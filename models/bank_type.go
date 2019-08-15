@@ -20,9 +20,9 @@ func (b *BankType) Save() (*BankType, error) {
 	return b, err
 }
 
-func (l *Loan) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
-	loans := []Loan{}
-	result, err = PagedFilterSearch(&loans, page, rows, orderby, sort, filter)
+func (b *BankType) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
+	bank_type := []BankType{}
+	result, err = PagedFilterSearch(&bank_type, page, rows, orderby, sort, filter)
 
 	return result, err
 }
