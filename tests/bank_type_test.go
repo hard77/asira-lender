@@ -47,3 +47,31 @@ func TestLenderGetBankTypeList(t *testing.T) {
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
 }
+
+func TestGetBankTypebyID(t *testing.T) {
+	RebuildData()
+
+	api := router.NewRouter()
+
+	server := httptest.NewServer(api)
+
+	defer server.Close()
+
+	e := httpexpect.New(t, server.URL)
+
+	auth := e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+	})
+
+	adminToken := getLenderAdminToken(e, auth)
+
+	auth = e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Bearer "+adminToken)
+	})
+
+	// valid response
+	obj := auth.GET("/admin/bank_types/1").
+		Expect().
+		Status(http.StatusOK).JSON().Object()
+	obj.ContainsKey("id").ValueEqual("id", 1)
+}

@@ -17,4 +17,5 @@ func AdminGroup(e *echo.Echo) {
 
 	// Bank Types
 	g.GET("/bank_types", admin_handlers.BankTypeList)
+	g.GET("/bank_types/:bank_id", admin_handlers.BankTypeDetail)
 }

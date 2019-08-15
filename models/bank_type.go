@@ -20,6 +20,11 @@ func (b *BankType) Save() (*BankType, error) {
 	return b, err
 }
 
+func (b *BankType) FindbyID(id int) (*BankType, error) {
+	err := FindbyID(&b, id)
+	return b, err
+}
+
 func (b *BankType) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
 	bank_type := []BankType{}
 	result, err = PagedFilterSearch(&bank_type, page, rows, orderby, sort, filter)

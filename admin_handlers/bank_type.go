@@ -34,3 +34,18 @@ func BankTypeList(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func BankTypeDetail(c echo.Context) error {
+	defer c.Request().Body.Close()
+
+	bank_id, _ := strconv.Atoi(c.Param("bank_id"))
+
+	bankType := models.BankType{}
+	result, err := bankType.FindbyID(bank_id)
+
+	if err != nil {
+		return returnInvalidResponse(http.StatusInternalServerError, err, "query result error")
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
