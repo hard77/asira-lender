@@ -1,6 +1,7 @@
 package groups
 
 import (
+	"asira_lender/admin_handlers"
 	"asira_lender/handlers"
 	"asira_lender/middlewares"
 
@@ -13,4 +14,7 @@ func AdminGroup(e *echo.Echo) {
 
 	// OTP
 	g.GET("/info", handlers.AsiraAppInfo)
+
+	// Bank Types
+	g.GET("/bank_types", admin_handlers.BankTypeList)
 }
