@@ -114,4 +114,81 @@ func TestGetBankTypebyID(t *testing.T) {
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("id").ValueEqual("id", 1)
+
+	// not found
+	auth.GET("/admin/bank_types/9999").
+		Expect().
+		Status(http.StatusNotFound).JSON().Object()
 }
+
+func TestPatchBankType(t *testing.T) {
+	RebuildData()
+
+	api := router.NewRouter()
+
+	server := httptest.NewServer(api)
+
+	defer server.Close()
+
+	e := httpexpect.New(t, server.URL)
+
+	auth := e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+	})
+
+	adminToken := getLenderAdminToken(e, auth)
+
+	auth = e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Bearer "+adminToken)
+	})
+
+	payload := map[string]interface{}{
+		"name": "Test Patch",
+	}
+
+	// valid response
+	obj := auth.PATCH("/admin/bank_types/1").WithJSON(payload).
+		Expect().
+		Status(http.StatusOK).JSON().Object()
+	obj.ContainsKey("name").ValueEqual("name", "Test Patch")
+
+	// test invalid token
+	auth = e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Bearer wrong token")
+	})
+	auth.PATCH("/admin/bank_types/1").WithJSON(payload).
+		Expect().
+		Status(http.StatusUnauthorized).JSON().Object()
+}
+
+// @ToDo must delete foreign reference first
+// func TestDeleteBankType(t *testing.T) {
+// 	RebuildData()
+
+// 	api := router.NewRouter()
+
+// 	server := httptest.NewServer(api)
+
+// 	defer server.Close()
+
+// 	e := httpexpect.New(t, server.URL)
+
+// 	auth := e.Builder(func(req *httpexpect.Request) {
+// 		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+// 	})
+
+// 	adminToken := getLenderAdminToken(e, auth)
+
+// 	auth = e.Builder(func(req *httpexpect.Request) {
+// 		req.WithHeader("Authorization", "Bearer "+adminToken)
+// 	})
+
+// 	// valid response
+// 	obj := auth.DELETE("/admin/bank_types/1").
+// 		Expect().
+// 		Status(http.StatusOK).JSON().Object()
+// 	obj.ContainsKey("name").ValueEqual("name", "Test Patch")
+// 	auth.GET("/admin/bank_types/1").
+// 		Expect().
+// 		Status(http.StatusNotFound).JSON().Object()
+// }
