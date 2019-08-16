@@ -51,7 +51,19 @@ func (b *Bank) Save() (*Bank, error) {
 	return b, err
 }
 
+func (b *Bank) Delete() (*Bank, error) {
+	err := Delete(&b)
+	return b, err
+}
+
 func (b *Bank) FindbyID(id int) (*Bank, error) {
 	err := FindbyID(&b, id)
 	return b, err
+}
+
+func (b *Bank) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
+	bank_type := []Bank{}
+	result, err = PagedFilterSearch(&bank_type, page, rows, orderby, sort, filter)
+
+	return result, err
 }

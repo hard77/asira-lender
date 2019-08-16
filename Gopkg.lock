@@ -112,7 +112,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:ff5d1c32429a9e5990ed91243aa76cdb1575fd97ea44971e1c084c75d9061902"
+  digest = "1:c12a939ca51eec3497f71bf2fd2a3fbafed9fafa420d55e90365ecd8c9c0d3de"
   name = "github.com/klauspost/compress"
   packages = [
     "flate",
@@ -120,8 +120,8 @@
     "zlib",
   ]
   pruneopts = ""
-  revision = "315059c39568ee89ae0c118bc6dc7306041543c3"
-  version = "v1.7.2"
+  revision = "53fd0299b54f91f5d91c50ee5f4d5e0393e45eb8"
+  version = "v1.7.5"
 
 [[projects]]
   digest = "1:cb39bebc72505b4120988fb9e258ecffba4ed679dc04794d517198887160df80"
@@ -292,15 +292,15 @@
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:381bcbeb112a51493d9d998bbba207a529c73dbb49b3fd789e48c63fac1f192c"
+  digest = "1:f7b541897bcde05a04a044c342ddc7425aab7e331f37b47fbb486cd16324b48e"
   name = "github.com/stretchr/testify"
   packages = [
     "assert",
     "require",
   ]
   pruneopts = ""
-  revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
-  version = "v1.3.0"
+  revision = "221dbe5ed46703ee255b1da0dec05086f5035f62"
+  version = "v1.4.0"
 
 [[projects]]
   digest = "1:6713ce21b0a4e38c3d27d27243e849a7ee47072b918d18779e9b0164a750bee9"
@@ -340,11 +340,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e6338f2518362ff701a556bd76afd90a2168d1c658ec5d1ea1e9c5ef30a7d157"
+  digest = "1:a2c6520c978d5067353277545a2e6fbd6acd3753d1cf5ec38b8e7d3e3dcbc1a2"
   name = "github.com/xeipuuv/gojsonpointer"
   packages = ["."]
   pruneopts = ""
-  revision = "4e3ac2762d5f479393488629ee9370b50873b3a6"
+  revision = "df4f5c81cb3b310899c091852a576ea7d178aedb"
 
 [[projects]]
   branch = "master"
