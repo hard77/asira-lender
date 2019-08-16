@@ -2,10 +2,12 @@ package admin_handlers
 
 import (
 	"asira_lender/models"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo"
+	"github.com/thedevsaddam/govalidator"
 )
 
 func BankTypeList(c echo.Context) error {
@@ -33,6 +35,29 @@ func BankTypeList(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, result)
+}
+
+func BankTypeNew(c echo.Context) error {
+	defer c.Request().Body.Close()
+
+	bank_type := models.BankType{}
+
+	payloadRules := govalidator.MapData{
+		"name": []string{"required"},
+	}
+
+	validate := validateRequestPayload(c, payloadRules, &bank_type)
+	if validate != nil {
+		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
+	}
+
+	newBankType, err := bank_type.Create()
+	if err != nil {
+		log.Println("new bank type : %v", newBankType)
+		return returnInvalidResponse(http.StatusInternalServerError, err, "Gagal membuat tipe bank baru")
+	}
+
+	return c.JSON(http.StatusCreated, newBankType)
 }
 
 func BankTypeDetail(c echo.Context) error {
