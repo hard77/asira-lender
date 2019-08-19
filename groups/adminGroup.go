@@ -28,4 +28,11 @@ func AdminGroup(e *echo.Echo) {
 	g.GET("/bank/:bank_id", admin_handlers.BankDetail)
 	g.PATCH("/bank/:bank_id", admin_handlers.BankPatch)
 	g.DELETE("/bank/:bank_id", admin_handlers.BankDelete)
+
+	// Bank Services
+	g.GET("/bank_services", admin_handlers.BankServiceList)
+	g.POST("/bank_services", admin_handlers.BankServiceNew)
+	g.GET("/bank_services/:bank_service_id", admin_handlers.BankServiceDetail)
+	g.PATCH("/bank_services/:bank_service_id", admin_handlers.BankServicePatch)
+	g.DELETE("/bank_services/:bank_service_id", admin_handlers.BankServiceDelete)
 }

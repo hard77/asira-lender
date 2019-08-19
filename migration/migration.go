@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -17,6 +19,19 @@ func Seed() {
 	defer seeder.Commit()
 
 	if asira.App.ENV == "development" {
+		// seed images
+		file, _ := os.Open("migration/image_dummy.txt")
+		defer file.Close()
+		b64image, _ := ioutil.ReadAll(file)
+		images := []models.Image{
+			models.Image{
+				Image_string: string(b64image),
+			},
+		}
+		for _, image := range images {
+			image.Create()
+		}
+
 		// seed bank types
 		bankTypes := []models.BankType{
 			models.BankType{
@@ -31,6 +46,38 @@ func Seed() {
 		}
 		for _, bankType := range bankTypes {
 			bankType.Create()
+		}
+
+		// seed bank services
+		bankServices := []models.BankService{
+			models.BankService{
+				Name:    "Pinjaman PNS",
+				ImageID: 1,
+				Status:  "active",
+			},
+			models.BankService{
+				Name:    "Pinjaman Pensiun",
+				ImageID: 1,
+				Status:  "active",
+			},
+			models.BankService{
+				Name:    "Pinjaman UMKN",
+				ImageID: 1,
+				Status:  "active",
+			},
+			models.BankService{
+				Name:    "Pinjaman Mikro",
+				ImageID: 1,
+				Status:  "inactive",
+			},
+			models.BankService{
+				Name:    "Pinjaman Lainnya",
+				ImageID: 1,
+				Status:  "inactive",
+			},
+		}
+		for _, bankService := range bankServices {
+			bankService.Create()
 		}
 
 		// seed lenders
@@ -428,8 +475,10 @@ func Truncate(tableList []string) (err error) {
 			tableList = []string{
 				"bank_types",
 				"banks",
+				"bank_services",
 				"borrowers",
 				"loans",
+				"images",
 			}
 		}
 
