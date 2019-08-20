@@ -1,21 +1,74 @@
 -- +goose Up
 -- SQL in this section is executed when the migration is applied.
 
+CREATE TABLE "images" (
+    "id" bigserial,
+    "image_string" text,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "bank_types" (
+    "id" bigserial,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "deleted_time" timestamptz,
+    "name" varchar(255),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
 CREATE TABLE "banks" (
     "id" bigserial,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
     "name" varchar(255),
-    "type" varchar(255),
+    "type" bigint,
     "address" text,
     "province" varchar(255),
     "city" varchar(255),
     "services" jsonb DEFAULT '[]',
+    "products" jsonb DEFAULT '[]',
     "pic" varchar(255),
     "phone" varchar(255),
     "username" varchar(255) NOT NULL UNIQUE,
     "password" text NOT NULL,
+    FOREIGN KEY ("type") REFERENCES bank_types(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "bank_services" (
+    "id" bigserial,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "deleted_time" timestamptz,
+    "name" varchar(255),
+    "image_id" bigint,
+    "status" varchar(255),
+    FOREIGN KEY ("image_id") REFERENCES images(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+COMMENT ON COLUMN "bank_services"."status" IS '0 = inactive, 1 = active';
+
+CREATE TABLE "bank_products" (
+    "id" bigserial,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "deleted_time" timestamptz,
+    "name" varchar(255),
+    "timespan" int,
+    "loan_min" int,
+    "loan_max" int,
+    "provision" int,
+    "service" bigint,
+    "bank_users" jsonb DEFAULT '[]',
+    "collaterals" jsonb DEFAULT '[]',
+    "financing_sector" jsonb DEFAULT '[]',
+    "available_for_banktypes" jsonb DEFAULT '[]',
+    "assurance" varchar(255),
+    "status" int,
+    FOREIGN KEY ("service") REFERENCES bank_services(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -100,6 +153,10 @@ CREATE TABLE "loans" (
 
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
+DROP TABLE IF EXISTS "bank_types" CASCADE;
 DROP TABLE IF EXISTS "banks" CASCADE;
+DROP TABLE IF EXISTS "bank_services" CASCADE;
+DROP TABLE IF EXISTS "bank_products" CASCADE;
 DROP TABLE IF EXISTS "borrowers" CASCADE;
 DROP TABLE IF EXISTS "loans" CASCADE;
+DROP TABLE IF EXISTS "images" CASCADE;

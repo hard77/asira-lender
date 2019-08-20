@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 
@@ -17,17 +19,79 @@ func Seed() {
 	defer seeder.Commit()
 
 	if asira.App.ENV == "development" {
+		// seed images
+		file, _ := os.Open("migration/image_dummy.txt")
+		defer file.Close()
+		b64image, _ := ioutil.ReadAll(file)
+		images := []models.Image{
+			models.Image{
+				Image_string: string(b64image),
+			},
+		}
+		for _, image := range images {
+			image.Create()
+		}
+
+		// seed bank types
+		bankTypes := []models.BankType{
+			models.BankType{
+				Name: "BPD",
+			},
+			models.BankType{
+				Name: "BPR",
+			},
+			models.BankType{
+				Name: "Koperasi",
+			},
+		}
+		for _, bankType := range bankTypes {
+			bankType.Create()
+		}
+
+		// seed bank services
+		bankServices := []models.BankService{
+			models.BankService{
+				Name:    "Pinjaman PNS",
+				ImageID: 1,
+				Status:  "active",
+			},
+			models.BankService{
+				Name:    "Pinjaman Pensiun",
+				ImageID: 1,
+				Status:  "active",
+			},
+			models.BankService{
+				Name:    "Pinjaman UMKN",
+				ImageID: 1,
+				Status:  "active",
+			},
+			models.BankService{
+				Name:    "Pinjaman Mikro",
+				ImageID: 1,
+				Status:  "inactive",
+			},
+			models.BankService{
+				Name:    "Pinjaman Lainnya",
+				ImageID: 1,
+				Status:  "inactive",
+			},
+		}
+		for _, bankService := range bankServices {
+			bankService.Create()
+		}
+
 		// seed lenders
-		services := []int{1, 2, 3, 5, 8}
-		jMarshal, _ := json.Marshal(services)
+		array := []int{1, 2, 3, 5, 8}
+		jMarshal, _ := json.Marshal(array)
 		lenders := []models.Bank{
 			models.Bank{
 				Name:     "Bank A",
-				Type:     "BDP",
+				Type:     1,
 				Address:  "Bank A Address",
 				Province: "Province A",
 				City:     "City A",
 				Services: postgres.Jsonb{jMarshal},
+				Products: postgres.Jsonb{jMarshal},
 				PIC:      "Bank A PIC",
 				Phone:    "081234567890",
 				Username: "Banktoib",
@@ -35,11 +99,12 @@ func Seed() {
 			},
 			models.Bank{
 				Name:     "Bank B",
-				Type:     "BDP",
+				Type:     2,
 				Address:  "Bank B Address",
 				Province: "Province B",
 				City:     "City B",
 				Services: postgres.Jsonb{jMarshal},
+				Products: postgres.Jsonb{jMarshal},
 				PIC:      "Bank B PIC",
 				Phone:    "081234567891",
 				Username: "Banktoic",
@@ -408,9 +473,12 @@ func Truncate(tableList []string) (err error) {
 	if len(tableList) > 0 {
 		if tableList[0] == "all" {
 			tableList = []string{
+				"bank_types",
 				"banks",
+				"bank_services",
 				"borrowers",
 				"loans",
+				"images",
 			}
 		}
 
