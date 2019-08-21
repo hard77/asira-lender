@@ -199,7 +199,7 @@ func KafkaSubmitEntity(i interface{}, entity string) {
 	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics", asira.App.ENV))
 
 	var payload interface{}
-	kafkaPayloadBuilder(&payload, i, entity)
+	payload = kafkaPayloadBuilder(payload, i, entity)
 
 	jMarshal, _ := json.Marshal(payload)
 	strTime := strconv.Itoa(int(time.Now().Unix()))
@@ -217,7 +217,7 @@ func KafkaSubmitEntity(i interface{}, entity string) {
 	}
 }
 
-func kafkaPayloadBuilder(i interface{}, j interface{}, entity string) {
+func kafkaPayloadBuilder(i interface{}, j interface{}, entity string) interface{} {
 	switch entity {
 	default:
 		i = j
@@ -235,4 +235,6 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, entity string) {
 		}
 		break
 	}
+
+	return i
 }
