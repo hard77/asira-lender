@@ -2,12 +2,16 @@ package models
 
 import (
 	"asira_lender/asira"
+	"encoding/json"
 	"fmt"
+	"log"
 	"math"
 	"reflect"
+	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Shopify/sarama"
 	"github.com/jinzhu/gorm"
 )
 
@@ -189,4 +193,46 @@ func PagedFilterSearch(i interface{}, page int, rows int, orderby string, sort s
 	}
 
 	return result, err
+}
+
+func KafkaSubmitEntity(i interface{}, entity string) {
+	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics", asira.App.ENV))
+
+	var payload interface{}
+	kafkaPayloadBuilder(&payload, i, entity)
+
+	jMarshal, _ := json.Marshal(payload)
+	strTime := strconv.Itoa(int(time.Now().Unix()))
+	msg := &sarama.ProducerMessage{
+		Topic: topics["entity_hook"].(string),
+		Key:   sarama.StringEncoder(strTime),
+		Value: sarama.StringEncoder(entity + ":" + string(jMarshal)),
+	}
+
+	select {
+	case asira.App.Kafka.Producer.Input() <- msg:
+		log.Printf("Produced topic : %s", topics["entity_hook"].(string))
+	case err := <-asira.App.Kafka.Producer.Errors():
+		log.Printf("Fail producing topic : %s error : %v", topics["entity_hook"].(string), err)
+	}
+}
+
+func kafkaPayloadBuilder(i interface{}, j interface{}, entity string) {
+	switch entity {
+	default:
+		i = j
+		break
+	case "loan":
+		type LoanStatusUpdate struct {
+			ID     uint64 `json:"id"`
+			Status string `json:"status"`
+		}
+		if e, ok := j.(Loan); ok {
+			i = LoanStatusUpdate{
+				ID:     e.ID,
+				Status: e.Status,
+			}
+		}
+		break
+	}
 }
