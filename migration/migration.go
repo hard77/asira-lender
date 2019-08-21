@@ -80,6 +80,49 @@ func Seed() {
 			bankService.Create()
 		}
 
+		// seed service products
+		feesMarshal, _ := json.Marshal(map[string]interface{}{
+			"description": "Admin Fee",
+			"amount":      2500,
+		})
+		collateralMarshal, _ := json.Marshal([]string{"Surat Tanah", "BPKB"})
+		financeMarshal, _ := json.Marshal([]string{"Pendidikan"})
+		serviceProducts := []models.ServiceProduct{
+			models.ServiceProduct{
+				Name:            "Product A",
+				MinTimeSpan:     1,
+				MaxTimeSpan:     6,
+				Interest:        5,
+				MinLoan:         1000000,
+				MaxLoan:         10000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				ASN_Fee:         1,
+				Service:         1,
+				Collaterals:     postgres.Jsonb{collateralMarshal},
+				FinancingSector: postgres.Jsonb{financeMarshal},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.ServiceProduct{
+				Name:            "Product B",
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				ASN_Fee:         1,
+				Service:         1,
+				Collaterals:     postgres.Jsonb{collateralMarshal},
+				FinancingSector: postgres.Jsonb{financeMarshal},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+		}
+		for _, serviceProduct := range serviceProducts {
+			serviceProduct.Create()
+		}
+
 		// seed lenders
 		array := []int{1, 2, 3, 5, 8}
 		jMarshal, _ := json.Marshal(array)
