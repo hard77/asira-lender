@@ -63,7 +63,7 @@ CREATE TABLE "service_products" (
     "min_loan" int,
     "max_loan" int,
     "fees" jsonb DEFAULT '[]',
-    "asn_fee" int,
+    "asn_fee" varchar(255),
     "service" bigint,
     "collaterals" jsonb DEFAULT '[]',
     "financing_sector" jsonb DEFAULT '[]',

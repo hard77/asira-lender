@@ -80,7 +80,7 @@ func TestNewBankServiceProduct(t *testing.T) {
 			"description": "Admin Fee",
 			"amount":      2500,
 		},
-		"asn_fee":          1,
+		"asn_fee":          "5%",
 		"service":          1,
 		"collaterals":      []string{"Surat Tanah", "BPKB"},
 		"financing_sector": []string{"Pendidikan"},

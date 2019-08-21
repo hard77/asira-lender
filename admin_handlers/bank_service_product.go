@@ -50,7 +50,7 @@ func BankServiceProductNew(c echo.Context) error {
 		"min_loan":         []string{"numeric"},
 		"max_loan":         []string{"numeric"},
 		"fees":             []string{},
-		"asn_fee":          []string{"numeric"},
+		"asn_fee":          []string{"regex:^(\\d|\\d%)+$"}, // fixed number or percentage
 		"service":          []string{"numeric"},
 		"collaterals":      []string{},
 		"financing_sector": []string{},
@@ -104,7 +104,7 @@ func BankServiceProductPatch(c echo.Context) error {
 		"min_loan":         []string{"numeric"},
 		"max_loan":         []string{"numeric"},
 		"fees":             []string{},
-		"asn_fee":          []string{"numeric"},
+		"asn_fee":          []string{"regex:^(\\d|\\d%)+$"}, // fixed number or percentage
 		"service":          []string{"numeric"},
 		"collaterals":      []string{},
 		"financing_sector": []string{},

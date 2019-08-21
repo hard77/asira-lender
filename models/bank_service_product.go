@@ -14,7 +14,7 @@ type (
 		MinLoan         int            `json:"min_loan" gorm:"column:min_loan"`
 		MaxLoan         int            `json:"max_loan" gorm:"column:max_loan"`
 		Fees            postgres.Jsonb `json:"fees" gorm:"column:fees"`
-		ASN_Fee         int            `json:"asn_fee" gorm:"column:asn_fee"`
+		ASN_Fee         string         `json:"asn_fee" gorm:"column:asn_fee"`
 		Service         int            `json:"service" gorm:"column:service"`
 		Collaterals     postgres.Jsonb `json:"collaterals" gorm:"column:collaterals"`
 		FinancingSector postgres.Jsonb `json:"financing_sector" gorm:"column:financing_sector"`
