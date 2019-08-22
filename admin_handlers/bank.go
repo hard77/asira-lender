@@ -53,7 +53,7 @@ func BankNew(c echo.Context) error {
 		"products": []string{},
 		"pic":      []string{"required"},
 		"phone":    []string{"required"},
-		"username": []string{"required", "unique"},
+		"username": []string{"required", "unique:banks,username"},
 		"password": []string{"required"},
 	}
 
