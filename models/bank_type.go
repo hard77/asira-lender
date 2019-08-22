@@ -28,6 +28,9 @@ func (b *BankType) Save() (*BankType, error) {
 
 func (b *BankType) Delete() (*BankType, error) {
 	err := Delete(&b)
+
+	KafkaSubmitModel(b, "bank_type_delete")
+
 	return b, err
 }
 

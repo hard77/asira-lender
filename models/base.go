@@ -196,7 +196,7 @@ func PagedFilterSearch(i interface{}, page int, rows int, orderby string, sort s
 }
 
 func KafkaSubmitModel(i interface{}, model string) {
-	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics.producer", asira.App.ENV))
+	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics.produces", asira.App.ENV))
 
 	var payload interface{}
 	payload = kafkaPayloadBuilder(payload, i, model)
@@ -218,11 +218,11 @@ func KafkaSubmitModel(i interface{}, model string) {
 }
 
 func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{} {
-	switch model {
+	select {
 	default:
 		i = j
 		break
-	case "loan":
+	case model == "loan":
 		type LoanStatusUpdate struct {
 			ID     uint64 `json:"id"`
 			Status string `json:"status"`
@@ -231,6 +231,18 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{}
 			i = LoanStatusUpdate{
 				ID:     e.ID,
 				Status: e.Status,
+			}
+		}
+		break
+	case strings.HasSuffix(model, "_delete"):
+		type ModelDelete struct {
+			ID    uint64 `json:"id"`
+			Model string `json:"model"`
+		}
+		if e, ok := j.(BaseModel); ok {
+			i = LoanStatusUpdate{
+				ID:    e.ID,
+				Model: strings.TrimRight(model, "_delete"),
 			}
 		}
 		break
