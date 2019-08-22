@@ -26,7 +26,7 @@ type (
 func (p *ServiceProduct) Create() (*ServiceProduct, error) {
 	err := Create(&p)
 
-	KafkaSubmitModel(b, "bank_service_product")
+	KafkaSubmitModel(p, "bank_service_product")
 
 	return p, err
 }
@@ -34,7 +34,7 @@ func (p *ServiceProduct) Create() (*ServiceProduct, error) {
 func (p *ServiceProduct) Save() (*ServiceProduct, error) {
 	err := Save(&p)
 
-	KafkaSubmitModel(b, "bank_service_product")
+	KafkaSubmitModel(p, "bank_service_product")
 
 	return p, err
 }
@@ -42,7 +42,7 @@ func (p *ServiceProduct) Save() (*ServiceProduct, error) {
 func (p *ServiceProduct) Delete() (*ServiceProduct, error) {
 	err := Delete(&p)
 
-	KafkaSubmitModel(b, "bank_service_product_delete")
+	KafkaSubmitModel(p, "bank_service_product_delete")
 
 	return p, err
 }

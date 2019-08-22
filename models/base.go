@@ -218,11 +218,24 @@ func KafkaSubmitModel(i interface{}, model string) {
 }
 
 func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{} {
-	select {
+	switch model {
 	default:
-		i = j
+		if strings.HasSuffix(model, "_delete") {
+			type ModelDelete struct {
+				ID    uint64 `json:"id"`
+				Model string `json:"model"`
+			}
+			if e, ok := j.(BaseModel); ok {
+				i = ModelDelete{
+					ID:    e.ID,
+					Model: strings.TrimRight(model, "_delete"),
+				}
+			}
+		} else {
+			i = j
+		}
 		break
-	case model == "loan":
+	case "loan":
 		type LoanStatusUpdate struct {
 			ID     uint64 `json:"id"`
 			Status string `json:"status"`
@@ -231,18 +244,6 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{}
 			i = LoanStatusUpdate{
 				ID:     e.ID,
 				Status: e.Status,
-			}
-		}
-		break
-	case strings.HasSuffix(model, "_delete"):
-		type ModelDelete struct {
-			ID    uint64 `json:"id"`
-			Model string `json:"model"`
-		}
-		if e, ok := j.(BaseModel); ok {
-			i = LoanStatusUpdate{
-				ID:    e.ID,
-				Model: strings.TrimRight(model, "_delete"),
 			}
 		}
 		break
