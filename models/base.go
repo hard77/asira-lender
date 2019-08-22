@@ -206,7 +206,7 @@ func KafkaSubmitModel(i interface{}, model string) {
 	msg := &sarama.ProducerMessage{
 		Topic: topics["for_borrower"].(string),
 		Key:   sarama.StringEncoder(strTime),
-		Value: sarama.StringEncoder(model + ":" + string(jMarshal)),
+		Value: sarama.StringEncoder(strings.TrimSuffix(model, "_delete") + ":" + string(jMarshal)),
 	}
 
 	select {
@@ -226,10 +226,13 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{}
 				Model  string `json:"model"`
 				Delete bool   `json:"delete"`
 			}
-			if e, ok := j.(BaseModel); ok {
+			var inInterface map[string]interface{}
+			inrec, _ := json.Marshal(i)
+			json.Unmarshal(inrec, &inInterface)
+			if modelID, ok := inInterface["id"].(uint64); ok {
 				i = ModelDelete{
-					ID:     e.ID,
-					Model:  strings.TrimRight(model, "_delete"),
+					ID:     modelID,
+					Model:  strings.TrimSuffix(model, "_delete"),
 					Delete: true,
 				}
 			}
