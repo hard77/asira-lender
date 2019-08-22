@@ -222,13 +222,15 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{}
 	default:
 		if strings.HasSuffix(model, "_delete") {
 			type ModelDelete struct {
-				ID    uint64 `json:"id"`
-				Model string `json:"model"`
+				ID     uint64 `json:"id"`
+				Model  string `json:"model"`
+				Delete bool   `json:"delete"`
 			}
 			if e, ok := j.(BaseModel); ok {
 				i = ModelDelete{
-					ID:    e.ID,
-					Model: strings.TrimRight(model, "_delete"),
+					ID:     e.ID,
+					Model:  strings.TrimRight(model, "_delete"),
+					Delete: true,
 				}
 			}
 		} else {
