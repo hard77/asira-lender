@@ -195,30 +195,30 @@ func PagedFilterSearch(i interface{}, page int, rows int, orderby string, sort s
 	return result, err
 }
 
-func KafkaSubmitEntity(i interface{}, entity string) {
-	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics", asira.App.ENV))
+func KafkaSubmitModel(i interface{}, model string) {
+	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics.producer", asira.App.ENV))
 
 	var payload interface{}
-	payload = kafkaPayloadBuilder(payload, i, entity)
+	payload = kafkaPayloadBuilder(payload, i, model)
 
 	jMarshal, _ := json.Marshal(payload)
 	strTime := strconv.Itoa(int(time.Now().Unix()))
 	msg := &sarama.ProducerMessage{
-		Topic: topics["entity_hook"].(string),
+		Topic: topics["for_borrower"].(string),
 		Key:   sarama.StringEncoder(strTime),
-		Value: sarama.StringEncoder(entity + ":" + string(jMarshal)),
+		Value: sarama.StringEncoder(model + ":" + string(jMarshal)),
 	}
 
 	select {
 	case asira.App.Kafka.Producer.Input() <- msg:
-		log.Printf("Produced topic : %s", topics["entity_hook"].(string))
+		log.Printf("Produced topic : %s", topics["for_borrower"].(string))
 	case err := <-asira.App.Kafka.Producer.Errors():
-		log.Printf("Fail producing topic : %s error : %v", topics["entity_hook"].(string), err)
+		log.Printf("Fail producing topic : %s error : %v", topics["for_borrower"].(string), err)
 	}
 }
 
-func kafkaPayloadBuilder(i interface{}, j interface{}, entity string) interface{} {
-	switch entity {
+func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{} {
+	switch model {
 	default:
 		i = j
 		break

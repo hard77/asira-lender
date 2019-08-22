@@ -13,7 +13,7 @@ type (
 func (b *BankType) Create() (*BankType, error) {
 	err := Create(&b)
 
-	KafkaSubmitEntity(b, "bank_type")
+	KafkaSubmitModel(b, "bank_type")
 
 	return b, err
 }
@@ -21,7 +21,7 @@ func (b *BankType) Create() (*BankType, error) {
 func (b *BankType) Save() (*BankType, error) {
 	err := Save(&b)
 
-	KafkaSubmitEntity(b, "bank_type")
+	KafkaSubmitModel(b, "bank_type")
 
 	return b, err
 }
