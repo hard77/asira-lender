@@ -55,7 +55,7 @@ func BankServiceProductNew(c echo.Context) error {
 		"collaterals":      []string{},
 		"financing_sector": []string{},
 		"assurance":        []string{},
-		"status":           []string{},
+		"status":           []string{"active_inactive"},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &serviceProduct)
@@ -109,7 +109,7 @@ func BankServiceProductPatch(c echo.Context) error {
 		"collaterals":      []string{},
 		"financing_sector": []string{},
 		"assurance":        []string{},
-		"status":           []string{},
+		"status":           []string{"active_inactive"},
 	}
 	validate := validateRequestPayload(c, productPayloadRules, &serviceProductRes)
 	if validate != nil {
