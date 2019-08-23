@@ -66,6 +66,15 @@ func (a *AsiraValidator) CustomValidatorRules() {
 		return nil
 	})
 
+	// active / inactive string only.
+	govalidator.AddCustomRule("active_inactive", func(field string, rule string, message string, value interface{}) error {
+		val := value.(string)
+		if strings.ToLower(val) != "active" && strings.ToLower(val) != "inactive" {
+			return fmt.Errorf("The %s field must be contain word: active or inactive", field)
+		}
+		return nil
+	})
+
 	// validator for pagination
 	govalidator.AddCustomRule("asc_desc", func(field string, rule string, message string, value interface{}) error {
 		val := value.(string)
