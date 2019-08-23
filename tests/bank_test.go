@@ -31,18 +31,18 @@ func TestLenderGetBankList(t *testing.T) {
 	})
 
 	// valid response
-	auth.GET("/admin/bank").
+	auth.GET("/admin/banks").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 
 	// test query found
-	obj := auth.GET("/admin/bank").WithQuery("name", "Bank A").
+	obj := auth.GET("/admin/banks").WithQuery("name", "Bank A").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
 
 	// test query invalid
-	obj = auth.GET("/admin/bank").WithQuery("name", "should not found this").
+	obj = auth.GET("/admin/banks").WithQuery("name", "should not found this").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
@@ -79,12 +79,10 @@ func TestNewBank(t *testing.T) {
 		"products": []string{"Products 1", "Products 2", "Products 3"},
 		"pic":      "test pic",
 		"phone":    "08123454321",
-		"username": "testuser",
-		"password": "password",
 	}
 
 	// normal scenario
-	obj := auth.POST("/admin/bank").WithJSON(payload).
+	obj := auth.POST("/admin/banks").WithJSON(payload).
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
 	obj.ContainsKey("name").ValueEqual("name", "Test New Bank")
@@ -93,7 +91,7 @@ func TestNewBank(t *testing.T) {
 	payload = map[string]interface{}{
 		"name": "",
 	}
-	auth.POST("/admin/bank").WithJSON(payload).
+	auth.POST("/admin/banks").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
 }
@@ -120,13 +118,13 @@ func TestGetBankbyID(t *testing.T) {
 	})
 
 	// valid response
-	obj := auth.GET("/admin/bank/1").
+	obj := auth.GET("/admin/banks/1").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("id").ValueEqual("id", 1)
 
 	// not found
-	auth.GET("/admin/bank/9999").
+	auth.GET("/admin/banks/9999").
 		Expect().
 		Status(http.StatusNotFound).JSON().Object()
 }
@@ -157,7 +155,7 @@ func TestPatchBank(t *testing.T) {
 	}
 
 	// valid response
-	obj := auth.PATCH("/admin/bank/1").WithJSON(payload).
+	obj := auth.PATCH("/admin/banks/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("name").ValueEqual("name", "Test Patch")
@@ -166,7 +164,7 @@ func TestPatchBank(t *testing.T) {
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer wrong token")
 	})
-	auth.PATCH("/admin/bank/1").WithJSON(payload).
+	auth.PATCH("/admin/banks/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object()
 }
