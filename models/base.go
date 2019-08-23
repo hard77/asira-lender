@@ -199,7 +199,7 @@ func KafkaSubmitModel(i interface{}, model string) {
 	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics.produces", asira.App.ENV))
 
 	var payload interface{}
-	payload = kafkaPayloadBuilder(payload, i, model)
+	payload = kafkaPayloadBuilder(i, model)
 
 	jMarshal, _ := json.Marshal(payload)
 	strTime := strconv.Itoa(int(time.Now().Unix()))
@@ -217,7 +217,7 @@ func KafkaSubmitModel(i interface{}, model string) {
 	}
 }
 
-func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{} {
+func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
 	switch model {
 	default:
 		if strings.HasSuffix(model, "_delete") {
@@ -230,14 +230,14 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{}
 			inrec, _ := json.Marshal(i)
 			json.Unmarshal(inrec, &inInterface)
 			if modelID, ok := inInterface["id"].(uint64); ok {
-				i = ModelDelete{
+				payload = ModelDelete{
 					ID:     modelID,
 					Model:  strings.TrimSuffix(model, "_delete"),
 					Delete: true,
 				}
 			}
 		} else {
-			i = j
+			payload = i
 		}
 		break
 	case "loan":
@@ -245,8 +245,8 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{}
 			ID     uint64 `json:"id"`
 			Status string `json:"status"`
 		}
-		if e, ok := j.(Loan); ok {
-			i = LoanStatusUpdate{
+		if e, ok := i.(Loan); ok {
+			payload = LoanStatusUpdate{
 				ID:     e.ID,
 				Status: e.Status,
 			}
@@ -254,5 +254,5 @@ func kafkaPayloadBuilder(i interface{}, j interface{}, model string) interface{}
 		break
 	}
 
-	return i
+	return payload
 }
