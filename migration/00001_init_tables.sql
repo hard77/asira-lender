@@ -45,7 +45,7 @@ CREATE TABLE "bank_services" (
     "deleted_time" timestamptz,
     "name" varchar(255),
     "image_id" bigint,
-    "status" int,
+    "status" varchar(255),
     FOREIGN KEY ("image_id") REFERENCES images(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
