@@ -12,6 +12,7 @@ import (
 
 var (
 	clientBasicToken string = "cmVhY3RrZXk6cmVhY3RwYXNz"
+	adminBasicToken  string = "Z3JhZGlvczp1bHRpbXVz"
 )
 
 func init() {
@@ -52,4 +53,14 @@ func getLenderLoginToken(e *httpexpect.Expect, auth *httpexpect.Expect, lender_i
 		Status(http.StatusOK).JSON().Object()
 
 	return obj.Value("token").String().Raw()
+}
+
+func getLenderAdminToken(e *httpexpect.Expect, auth *httpexpect.Expect) string {
+	obj := auth.GET("/clientauth").
+		Expect().
+		Status(http.StatusOK).JSON().Object()
+
+	admintoken := obj.Value("token").String().Raw()
+
+	return admintoken
 }
