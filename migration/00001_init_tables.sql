@@ -51,23 +51,24 @@ CREATE TABLE "bank_services" (
 ) WITH (OIDS = FALSE);
 COMMENT ON COLUMN "bank_services"."status" IS '0 = inactive, 1 = active';
 
-CREATE TABLE "bank_products" (
+CREATE TABLE "service_products" (
     "id" bigserial,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
     "name" varchar(255),
-    "timespan" int,
-    "loan_min" int,
-    "loan_max" int,
-    "provision" int,
+    "min_timespan" int,
+    "max_timespan" int,
+    "interest" int,
+    "min_loan" int,
+    "max_loan" int,
+    "fees" jsonb DEFAULT '[]',
+    "asn_fee" varchar(255),
     "service" bigint,
-    "bank_users" jsonb DEFAULT '[]',
     "collaterals" jsonb DEFAULT '[]',
     "financing_sector" jsonb DEFAULT '[]',
-    "available_for_banktypes" jsonb DEFAULT '[]',
     "assurance" varchar(255),
-    "status" int,
+    "status" varchar(255),
     FOREIGN KEY ("service") REFERENCES bank_services(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
@@ -156,7 +157,7 @@ CREATE TABLE "loans" (
 DROP TABLE IF EXISTS "bank_types" CASCADE;
 DROP TABLE IF EXISTS "banks" CASCADE;
 DROP TABLE IF EXISTS "bank_services" CASCADE;
-DROP TABLE IF EXISTS "bank_products" CASCADE;
+DROP TABLE IF EXISTS "service_products" CASCADE;
 DROP TABLE IF EXISTS "borrowers" CASCADE;
 DROP TABLE IF EXISTS "loans" CASCADE;
 DROP TABLE IF EXISTS "images" CASCADE;
