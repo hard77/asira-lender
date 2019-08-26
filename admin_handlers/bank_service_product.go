@@ -55,7 +55,7 @@ func BankServiceProductNew(c echo.Context) error {
 		"collaterals":      []string{},
 		"financing_sector": []string{},
 		"assurance":        []string{},
-		"status":           []string{},
+		"status":           []string{"active_inactive"},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &serviceProduct)
@@ -63,12 +63,12 @@ func BankServiceProductNew(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	newProduct, err := serviceProduct.Create()
+	_, err := serviceProduct.Create()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "Gagal membuat layanan bank baru")
 	}
 
-	return c.JSON(http.StatusCreated, newProduct)
+	return c.JSON(http.StatusCreated, serviceProduct)
 }
 
 func BankServiceProductDetail(c echo.Context) error {
@@ -77,12 +77,12 @@ func BankServiceProductDetail(c echo.Context) error {
 	product_id, _ := strconv.Atoi(c.Param("product_id"))
 
 	serviceProduct := models.ServiceProduct{}
-	result, err := serviceProduct.FindbyID(product_id)
+	_, err := serviceProduct.FindbyID(product_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("product %v tidak ditemukan", serviceProduct))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, serviceProduct)
 }
 
 func BankServiceProductPatch(c echo.Context) error {
@@ -91,7 +91,7 @@ func BankServiceProductPatch(c echo.Context) error {
 	product_id, _ := strconv.Atoi(c.Param("product_id"))
 
 	serviceProduct := models.ServiceProduct{}
-	serviceProductRes, err := serviceProduct.FindbyID(product_id)
+	_, err := serviceProduct.FindbyID(product_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("product %v tidak ditemukan", product_id))
 	}
@@ -109,19 +109,19 @@ func BankServiceProductPatch(c echo.Context) error {
 		"collaterals":      []string{},
 		"financing_sector": []string{},
 		"assurance":        []string{},
-		"status":           []string{},
+		"status":           []string{"active_inactive"},
 	}
-	validate := validateRequestPayload(c, productPayloadRules, &serviceProductRes)
+	validate := validateRequestPayload(c, productPayloadRules, &serviceProduct)
 	if validate != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	_, err = serviceProductRes.Save()
+	_, err = serviceProduct.Save()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update product %v", product_id))
 	}
 
-	return c.JSON(http.StatusOK, serviceProductRes)
+	return c.JSON(http.StatusOK, serviceProduct)
 }
 
 func BankServiceProductDelete(c echo.Context) error {
@@ -130,15 +130,15 @@ func BankServiceProductDelete(c echo.Context) error {
 	product_id, _ := strconv.Atoi(c.Param("product_id"))
 
 	serviceProduct := models.ServiceProduct{}
-	result, err := serviceProduct.FindbyID(product_id)
+	_, err := serviceProduct.FindbyID(product_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", product_id))
 	}
 
-	_, err = result.Delete()
+	_, err = serviceProduct.Delete()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update bank tipe %v", product_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, serviceProduct)
 }

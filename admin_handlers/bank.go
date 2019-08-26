@@ -53,8 +53,8 @@ func BankNew(c echo.Context) error {
 		"products": []string{},
 		"pic":      []string{"required"},
 		"phone":    []string{"required"},
-		"username": []string{"required"},
-		"password": []string{"required"},
+		// "username": []string{"required", "unique:banks,username"},
+		// "password": []string{"required"},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &bank)
@@ -95,6 +95,10 @@ func BankPatch(c echo.Context) error {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_id))
 	}
 
+	// dont allow admin to change bank credentials
+	tempUsername := result.Username
+	tempPassword := result.Password
+
 	payloadRules := govalidator.MapData{
 		"name":     []string{},
 		"type":     []string{"bank_type_id"},
@@ -112,6 +116,9 @@ func BankPatch(c echo.Context) error {
 	if validate != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
+
+	result.Username = tempUsername
+	result.Password = tempPassword
 
 	_, err = result.Save()
 	if err != nil {

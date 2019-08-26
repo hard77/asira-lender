@@ -167,6 +167,14 @@ func TestPatchBankServiceProduct(t *testing.T) {
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("name").ValueEqual("name", "Test Service Product Patch")
 
+	// valid response
+	payload = map[string]interface{}{
+		"status": "invalid",
+	}
+	auth.PATCH("/admin/service_products/1").WithJSON(payload).
+		Expect().
+		Status(http.StatusUnprocessableEntity).JSON().Object()
+
 	// test invalid token
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer wrong token")

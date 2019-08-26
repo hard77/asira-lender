@@ -81,6 +81,16 @@ func TestNewBankService(t *testing.T) {
 		Status(http.StatusCreated).JSON().Object()
 	obj.ContainsKey("name").ValueEqual("name", "Test New Bank Service")
 
+	// invalid status
+	payload = map[string]interface{}{
+		"name":   "Test New Bank Service",
+		"image":  "this is a long long base64 encoded image string",
+		"status": "not valid",
+	}
+	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
+		Expect().
+		Status(http.StatusUnprocessableEntity).JSON().Object()
+
 	// test invalid
 	payload = map[string]interface{}{
 		"name": "",
@@ -153,6 +163,14 @@ func TestPatchBankService(t *testing.T) {
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("name").ValueEqual("name", "Test Service Patch")
+
+	// invalid status
+	payload = map[string]interface{}{
+		"status": "not valid",
+	}
+	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
+		Expect().
+		Status(http.StatusUnprocessableEntity).JSON().Object()
 
 	// test invalid token
 	auth = e.Builder(func(req *httpexpect.Request) {
