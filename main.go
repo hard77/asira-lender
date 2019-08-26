@@ -36,6 +36,7 @@ func main() {
 		if asira.App.Config.GetBool("react_cors") {
 			e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 				AllowOrigins: []string{"*"},
+				AllowMethods: []string{"*"},
 				AllowHeaders: []string{"*"},
 			}))
 		}
