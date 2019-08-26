@@ -4,7 +4,7 @@ servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/ayannahindonesia/Asira_Lender/1.0.0
   - description: Indonesia Asira Lender dev
-    url: http://35.240.245.40:8001
+    url: http://asira.ayannah.com/api-lender
   - description: Indonesia Asira Lender staging
     url: https://staging-indo.asira.com/v1
 info:
@@ -18,6 +18,8 @@ tags:
     description: endpoint for clients
   - name : Lender
     description: endpoint for lender
+  - name : Admin
+    description: endpoint for admin
 security:
   - application:
       - read
@@ -366,6 +368,579 @@ paths:
           description: Unauthorized
         '404':
           description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /admin/bank_types:
+    get:
+      tags:
+        - Admin
+      summary: get bank type list
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+        - in: query
+          name: rows
+          schema:
+            type: integer
+            example: 2
+          description: how many data shown in one page
+        - in: query
+          name: page
+          schema:
+            type: string
+            example: 1
+          description: current open page
+        - in: query
+          name: orderby
+          schema:
+            type: string
+          description: order by
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: "asc"
+          description: sort ascending or descending
+        - in: query
+          name: name
+          schema:
+            type: string
+            example: BPD
+          description: search by name
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankTypeList'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Admin
+      summary: create a new bank type
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bankTypePostRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankTypeDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /admin/bank_types/[bank_type_id]:
+    get:
+      tags:
+        - Admin
+      summary: get bank type detail info by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankTypeDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+        - Admin
+      summary: edit bank type by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bankTypePostRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankTypeDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Admin
+      summary: delete bank type by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"message":"bank type BPD is deleted"}
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /admin/banks:
+    get:
+      tags:
+        - Admin
+      summary: get all Banks info
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankList'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Admin
+      summary: register new bank
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bankPostRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankListDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /admin/banks/[bank_id]:
+    get:
+      tags:
+        - Admin
+      summary: get bank detail info by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankListDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+        - Admin
+      summary: edit bank info by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bankPostRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankListDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Admin
+      summary: delete bank by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankListDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"message":"bank Bank Satu is deleted"}
+  /admin/bank_services:
+    get:
+      tags:
+        - Admin
+      summary: get bank type list
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankServiceList'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Admin
+      summary: create a new bank type
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bankServiceDetails'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankTypeDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /admin/bank_services/[bank_service_id]:
+    get:
+      tags:
+        - Admin
+      summary: get bank type detail info by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankServiceDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+        - Admin
+      summary: edit bank type by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bankTypePatchRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankTypeDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Admin
+      summary: delete bank type by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"message":"bank type BPD is deleted"}
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /admin/service_products:
+    get:
+      tags:
+        - Admin
+      summary: get all Banks info
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/serviceProductList'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Admin
+      summary: register new bank
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/serviceProductDetails'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/serviceProductDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+  /admin/service_products/[bank_id]:
+    get:
+      tags:
+        - Admin
+      summary: get bank detail info by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/serviceProductDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+        - Admin
+      summary: edit bank info by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/serviceProductDetails'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/bankListDetails'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Admin
+      summary: delete bank by id
+      parameters:
+        - $ref: '#/components/parameters/authtoken'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"message":"service Layanan is deleted"}
+        '401':
+          description: Unauthorized
         '500':
           description: Internal Server Error
           content:
@@ -808,6 +1383,301 @@ components:
         amount:
           type: number
           example: 100
+    bankTypeList:
+      type: object
+      properties:
+        total_data:
+          type: number
+          example: 3
+        rows:
+          type: number
+          example: 5
+        current_page:
+         type: number
+         example: 1
+        last_page:
+         type: number
+         example: 1
+        from:
+         type: number
+         example: 1
+        to:
+         type: number
+         example: 3
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankTypeDetails'
+    bankTypeDetails:
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: BPD
+    bankTypePostRequest:
+      properties:
+        name:
+          type: string
+          example: BPD
+    bankTypePatchRequest:
+      properties:
+        name:
+          type: string
+          example: BPD
+        image:
+          type: string
+          example: f329j98qfj38u9q89u38u9fqfu8qfu809fqu809qfwu980fqewu98efwqu98few9u8fweq9uwfeq98uwefqa9u8afew
+        status:
+          type: number
+          example: 0
+    bankList:
+      type: object
+      properties:
+        total_data:
+          type: number
+          example: 3
+        rows:
+          type: number
+          example: 5
+        current_page:
+         type: number
+         example: 1
+        last_page:
+         type: number
+         example: 1
+        from:
+         type: number
+         example: 1
+        to:
+         type: number
+         example: 3
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankListDetails'
+    bankListDetails:
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: Bank Satu
+        type:
+          type: string
+          example: BJB
+        address:
+          type: string
+          example: Jalan Apel No.11
+        province:
+          type: string
+          example: Jawa Barat
+        city:
+          type: string
+          example: Kab. Garut
+        services:
+          type: array
+          example:
+            - Pinjaman PNS
+            - Pinjaman Pensiun
+            - Pinjaman Mikro
+        products:
+          type: array
+          example:
+            - Product A
+            - Product B
+            - Product C
+        pic_name:
+          type: string
+          example: Liana
+        phone:
+          type: string
+          example: "0218898775"
+        join_date:
+          type: string
+          example: "1999-12-31T00:00:00.000Z"
+    bankPostRequest:
+      required:
+        - name
+        - address
+        - province
+        - city
+        - pic
+        - phone
+        - username
+        - password
+      properties:
+        name:
+          type: string
+          example: Bank Satu
+        type:
+          type: number
+          example: 1
+        address:
+          type: string
+          example: Jalan Apel No.11
+        province:
+          type: string
+          example: Jawa Barat
+        city:
+          type: string
+          example: Kab. Garut
+        services:
+          type: array
+          example:
+            - Pinjaman PNS
+            - Pinjaman Pensiun
+            - Pinjaman Mikro
+        products:
+          type: array
+          example:
+            - Product A
+            - Product B
+            - Product C
+        pic_name:
+          type: string
+          example: Liana
+        phone:
+          type: string
+          example: "0218898777"
+        username:
+          type: string
+          example: bank1user
+        password:
+          type: string
+          example: bank1pass
+    bankServiceList:
+      type: object
+      properties:
+        total_data:
+          type: number
+          example: 3
+        rows:
+          type: number
+          example: 5
+        current_page:
+         type: number
+         example: 1
+        last_page:
+         type: number
+         example: 1
+        from:
+         type: number
+         example: 1
+        to:
+         type: number
+         example: 3
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankServiceDetails'
+    bankServiceDetails:
+      required:
+        - name
+        - image
+        - status
+      properties:
+        id:
+          type: string
+          example: 1
+        name:
+          type: string
+          example: TSL
+        image:
+          type: string
+          example: "5"
+        status:
+          type: string
+          example: active
+    serviceProductList:
+      type: object
+      properties:
+        total_data:
+          type: number
+          example: 3
+        rows:
+          type: number
+          example: 5
+        current_page:
+         type: number
+         example: 1
+        last_page:
+         type: number
+         example: 1
+        from:
+         type: number
+         example: 1
+        to:
+         type: number
+         example: 3
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/serviceProductDetails'
+    serviceProductDetails:
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          example: 1
+        name:
+          type: string
+          example: Product A
+        min_timespan:
+          type: number
+          example: 6
+          description: in month
+        max_timespan:
+          type: number
+          example: 12
+          description: in month
+        interest:
+          type: number
+          example: 7
+          description: in percent
+        min_loan:
+          type: number
+          example: 5000000
+        max_loan:
+          type: number
+          example: 50000000
+        fees:
+          type: array
+          example: [{
+            "description": "Admin Fee",
+            "amount": "2500"
+          }]
+          description: amount can be a fixed amount or percent
+        asn_fee:
+          type: string
+          example: "1%"
+          description: fixed or percent
+        service:
+          type: number
+          example: 1
+          description: service id
+        collaterals:
+          type: array
+          example:
+            - Sertifikat Tanah
+            - Sertifikat Rumah
+            - Kios/Lapak
+            - Deposito
+            - BPKB Kendaraan
+        financing_sector:
+          type: array
+          example:
+            - Pendidikan
+            - Konsumtif
+        assurance:
+          type: string
+          example: Jamkrindo
+        status:
+          type: string
+          example: active
   parameters:
     clienttoken:
       required: true

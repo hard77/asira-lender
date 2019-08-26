@@ -49,6 +49,32 @@ func (a *AsiraValidator) CustomValidatorRules() {
 		return nil
 	})
 
+	// bank type. must be a listed bank type id.
+	govalidator.AddCustomRule("bank_type_id", func(field string, rule string, message string, value interface{}) error {
+		var (
+			queryRow *gorm.DB
+			total    int
+		)
+
+		query := `SELECT COUNT(*) as total FROM bank_types WHERE id = ?`
+		queryRow = a.DB.Raw(query, value)
+		queryRow.Row().Scan(&total)
+
+		if total < 1 {
+			return fmt.Errorf(fmt.Sprint("bank type %v is not found.", value), field)
+		}
+		return nil
+	})
+
+	// active / inactive string only.
+	govalidator.AddCustomRule("active_inactive", func(field string, rule string, message string, value interface{}) error {
+		val := value.(string)
+		if strings.ToLower(val) != "active" && strings.ToLower(val) != "inactive" {
+			return fmt.Errorf("The %s field must be contain word: active or inactive", field)
+		}
+		return nil
+	})
+
 	// validator for pagination
 	govalidator.AddCustomRule("asc_desc", func(field string, rule string, message string, value interface{}) error {
 		val := value.(string)
