@@ -1,9 +1,15 @@
 package models
 
 import (
+	"asira_lender/asira"
 	"database/sql"
+	"encoding/json"
+	"fmt"
+	"log"
+	"strconv"
 	"time"
 
+	"github.com/Shopify/sarama"
 	"github.com/jinzhu/gorm/dialects/postgres"
 )
 
@@ -33,6 +39,11 @@ type (
 		Amount      float64 `json:"amount"`
 	}
 	LoanFees []LoanFee
+
+	LoanStatusUpdate struct {
+		ID     uint64 `json:"id"`
+		Status string `json:"status"`
+	}
 )
 
 func (l *Loan) Create() (*Loan, error) {
@@ -73,12 +84,47 @@ func (l *Loan) Approve() error {
 	l.Status = "approved"
 
 	_, err := l.Save()
-	return err
+	if err != nil {
+		return err
+	}
+
+	kafkaProduceLoanStatusUpdate(l)
+
+	return nil
 }
 
 func (l *Loan) Reject() error {
 	l.Status = "rejected"
 
 	_, err := l.Save()
-	return err
+	if err != nil {
+		return err
+	}
+
+	kafkaProduceLoanStatusUpdate(l)
+
+	return nil
+}
+
+func kafkaProduceLoanStatusUpdate(l *Loan) {
+	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics", asira.App.ENV))
+	payload := LoanStatusUpdate{
+		ID:     l.ID,
+		Status: l.Status,
+	}
+	lJsonMarshal, _ := json.Marshal(payload)
+
+	strTime := strconv.Itoa(int(time.Now().Unix()))
+	msg := &sarama.ProducerMessage{
+		Topic: topics["loan_status_updt"].(string),
+		Key:   sarama.StringEncoder(strTime),
+		Value: sarama.StringEncoder(string(lJsonMarshal)),
+	}
+
+	select {
+	case asira.App.Kafka.Producer.Input() <- msg:
+		log.Printf("Produced topic : %s", topics["loan_status_updt"].(string))
+	case err := <-asira.App.Kafka.Producer.Errors():
+		log.Printf("Fail producing topic : %s error : %v", topics["loan_status_updt"].(string), err)
+	}
 }

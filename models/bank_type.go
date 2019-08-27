@@ -12,16 +12,25 @@ type (
 
 func (b *BankType) Create() (*BankType, error) {
 	err := Create(&b)
+
+	KafkaSubmitModel(b, "bank_type")
+
 	return b, err
 }
 
 func (b *BankType) Save() (*BankType, error) {
 	err := Save(&b)
+
+	KafkaSubmitModel(b, "bank_type")
+
 	return b, err
 }
 
 func (b *BankType) Delete() (*BankType, error) {
 	err := Delete(&b)
+
+	KafkaSubmitModel(b, "bank_type_delete")
+
 	return b, err
 }
 
