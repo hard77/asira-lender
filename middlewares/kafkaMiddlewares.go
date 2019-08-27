@@ -102,7 +102,7 @@ func syncBorrowerData(kafkaMessage []byte) (borrower models.Borrower, err error)
 
 	err = json.Unmarshal(marshal, &borrower)
 	if err != nil {
-		return nil, err
+		return borrower, err
 	}
 
 	_, err = borrower.Save()
