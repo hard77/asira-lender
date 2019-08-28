@@ -84,10 +84,10 @@ func Seed() {
 		}
 
 		// seed service products
-		feesMarshal, _ := json.Marshal(map[string]interface{}{
+		feesMarshal, _ := json.Marshal([]interface{}{map[string]interface{}{
 			"description": "Admin Fee",
 			"amount":      2500,
-		})
+		}})
 		collateralMarshal, _ := json.Marshal([]string{"Surat Tanah", "BPKB"})
 		financeMarshal, _ := json.Marshal([]string{"Pendidikan"})
 		serviceProducts := []models.ServiceProduct{
