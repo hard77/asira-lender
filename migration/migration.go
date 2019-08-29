@@ -33,13 +33,16 @@ func Seed() {
 		// seed bank types
 		bankTypes := []models.BankType{
 			models.BankType{
-				Name: "BPD",
+				Name:        "BPD",
+				Description: "Layanan BPD",
 			},
 			models.BankType{
-				Name: "BPR",
+				Name:        "BPR",
+				Description: "Layanan BPR",
 			},
 			models.BankType{
-				Name: "Koperasi",
+				Name:        "Koperasi",
+				Description: "Layanan Koperasi",
 			},
 		}
 		for _, bankType := range bankTypes {
@@ -79,10 +82,10 @@ func Seed() {
 		}
 
 		// seed service products
-		feesMarshal, _ := json.Marshal(map[string]interface{}{
+		feesMarshal, _ := json.Marshal([]interface{}{map[string]interface{}{
 			"description": "Admin Fee",
 			"amount":      2500,
-		})
+		}})
 		collateralMarshal, _ := json.Marshal([]string{"Surat Tanah", "BPKB"})
 		financeMarshal, _ := json.Marshal([]string{"Pendidikan"})
 		serviceProducts := []models.ServiceProduct{
