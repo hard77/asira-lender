@@ -34,15 +34,15 @@ func Seed() {
 		bankTypes := []models.BankType{
 			models.BankType{
 				Name:        "BPD",
-				Description: "Layanan BPD",
+				Description: "Description of BPD bank type",
 			},
 			models.BankType{
 				Name:        "BPR",
-				Description: "Layanan BPR",
+				Description: "Description of BPR bank type",
 			},
 			models.BankType{
 				Name:        "Koperasi",
-				Description: "Layanan Koperasi",
+				Description: "Description of Koperasi bank type",
 			},
 		}
 		for _, bankType := range bankTypes {

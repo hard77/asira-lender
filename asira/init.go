@@ -146,22 +146,33 @@ func (x *Application) KafkaInit() (err error) {
 	}
 
 	conf := sarama.NewConfig()
+
 	conf.ClientID = kafkaConf["client_id"].(string)
 	if kafkaConf["sasl"].(bool) {
 		conf.Net.SASL.Enable = true
 	}
+
 	conf.Net.SASL.User = kafkaConf["user"].(string)
 	conf.Net.SASL.Password = kafkaConf["pass"].(string)
+
 	conf.Producer.Return.Successes = true
 	conf.Producer.Partitioner = sarama.NewRandomPartitioner
 	conf.Producer.RequiredAcks = sarama.WaitForAll
+	conf.Producer.Flush.Frequency = 500 * time.Millisecond
+
 	conf.Consumer.Return.Errors = true
+
 	kafkaHost := strings.Join([]string{kafkaConf["host"].(string), kafkaConf["port"].(string)}, ":")
 
 	x.Kafka.Producer, err = sarama.NewAsyncProducer([]string{kafkaHost}, conf)
 	if err != nil {
 		return err
 	}
+	go func() {
+		for err := range x.Kafka.Producer.Errors() {
+			log.Printf("Failed producer. Error : %v", err)
+		}
+	}()
 
 	x.Kafka.Consumer, err = sarama.NewConsumer([]string{kafkaHost}, conf)
 	if err != nil {

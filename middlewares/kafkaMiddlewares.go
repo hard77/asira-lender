@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
+	"sync"
 
 	"github.com/Shopify/sarama"
 )
@@ -21,6 +23,8 @@ type (
 	}
 )
 
+var wg sync.WaitGroup
+
 func init() {
 	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics.consumes", asira.App.ENV))
 
@@ -28,22 +32,18 @@ func init() {
 	kafka.KafkaProducer = asira.App.Kafka.Producer
 	kafka.KafkaConsumer = asira.App.Kafka.Consumer
 
-	kafka.SetPartitionConsumer(topics["new_loan"].(string))
+	kafka.SetPartitionConsumer(topics["for_lender"].(string))
 
+	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		for {
 			message, err := kafka.Listen()
 			if err != nil {
 				log.Printf("error occured when listening kafka : %v", err)
 			}
 			if message != nil {
-				var brwr models.Borrower
-				brwr, err = syncBorrowerData(message)
-				if err != nil {
-					log.Println(err)
-				}
-
-				err := syncLoanData(message, brwr)
+				err := getEntity(message)
 				if err != nil {
 					log.Println(err)
 				}
@@ -72,39 +72,47 @@ func (k *AsiraKafkaHandlers) Listen() ([]byte, error) {
 	return nil, fmt.Errorf("unidentified error while listening")
 }
 
-func syncLoanData(kafkaMessage []byte, borrower models.Borrower) (err error) {
-	var loan models.Loan
-	err = json.Unmarshal(kafkaMessage, &loan)
-	if err != nil {
-		return err
+func getEntity(kafkaMessage []byte) (err error) {
+	data := strings.SplitN(string(kafkaMessage), ":", 2)
+	switch data[0] {
+	default:
+		return nil
+	case "loan":
+		// create borrower first
+		var borrowerInfo BorrowerInfo
+		err = json.Unmarshal(kafkaMessage, &borrowerInfo)
+		if err != nil {
+			return err
+		}
+
+		marshal, err := json.Marshal(borrowerInfo.Info)
+		if err != nil {
+			return err
+		}
+
+		var borrower models.Borrower
+		err = json.Unmarshal(marshal, &borrower)
+		if err != nil {
+			return err
+		}
+
+		_, err = borrower.Save() // finish borrower create
+		if err != nil {
+			return err
+		}
+
+		// create loan
+		var loan models.Loan
+		err = json.Unmarshal(kafkaMessage, &loan)
+		if err != nil {
+			return err
+		}
+
+		loan.Bank = borrower.Bank
+		loan.OwnerName = borrower.Fullname
+
+		_, err = loan.Save() // finish create loan
+		break
 	}
-
-	loan.Bank = borrower.Bank
-	loan.OwnerName = borrower.Fullname
-
-	// loan.ID = uint64(0) // remove ID so it can create new instead of using id from borrower
-	// loan.Create()
-	_, err = loan.Save()
 	return err
-}
-
-func syncBorrowerData(kafkaMessage []byte) (borrower models.Borrower, err error) {
-	var borrowerInfo BorrowerInfo
-	err = json.Unmarshal(kafkaMessage, &borrowerInfo)
-	if err != nil {
-		return borrower, err
-	}
-
-	marshal, err := json.Marshal(borrowerInfo.Info)
-	if err != nil {
-		return borrower, err
-	}
-
-	err = json.Unmarshal(marshal, &borrower)
-	if err != nil {
-		return borrower, err
-	}
-
-	_, err = borrower.Save()
-	return borrower, err
 }
