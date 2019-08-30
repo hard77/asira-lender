@@ -15,6 +15,9 @@ func AdminGroup(e *echo.Echo) {
 	// OTP
 	g.GET("/info", handlers.AsiraAppInfo)
 
+	// Internals Accounts Management
+	g.POST("/client_config", admin_handlers.CreateInternal)
+
 	// Bank Types
 	g.GET("/bank_types", admin_handlers.BankTypeList)
 	g.POST("/bank_types", admin_handlers.BankTypeNew)
