@@ -12,9 +12,6 @@ development:
     sslmode: disable
     logmode: true
     timezone: Asia/Jakarta
-  clients:
-    admin: Z3JhZGlvczp1bHRpbXVz
-    react: cmVhY3RrZXk6cmVhY3RwYXNz # reactkey:reactpass
   jwt:
     duration: 10080 # in minutes
     jwt_secret: sXQ8jUMpueOvN5P3cdCR
