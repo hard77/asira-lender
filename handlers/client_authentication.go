@@ -5,7 +5,6 @@ import (
 	"asira_lender/models"
 	"encoding/base64"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -23,7 +22,9 @@ func ClientLogin(c echo.Context) error {
 	}
 
 	auth := strings.Split(string(data), ":")
-	log.Printf("amaaa: %v", c.Request().Header.Get("Authorization"))
+	if len(auth) < 2 {
+		return returnInvalidResponse(http.StatusUnauthorized, "", "Invalid Credentials")
+	}
 	type Login struct {
 		Key    string `json:"key"`
 		Secret string `json:"secret"`
