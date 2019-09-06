@@ -1,0 +1,52 @@
+package tests
+
+import (
+	"asira_lender/router"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/gavv/httpexpect"
+)
+
+func TestNewInternal(t *testing.T) {
+	RebuildData()
+
+	api := router.NewRouter()
+
+	server := httptest.NewServer(api)
+
+	defer server.Close()
+
+	e := httpexpect.New(t, server.URL)
+
+	auth := e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+	})
+
+	adminToken := getLenderAdminToken(e, auth)
+
+	auth = e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Bearer "+adminToken)
+	})
+
+	payload := map[string]interface{}{
+		"name": "new client",
+		"key":  "client key",
+		"role": "client",
+	}
+
+	// normal scenario
+	obj := auth.POST("/admin/client_config").WithJSON(payload).
+		Expect().
+		Status(http.StatusCreated).JSON().Object()
+	obj.ContainsKey("name").ValueEqual("name", "new client")
+
+	// test invalid
+	payload = map[string]interface{}{
+		"secret": "fawef",
+	}
+	auth.POST("/admin/client_config").WithJSON(payload).
+		Expect().
+		Status(http.StatusUnprocessableEntity).JSON().Object()
+}

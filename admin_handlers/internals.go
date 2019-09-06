@@ -14,9 +14,10 @@ func CreateInternal(c echo.Context) error {
 	internals := models.Internals{}
 
 	payloadRules := govalidator.MapData{
-		"name": []string{"required"},
-		"key":  []string{"required"},
-		"role": []string{"required"},
+		"name":   []string{"required"},
+		"key":    []string{"required"},
+		"role":   []string{"required"},
+		"secret": []string{"unrequired"},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &internals)
