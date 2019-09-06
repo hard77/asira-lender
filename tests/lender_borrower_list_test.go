@@ -42,3 +42,37 @@ func TestBorrowerGetAll(t *testing.T) {
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("to").ValueEqual("to", 25)
 }
+
+func TestBorrowerGetDetail(t *testing.T) {
+	RebuildData()
+
+	api := router.NewRouter()
+
+	server := httptest.NewServer(api)
+
+	defer server.Close()
+
+	e := httpexpect.New(t, server.URL)
+
+	auth := e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Basic "+clientBasicToken)
+	})
+
+	lendertoken := getLenderLoginToken(e, auth, "1")
+
+	auth = e.Builder(func(req *httpexpect.Request) {
+		req.WithHeader("Authorization", "Bearer "+lendertoken)
+	})
+
+	// valid response of borrowers
+	obj := auth.GET("/lender/borrower_list/1/detail").
+		Expect().
+		Status(http.StatusOK).JSON().Object()
+	obj.ContainsKey("id").ValueEqual("id", 1)
+
+	// invalid response of borrowers
+	obj = auth.GET("/lender/borrower_list/99/detail").
+		Expect().
+		Status(http.StatusInternalServerError).JSON().Object()
+
+}
