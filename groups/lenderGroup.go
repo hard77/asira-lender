@@ -23,4 +23,5 @@ func LenderGroup(e *echo.Echo) {
 	// Borrowers endpoints
 	g.GET("/borrower_list", handlers.LenderBorrowerList)
 	g.GET("/borrower_list/:borrower_id/detail", handlers.LenderBorrowerListDetail)
+	g.GET("/borrower_list/download", handlers.LenderBorrowerListDownload)
 }
