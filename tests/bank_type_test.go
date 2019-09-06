@@ -36,10 +36,10 @@ func TestLenderGetBankTypeList(t *testing.T) {
 		Status(http.StatusOK).JSON().Object()
 
 	// test query found
-	obj := auth.GET("/admin/bank_types").WithQuery("name", "Koperasi").
+	obj := auth.GET("/admin/bank_types").WithQuery("name", "operasi").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
+	obj.ContainsKey("rows").ValueEqual("rows", 25)
 
 	// test query invalid
 	obj = auth.GET("/admin/bank_types").WithQuery("name", "should not found this").
