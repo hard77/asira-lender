@@ -24,7 +24,7 @@ func BankList(c echo.Context) error {
 	name := c.QueryParam("name")
 
 	type Filter struct {
-		Name string `json:"name"`
+		Name string `json:"name" condition:"LIKE"`
 	}
 
 	bank := models.Bank{}
