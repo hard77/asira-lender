@@ -41,7 +41,7 @@ func TestLenderGetBankServiceList(t *testing.T) {
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
 	// test query found with part name
-	obj := auth.GET("/admin/bank_services").WithQuery("name", "pinjaman").
+	obj = auth.GET("/admin/bank_services").WithQuery("name", "pinjaman").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 5)
