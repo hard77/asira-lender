@@ -34,7 +34,7 @@ func TestLenderGetLoanRequestList(t *testing.T) {
 	obj := auth.GET("/lender/loanrequest_list").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
+	obj.ContainsKey("total_data").ValueEqual("total_data", 2)
 
 	// wrong token
 	auth = e.Builder(func(req *httpexpect.Request) {
