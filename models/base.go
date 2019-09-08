@@ -2,12 +2,15 @@ package models
 
 import (
 	"asira_lender/asira"
+	"encoding/json"
 	"fmt"
+	"log"
 	"math"
 	"reflect"
 	"strings"
 	"time"
 
+	"github.com/Shopify/sarama"
 	"github.com/jinzhu/gorm"
 )
 
@@ -139,7 +142,7 @@ func PagedFilterSearch(i interface{}, page int, rows int, orderby string, sort s
 			default:
 				db = db.Where(fmt.Sprintf("%s = ?", refType.Field(x).Tag.Get("json")), field.Interface())
 			case "LIKE":
-				db = db.Where(fmt.Sprintf("%s %s ?", refType.Field(x).Tag.Get("json"), refType.Field(x).Tag.Get("condition")), "%"+field.Interface().(string)+"%")
+				db = db.Where(fmt.Sprintf("LOWER(%s) %s ?", refType.Field(x).Tag.Get("json"), refType.Field(x).Tag.Get("condition")), "%"+strings.ToLower(field.Interface().(string))+"%")
 			case "BETWEEN":
 				if values, ok := field.Interface().(CompareFilter); ok && values.Value1 != "" {
 					db = db.Where(fmt.Sprintf("%s %s ? %s ?", refType.Field(x).Tag.Get("json"), refType.Field(x).Tag.Get("condition"), "AND"), values.Value1, values.Value2)
@@ -189,4 +192,73 @@ func PagedFilterSearch(i interface{}, page int, rows int, orderby string, sort s
 	}
 
 	return result, err
+}
+
+func KafkaSubmitModel(i interface{}, model string) (err error) {
+	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics.produces", asira.App.ENV))
+
+	var payload interface{}
+	payload = kafkaPayloadBuilder(i, model)
+
+	jMarshal, _ := json.Marshal(payload)
+
+	kafkaProducer, err := sarama.NewAsyncProducer([]string{asira.App.Kafka.Host}, asira.App.Kafka.Config)
+	if err != nil {
+		return err
+	}
+	defer kafkaProducer.Close()
+
+	msg := &sarama.ProducerMessage{
+		Topic: topics["for_borrower"].(string),
+		Value: sarama.StringEncoder(strings.TrimSuffix(model, "_delete") + ":" + string(jMarshal)),
+	}
+
+	select {
+	case kafkaProducer.Input() <- msg:
+		log.Printf("Produced topic : %s", topics["for_borrower"].(string))
+	case err := <-kafkaProducer.Errors():
+		log.Printf("Fail producing topic : %s error : %v", topics["for_borrower"].(string), err)
+	}
+
+	return nil
+}
+
+func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
+	switch model {
+	default:
+		if strings.HasSuffix(model, "_delete") {
+			type ModelDelete struct {
+				ID     float64 `json:"id"`
+				Model  string  `json:"model"`
+				Delete bool    `json:"delete"`
+			}
+			var inInterface map[string]interface{}
+			inrec, _ := json.Marshal(i)
+			json.Unmarshal(inrec, &inInterface)
+			if modelID, ok := inInterface["id"].(float64); ok {
+				payload = ModelDelete{
+					ID:     modelID,
+					Model:  strings.TrimSuffix(model, "_delete"),
+					Delete: true,
+				}
+			}
+		} else {
+			payload = i
+		}
+		break
+	case "loan":
+		type LoanStatusUpdate struct {
+			ID     uint64 `json:"id"`
+			Status string `json:"status"`
+		}
+		if e, ok := i.(*Loan); ok {
+			payload = LoanStatusUpdate{
+				ID:     e.ID,
+				Status: e.Status,
+			}
+		}
+		break
+	}
+
+	return payload
 }

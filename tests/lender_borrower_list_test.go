@@ -9,7 +9,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestLenderGetLoanRequestList(t *testing.T) {
+func TestBorrowerGetAll(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -30,23 +30,20 @@ func TestLenderGetLoanRequestList(t *testing.T) {
 		req.WithHeader("Authorization", "Bearer "+lendertoken)
 	})
 
-	// valid response
-	obj := auth.GET("/lender/loanrequest_list").
+	// valid response of borrowers
+	obj := auth.GET("/lender/borrower_list").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
+	obj.ContainsKey("to").ValueEqual("to", 25)
 
-	// wrong token
-	auth = e.Builder(func(req *httpexpect.Request) {
-		req.WithHeader("Authorization", "Bearer thisisinvalidtoken")
-	})
-
-	auth.GET("/lender/loanrequest_list").
+	// valid response of borrowers
+	obj = auth.GET("/lender/borrower_list").WithQuery("fullname", "ame").
 		Expect().
-		Status(http.StatusUnauthorized).JSON().Object()
+		Status(http.StatusOK).JSON().Object()
+	obj.ContainsKey("to").ValueEqual("to", 25)
 }
 
-func TestLenderGetLoanRequestListDetail(t *testing.T) {
+func TestBorrowerGetDetail(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -67,13 +64,15 @@ func TestLenderGetLoanRequestListDetail(t *testing.T) {
 		req.WithHeader("Authorization", "Bearer "+lendertoken)
 	})
 
-	// valid response
-	// auth.GET("/lender/loanrequest_list/1/detail").
-	// 	Expect().
-	// 	Status(http.StatusOK).JSON().Object()
+	// valid response of borrowers
+	obj := auth.GET("/lender/borrower_list/1/detail").
+		Expect().
+		Status(http.StatusOK).JSON().Object()
+	obj.ContainsKey("id").ValueEqual("id", 1)
 
-	// not owned by lender
-	auth.GET("/lender/loanrequest_list/2/detail").
+	// invalid response of borrowers
+	obj = auth.GET("/lender/borrower_list/99/detail").
 		Expect().
 		Status(http.StatusInternalServerError).JSON().Object()
+
 }
