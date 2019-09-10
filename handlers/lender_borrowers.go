@@ -3,10 +3,11 @@ package handlers
 import (
 	"asira_lender/models"
 	"database/sql"
-	"encoding/csv"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/jszwec/csvutil"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -130,68 +131,13 @@ func LenderBorrowerListDownload(c echo.Context) error {
 	})
 
 	// write results to a new csv
-	outfile, _ := os.Create("files/csvdownload.csv")
+	outfile, _ := os.Create("files/brwr" + strconv.Itoa(lenderID) + ".csv")
 	defer outfile.Close()
 
-	writer := csv.NewWriter(outfile)
-	defer writer.Flush()
-	writer.Write([]string{"fullname", "gender", "idcard_number", "idcard_imageid", "taxid_number", "taxid_imageid", "email", "birthday", "birthplace", "last_education", "mother_name", "phone", "married_status", "spouse_name", "spouse_birthday", "spouse_lasteducation", "dependants", "address", "province", "city", "neighbour_association", "hamlets", "home_phonenumber", "subdistrict", "urban_village", "home_ownership", "lived_for", "occupation", "employee_id", "employer_name", "employer_address", "department", "been_workingfor", "direct_superiorname", "employer_number", "monthly_income", "other_income", "other_incomesource", "field_of_work", "related_personname", "related_relation", "related_phonenumber", "related_homenumber", "bank", "bank_account_number"})
-
-	for i, record := range result.Data.([]*models.Borrower) {
-		// skip header row
-		if i == 0 {
-			writer.Write([]string{
-				record.Fullname,
-				record.Gender,
-				record.IdCardNumber,
-				record.IdCardImageID,
-				record.TaxIDnumber,
-				record.TaxIDImageID,
-				record.Email,
-				record.Birthday.Format("2006-01-02"),
-				record.Birthplace,
-				record.LastEducation,
-				record.MotherName,
-				record.Phone,
-				record.MarriedStatus,
-				record.SpouseName,
-				record.SpouseBirthday.Format("2006-01-02"),
-				record.SpouseLastEducation,
-				string(record.Dependants),
-				record.Address,
-				record.Province,
-				record.City,
-				record.NeighbourAssociation,
-				record.Hamlets,
-				record.HomePhoneNumber,
-				record.Subdistrict,
-				record.UrbanVillage,
-				record.HomeOwnership,
-				string(record.LivedFor),
-				record.Occupation,
-				record.EmployeeID,
-				record.EmployerName,
-				record.EmployerAddress,
-				record.Department,
-				string(record.BeenWorkingFor),
-				record.DirectSuperior,
-				record.EmployerNumber,
-				string(record.MonthlyIncome),
-				string(record.OtherIncome),
-				record.OtherIncomeSource,
-				record.FieldOfWork,
-				record.RelatedPersonName,
-				record.RelatedRelation,
-				record.RelatedPhoneNumber,
-				record.RelatedHomePhone,
-				record.RelatedAddress,
-				record.BankAccountNumber,
-			})
-			continue
-		}
+	csv, err := csvutil.Marshal(result)
+	if err != nil {
+		return returnInvalidResponse(http.StatusInternalServerError, err, "Error generating csv")
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "Download",
-	})
+	return c.JSON(http.StatusOK, csv)
 }
