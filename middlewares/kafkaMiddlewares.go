@@ -119,7 +119,7 @@ func processMessage(kafkaMessage []byte) (err error) {
 	case "internal_role":
 		{
 			//create internal roles
-			var iroles models.Internal_Roles
+			var iroles models.InternalRoles
 			var a map[string]interface{}
 
 			err = json.Unmarshal([]byte(data[1]), &a)
