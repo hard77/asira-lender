@@ -181,6 +181,14 @@ func Seed() {
 		for _, lender := range lenders {
 			lender.Create()
 		}
+
+		roles := models.Internal_Roles{
+			Name:        "Admin",
+			System:      "Core",
+			Description: "Role Admin",
+			Status:      true,
+		}
+		roles.Create()
 	}
 }
 
@@ -569,6 +577,7 @@ func Truncate(tableList []string) (err error) {
 				"borrowers",
 				"loans",
 				"images",
+				"internal_roles",
 			}
 		}
 
