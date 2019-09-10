@@ -29,21 +29,3 @@ func (b *Internal_Roles) FindbyID(id int) (*Internal_Roles, error) {
 	err := FindbyID(&b, id)
 	return b, err
 }
-
-func (b *Internal_Roles) FilterSearchSingle(filter interface{}) (*Internal_Roles, error) {
-	err := FilterSearchSingle(&b, filter)
-	return b, err
-}
-
-func (b *Internal_Roles) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
-	internal := []Internal_Roles{}
-	result, err = PagedFilterSearch(&internal, page, rows, orderby, sort, filter)
-
-	return result, err
-}
-
-func (b *Internal_Roles) FilterSearch(filter interface{}) (SearchResult, error) {
-	internal := []Internal_Roles{}
-	result, err := FilterSearch(&internal, filter)
-	return result, err
-}

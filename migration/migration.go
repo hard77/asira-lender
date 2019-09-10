@@ -181,14 +181,6 @@ func Seed() {
 		for _, lender := range lenders {
 			lender.Create()
 		}
-
-		roles := models.Internal_Roles{
-			Name:        "Admin",
-			System:      "Core",
-			Description: "Role Admin",
-			Status:      true,
-		}
-		roles.Create()
 	}
 }
 
