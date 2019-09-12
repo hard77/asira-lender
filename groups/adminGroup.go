@@ -49,4 +49,7 @@ func AdminGroup(e *echo.Echo) {
 	g.PATCH("/service_products/:product_id", admin_handlers.BankServiceProductPatch)
 	g.DELETE("/service_products/:product_id", admin_handlers.BankServiceProductDelete)
 
+	// Role
+	g.GET("/internal_role", admin_handlers.GetAllRole)
+	g.GET("/internal_role/:role_id", admin_handlers.RoleGetDetails)
 }
