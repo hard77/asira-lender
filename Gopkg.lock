@@ -187,14 +187,6 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:d3a91d0b778fc5ace0d7df4d688ec86ae54d1ce2b834d655c4cd64e58ec98baf"
-  name = "github.com/jszwec/csvutil"
-  packages = ["."]
-  pruneopts = ""
-  revision = "459861b905123825bd0412e151304689031f3c09"
-  version = "v1.2.1"
-
-[[projects]]
   digest = "1:c12a939ca51eec3497f71bf2fd2a3fbafed9fafa420d55e90365ecd8c9c0d3de"
   name = "github.com/klauspost/compress"
   packages = [
@@ -637,7 +629,6 @@
     "github.com/google/uuid",
     "github.com/jinzhu/gorm",
     "github.com/jinzhu/gorm/dialects/postgres",
-    "github.com/jszwec/csvutil",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
     "github.com/pressly/goose",

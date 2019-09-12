@@ -3,11 +3,11 @@ package handlers
 import (
 	"asira_lender/models"
 	"database/sql"
+	"encoding/csv"
+	"encoding/json"
 	"net/http"
 	"os"
 	"strconv"
-
-	"github.com/jszwec/csvutil"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -133,11 +133,24 @@ func LenderBorrowerListDownload(c echo.Context) error {
 	// write results to a new csv
 	outfile, _ := os.Create("files/brwr" + strconv.Itoa(lenderID) + ".csv")
 	defer outfile.Close()
+	csvWriter := csv.NewWriter(outfile)
+	defer csvWriter.Flush()
 
-	csv, err := csvutil.Marshal(result)
-	if err != nil {
-		return returnInvalidResponse(http.StatusInternalServerError, err, "Error generating csv")
+	switch result.Data.(type) {
+	case []interface{}:
+		for _, v := range result.Data.([]interface{}) {
+			var inInterface map[string]interface{}
+			inrec, _ := json.Marshal(v)
+			json.Unmarshal(inrec, &inInterface)
+
+			w := make([]string, 0, len(inInterface))
+			for _, x := range inInterface {
+				w = append(w, x.(string))
+			}
+
+			csvWriter.Write(w)
+		}
 	}
 
-	return c.JSON(http.StatusOK, csv)
+	return c.JSON(http.StatusOK, "Done")
 }
