@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
@@ -137,6 +138,9 @@ func LenderLoanApproveReject(c echo.Context) error {
 	default:
 		return returnInvalidResponse(http.StatusBadRequest, "", "not allowed status")
 	case "approve":
+		if disburseDate := c.QueryParam("disburse_date"); len(disburseDate) > 0 {
+			result.DisburseDate, _ = time.Parse("2006-01-02", disburseDate)
+		}
 		result.Approve()
 	case "reject":
 		result.Reject()
