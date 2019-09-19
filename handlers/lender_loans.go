@@ -117,7 +117,7 @@ func LenderLoanApproveReject(c echo.Context) error {
 	}
 
 	loan := models.Loan{}
-	result, err := loan.FilterSearchSingle(&Filter{
+	_, err := loan.FilterSearchSingle(&Filter{
 		Bank: sql.NullInt64{
 			Int64: int64(lenderID),
 			Valid: true,
@@ -129,7 +129,7 @@ func LenderLoanApproveReject(c echo.Context) error {
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "query result error")
 	}
-	if result.ID == 0 {
+	if loan.ID == 0 {
 		return returnInvalidResponse(http.StatusNotFound, "", "not found")
 	}
 
@@ -139,12 +139,12 @@ func LenderLoanApproveReject(c echo.Context) error {
 		return returnInvalidResponse(http.StatusBadRequest, "", "not allowed status")
 	case "approve":
 		if disburseDate := c.QueryParam("disburse_date"); len(disburseDate) > 0 {
-			result.DisburseDate, _ = time.Parse("2006-01-02", disburseDate)
+			loan.DisburseDate, _ = time.Parse("2006-01-02", disburseDate)
 		}
-		result.Approve()
+		loan.Approve()
 	case "reject":
-		result.Reject()
+		loan.Reject()
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("loan %v is %v", loan_id, result.Status)})
+	return c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("loan %v is %v", loan_id, loan.Status)})
 }
