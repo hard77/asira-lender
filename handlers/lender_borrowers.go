@@ -3,14 +3,68 @@ package handlers
 import (
 	"asira_lender/models"
 	"database/sql"
-	"encoding/csv"
 	"encoding/json"
 	"net/http"
-	"os"
 	"strconv"
+	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/jszwec/csvutil"
 	"github.com/labstack/echo"
+)
+
+type (
+	BorrowerCSV struct {
+		models.BaseModel
+		DeletedTime          time.Time `json:"deleted_time"`
+		Status               string    `json:"status"`
+		Fullname             string    `json:"fullname"`
+		Gender               string    `json:"gender"`
+		IdCardNumber         string    `json:"idcard_number"`
+		IdCardImageID        string    `json:"idcard_imageid"`
+		TaxIDnumber          string    `json:"taxid_number"`
+		TaxIDImageID         string    `json:"taxid_imageid"`
+		Email                string    `json:"email"`
+		Birthday             time.Time `json:"birthday"`
+		Birthplace           string    `json:"birthplace"`
+		LastEducation        string    `json:"last_education"`
+		MotherName           string    `json:"mother_name"`
+		Phone                string    `json:"phone"`
+		MarriedStatus        string    `json:"marriage_status"`
+		SpouseName           string    `json:"spouse_name"`
+		SpouseBirthday       time.Time `json:"spouse_birthday"`
+		SpouseLastEducation  string    `json:"spouse_lasteducation"`
+		Dependants           int       `json:"dependants"`
+		Address              string    `json:"address"`
+		Province             string    `json:"province"`
+		City                 string    `json:"city"`
+		NeighbourAssociation string    `json:"neighbour_association"`
+		Hamlets              string    `json:"hamlets"`
+		HomePhoneNumber      string    `json:"home_phonenumber"`
+		Subdistrict          string    `json:"subdistrict"`
+		UrbanVillage         string    `json:"urban_village"`
+		HomeOwnership        string    `json:"home_ownership"`
+		LivedFor             int       `json:"lived_for"`
+		Occupation           string    `json:"occupation"`
+		EmployeeID           string    `json:"employee_id"`
+		EmployerName         string    `json:"employer_name"`
+		EmployerAddress      string    `json:"employer_address"`
+		Department           string    `json:"department"`
+		BeenWorkingFor       int       `json:"been_workingfor"`
+		DirectSuperior       string    `json:"direct_superiorname"`
+		EmployerNumber       string    `json:"employer_number"`
+		MonthlyIncome        int       `json:"monthly_income"`
+		OtherIncome          int       `json:"other_income"`
+		OtherIncomeSource    string    `json:"other_incomesource"`
+		FieldOfWork          string    `json:"field_of_work"`
+		RelatedPersonName    string    `json:"related_personname"`
+		RelatedRelation      string    `json:"related_relation"`
+		RelatedPhoneNumber   string    `json:"related_phonenumber"`
+		RelatedHomePhone     string    `json:"related_homenumber"`
+		RelatedAddress       string    `json:"related_address"`
+		Bank                 int64
+		BankAccountNumber    string `json:"bank_accountnumber"`
+	}
 )
 
 func LenderBorrowerList(c echo.Context) error {
@@ -130,27 +184,25 @@ func LenderBorrowerListDownload(c echo.Context) error {
 		ID:       id,
 	})
 
-	// write results to a new csv
-	outfile, _ := os.Create("files/brwr" + strconv.Itoa(lenderID) + ".csv")
-	defer outfile.Close()
-	csvWriter := csv.NewWriter(outfile)
-	defer csvWriter.Flush()
+	var data []BorrowerCSV
+	data = mapnewBorrowerStruct(*result.Data.(*[]models.Borrower))
 
-	switch result.Data.(type) {
-	case []interface{}:
-		for _, v := range result.Data.([]interface{}) {
-			var inInterface map[string]interface{}
-			inrec, _ := json.Marshal(v)
-			json.Unmarshal(inrec, &inInterface)
-
-			w := make([]string, 0, len(inInterface))
-			for _, x := range inInterface {
-				w = append(w, x.(string))
-			}
-
-			csvWriter.Write(w)
-		}
+	b, err := csvutil.Marshal(data)
+	if err != nil {
+		return err
 	}
 
-	return c.JSON(http.StatusOK, "Done")
+	return c.JSON(http.StatusOK, string(b))
+}
+
+func mapnewBorrowerStruct(m []models.Borrower) []BorrowerCSV {
+	var r []BorrowerCSV
+	for _, v := range m {
+		var unmarsh BorrowerCSV
+		b, _ := json.Marshal(v)
+		json.Unmarshal(b, &unmarsh)
+		unmarsh.Bank = v.Bank.Int64
+		r = append(r, unmarsh)
+	}
+	return r
 }
