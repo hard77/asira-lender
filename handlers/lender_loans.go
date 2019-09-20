@@ -138,10 +138,11 @@ func LenderLoanApproveReject(c echo.Context) error {
 	default:
 		return returnInvalidResponse(http.StatusBadRequest, "", "not allowed status")
 	case "approve":
-		if disburseDate := c.QueryParam("disburse_date"); len(disburseDate) > 0 {
-			loan.DisburseDate, _ = time.Parse("2006-01-02", disburseDate)
+		disburseDate, err := time.Parse("2006-01-02", c.QueryParam("disburse_date"))
+		if err != nil {
+			return returnInvalidResponse(http.StatusBadRequest, "", "error parsing disburse date")
 		}
-		loan.Approve()
+		loan.Approve(disburseDate)
 	case "reject":
 		loan.Reject()
 	}

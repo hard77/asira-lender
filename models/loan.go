@@ -75,8 +75,9 @@ func (l *Loan) PagedFilterSearch(page int, rows int, orderby string, sort string
 	return result, err
 }
 
-func (l *Loan) Approve() error {
+func (l *Loan) Approve(disburseDate time.Time) error {
 	l.Status = "approved"
+	l.DisburseDate = disburseDate
 
 	_, err := l.Save()
 	if err != nil {
