@@ -141,7 +141,7 @@ func LenderLoanApproveReject(c echo.Context) error {
 	}
 
 	loan := models.Loan{}
-	result, err := loan.FilterSearchSingle(&Filter{
+	_, err := loan.FilterSearchSingle(&Filter{
 		Bank: sql.NullInt64{
 			Int64: int64(lenderID),
 			Valid: true,
@@ -153,7 +153,7 @@ func LenderLoanApproveReject(c echo.Context) error {
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "query result error")
 	}
-	if result.ID == 0 {
+	if loan.ID == 0 {
 		return returnInvalidResponse(http.StatusNotFound, "", "not found")
 	}
 
@@ -162,12 +162,16 @@ func LenderLoanApproveReject(c echo.Context) error {
 	default:
 		return returnInvalidResponse(http.StatusBadRequest, "", "not allowed status")
 	case "approve":
-		result.Approve()
+		disburseDate, err := time.Parse("2006-01-02", c.QueryParam("disburse_date"))
+		if err != nil {
+			return returnInvalidResponse(http.StatusBadRequest, "", "error parsing disburse date")
+		}
+		loan.Approve(disburseDate)
 	case "reject":
-		result.Reject()
+		loan.Reject()
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("loan %v is %v", loan_id, result.Status)})
+	return c.JSON(http.StatusOK, map[string]interface{}{"message": fmt.Sprintf("loan %v is %v", loan_id, loan.Status)})
 }
 
 func LenderLoanRequestListDownload(c echo.Context) error {
