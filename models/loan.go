@@ -26,6 +26,7 @@ type (
 		Service          uint64         `json:"service" gorm:"column:service;foreignkey"`
 		LoanIntention    string         `json:"loan_intention" gorm:"column:loan_intention;type:varchar(255);not null"`
 		IntentionDetails string         `json:"intention_details" gorm:"column:intention_details;type:text;not null"`
+		DisburseDate     time.Time      `json:"disburse_date" gorm:"column:disburse_date"`
 	}
 
 	LoanFee struct { // temporary hardcoded
