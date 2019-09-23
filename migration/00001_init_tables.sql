@@ -149,6 +149,8 @@ CREATE TABLE "loans" (
     "owner" bigint,
     "owner_name" varchar(255),
     "bank" bigint,
+    "service" bigint,
+    "product" bigint,
     "status" varchar(255) DEFAULT  ('processing'),
     "loan_amount" FLOAT NOT NULL,
     "installment" int NOT NULL,
