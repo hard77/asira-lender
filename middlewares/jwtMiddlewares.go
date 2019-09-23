@@ -22,8 +22,8 @@ func SetClientJWTmiddlewares(g *echo.Group, role string) {
 	case "client":
 		g.Use(validateJWTclient)
 		break
-	case "borrower":
-		g.Use(validateJWTborrower)
+	case "lender":
+		g.Use(validateJWTlender)
 		break
 	}
 }
@@ -62,38 +62,17 @@ func validateJWTclient(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func validateJWTborrower(next echo.HandlerFunc) echo.HandlerFunc {
+func validateJWTlender(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user")
 		token := user.(*jwt.Token)
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
-			if claims["role"] == "borrower" {
-				return next(c)
-			} else if claims["role"] == "unverified_borrower" {
-				return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "account need to verify otp"))
-			} else {
-				return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "invalid role"))
-			}
-		}
-
-		return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "invalid token"))
-	}
-}
-
-func validateJWTunverifiedBorrower(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		user := c.Get("user")
-		token := user.(*jwt.Token)
-
-		if claims, ok := token.Claims.(jwt.MapClaims); ok {
-			if claims["role"] == "unverified_borrower" {
+			if claims["role"] == "lender" {
 				return next(c)
 			} else {
 				return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "invalid role"))
 			}
-
-			return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "invalid token"))
 		}
 
 		return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "invalid token"))

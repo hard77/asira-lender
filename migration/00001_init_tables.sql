@@ -44,6 +44,8 @@ CREATE TABLE "banks" (
     "products" jsonb DEFAULT '[]',
     "pic" varchar(255),
     "phone" varchar(255),
+    "adminfee_setup" varchar(255),
+    "convfee_setup" varchar(255),
     "username" varchar(255) NOT NULL UNIQUE,
     "password" text NOT NULL,
     FOREIGN KEY ("type") REFERENCES bank_types(id),
@@ -149,6 +151,8 @@ CREATE TABLE "loans" (
     "owner" bigint,
     "owner_name" varchar(255),
     "bank" bigint,
+    "service" bigint,
+    "product" bigint,
     "status" varchar(255) DEFAULT  ('processing'),
     "loan_amount" FLOAT NOT NULL,
     "installment" int NOT NULL,
@@ -159,11 +163,22 @@ CREATE TABLE "loans" (
     "layaway_plan" FLOAT NOT NULL,
     "loan_intention" varchar(255) NOT NULL,
     "intention_details" text NOT NULL,
+    "disburse_date" timestamptz,
     FOREIGN KEY ("owner") REFERENCES borrowers(id),
     FOREIGN KEY ("bank") REFERENCES banks(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
+CREATE TABLE "internal_roles" (
+    "id" bigserial,
+    "name" varchar(255) NOT NULL,
+    "system" varchar(255) NOT NULL,
+    "description" text,
+    "status" BOOLEAN,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
 DROP TABLE IF EXISTS "service_products" CASCADE;
@@ -174,3 +189,4 @@ DROP TABLE IF EXISTS "borrowers" CASCADE;
 DROP TABLE IF EXISTS "loans" CASCADE;
 DROP TABLE IF EXISTS "images" CASCADE;
 DROP TABLE IF EXISTS "internals" CASCADE;
+DROP TABLE IF EXISTS "internal_roles" CASCADE;

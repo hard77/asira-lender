@@ -152,30 +152,34 @@ func Seed() {
 		jBankProducts, _ := json.Marshal(rawBankProducts)
 		lenders := []models.Bank{
 			models.Bank{
-				Name:     "Bank A",
-				Type:     1,
-				Address:  "Bank A Address",
-				Province: "Province A",
-				City:     "City A",
-				Services: postgres.Jsonb{jBankServices},
-				Products: postgres.Jsonb{jBankProducts},
-				PIC:      "Bank A PIC",
-				Phone:    "081234567890",
-				Username: "Banktoib",
-				Password: "password",
+				Name:                "Bank A",
+				Type:                1,
+				Address:             "Bank A Address",
+				Province:            "Province A",
+				City:                "City A",
+				Services:            postgres.Jsonb{jBankServices},
+				Products:            postgres.Jsonb{jBankProducts},
+				AdminFeeSetup:       "potong_plafon",
+				ConvinienceFeeSetup: "potong_plafon",
+				PIC:                 "Bank A PIC",
+				Phone:               "081234567890",
+				Username:            "Banktoib",
+				Password:            "password",
 			},
 			models.Bank{
-				Name:     "Bank B",
-				Type:     2,
-				Address:  "Bank B Address",
-				Province: "Province B",
-				City:     "City B",
-				Services: postgres.Jsonb{jBankServices},
-				Products: postgres.Jsonb{jBankProducts},
-				PIC:      "Bank B PIC",
-				Phone:    "081234567891",
-				Username: "Banktoic",
-				Password: "password",
+				Name:                "Bank B",
+				Type:                2,
+				Address:             "Bank B Address",
+				Province:            "Province B",
+				City:                "City B",
+				Services:            postgres.Jsonb{jBankServices},
+				Products:            postgres.Jsonb{jBankProducts},
+				AdminFeeSetup:       "potong_plafon",
+				ConvinienceFeeSetup: "potong_plafon",
+				PIC:                 "Bank B PIC",
+				Phone:               "081234567891",
+				Username:            "Banktoic",
+				Password:            "password",
 			},
 		}
 		for _, lender := range lenders {
@@ -189,6 +193,25 @@ func TestSeed() {
 	defer seeder.Commit()
 
 	if asira.App.ENV == "development" {
+		// seed internals
+		internals := []models.Internals{
+			models.Internals{
+				Name:   "admin",
+				Key:    "adminkey",
+				Role:   "admin",
+				Secret: "adminsecret",
+			},
+			models.Internals{
+				Name:   "bank dashboard",
+				Key:    "reactkey",
+				Role:   "client",
+				Secret: "reactsecret",
+			},
+		}
+		for _, internal := range internals {
+			internal.Create()
+		}
+
 		// seed images
 		file, _ := os.Open("migration/image_dummy.txt")
 		defer file.Close()
@@ -303,30 +326,34 @@ func TestSeed() {
 		jBankProducts, _ := json.Marshal(rawBankProducts)
 		lenders := []models.Bank{
 			models.Bank{
-				Name:     "Bank A",
-				Type:     1,
-				Address:  "Bank A Address",
-				Province: "Province A",
-				City:     "City A",
-				Services: postgres.Jsonb{jBankServices},
-				Products: postgres.Jsonb{jBankProducts},
-				PIC:      "Bank A PIC",
-				Phone:    "081234567890",
-				Username: "Banktoib",
-				Password: "password",
+				Name:                "Bank A",
+				Type:                1,
+				Address:             "Bank A Address",
+				Province:            "Province A",
+				City:                "City A",
+				Services:            postgres.Jsonb{jBankServices},
+				Products:            postgres.Jsonb{jBankProducts},
+				PIC:                 "Bank A PIC",
+				Phone:               "081234567890",
+				AdminFeeSetup:       "potong_plafon",
+				ConvinienceFeeSetup: "potong_plafon",
+				Username:            "Banktoib",
+				Password:            "password",
 			},
 			models.Bank{
-				Name:     "Bank B",
-				Type:     2,
-				Address:  "Bank B Address",
-				Province: "Province B",
-				City:     "City B",
-				Services: postgres.Jsonb{jBankServices},
-				Products: postgres.Jsonb{jBankProducts},
-				PIC:      "Bank B PIC",
-				Phone:    "081234567891",
-				Username: "Banktoic",
-				Password: "password",
+				Name:                "Bank B",
+				Type:                2,
+				Address:             "Bank B Address",
+				Province:            "Province B",
+				City:                "City B",
+				Services:            postgres.Jsonb{jBankServices},
+				Products:            postgres.Jsonb{jBankProducts},
+				PIC:                 "Bank B PIC",
+				Phone:               "081234567891",
+				AdminFeeSetup:       "beban_plafon",
+				ConvinienceFeeSetup: "beban_plafon",
+				Username:            "Banktoic",
+				Password:            "password",
 			},
 		}
 		for _, lender := range lenders {
@@ -569,6 +596,7 @@ func Truncate(tableList []string) (err error) {
 				"borrowers",
 				"loans",
 				"images",
+				"internal_roles",
 			}
 		}
 

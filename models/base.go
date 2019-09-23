@@ -188,7 +188,7 @@ func PagedFilterSearch(i interface{}, page int, rows int, orderby string, sort s
 		LastPage:    lastPage,
 		From:        offset + 1,
 		To:          offset + rows,
-		Data:        &i,
+		Data:        i,
 	}
 
 	return result, err
@@ -248,13 +248,15 @@ func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
 		break
 	case "loan":
 		type LoanStatusUpdate struct {
-			ID     uint64 `json:"id"`
-			Status string `json:"status"`
+			ID           uint64    `json:"id"`
+			Status       string    `json:"status"`
+			DisburseDate time.Time `json:"disburse_date"`
 		}
 		if e, ok := i.(*Loan); ok {
 			payload = LoanStatusUpdate{
-				ID:     e.ID,
-				Status: e.Status,
+				ID:           e.ID,
+				Status:       e.Status,
+				DisburseDate: e.DisburseDate,
 			}
 		}
 		break

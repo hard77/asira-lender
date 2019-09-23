@@ -47,15 +47,17 @@ func BankNew(c echo.Context) error {
 	bank := models.Bank{}
 
 	payloadRules := govalidator.MapData{
-		"name":     []string{"required"},
-		"type":     []string{"bank_type_id"},
-		"address":  []string{"required"},
-		"province": []string{"required"},
-		"city":     []string{"required"},
-		"services": []string{},
-		"products": []string{},
-		"pic":      []string{"required"},
-		"phone":    []string{"required"},
+		"name":           []string{"required"},
+		"type":           []string{"bank_type_id"},
+		"address":        []string{"required"},
+		"province":       []string{"required"},
+		"city":           []string{"required"},
+		"services":       []string{},
+		"products":       []string{},
+		"pic":            []string{"required"},
+		"phone":          []string{"required"},
+		"adminfee_setup": []string{"required"},
+		"convfee_setup":  []string{"required"},
 		// "username": []string{"required", "unique:banks,username"},
 		// "password": []string{"required"},
 	}
@@ -103,15 +105,17 @@ func BankPatch(c echo.Context) error {
 	tempPassword := result.Password
 
 	payloadRules := govalidator.MapData{
-		"name":     []string{},
-		"type":     []string{"bank_type_id"},
-		"address":  []string{},
-		"province": []string{},
-		"city":     []string{},
-		"services": []string{},
-		"products": []string{},
-		"pic":      []string{},
-		"phone":    []string{},
+		"name":           []string{},
+		"type":           []string{"bank_type_id"},
+		"address":        []string{},
+		"province":       []string{},
+		"city":           []string{},
+		"services":       []string{},
+		"products":       []string{},
+		"pic":            []string{},
+		"phone":          []string{},
+		"adminfee_setup": []string{},
+		"convfee_setup":  []string{},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &result)
