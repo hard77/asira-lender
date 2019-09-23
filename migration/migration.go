@@ -596,6 +596,7 @@ func Truncate(tableList []string) (err error) {
 				"borrowers",
 				"loans",
 				"images",
+				"internal_roles",
 			}
 		}
 
