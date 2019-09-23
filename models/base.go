@@ -188,7 +188,7 @@ func PagedFilterSearch(i interface{}, page int, rows int, orderby string, sort s
 		LastPage:    lastPage,
 		From:        offset + 1,
 		To:          offset + rows,
-		Data:        &i,
+		Data:        i,
 	}
 
 	return result, err
