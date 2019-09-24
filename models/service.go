@@ -1,8 +1,10 @@
 package models
 
+import "gitlab.com/asira-ayannah/basemodel"
+
 type (
 	Service struct {
-		BaseModel
+		basemodel.BaseModel
 		Name string `json:"name" gorm:"column:name;type:varchar(255)"`
 	}
 )

@@ -34,7 +34,7 @@ func RoleGetDetails(c echo.Context) error {
 	Iroles := models.InternalRoles{}
 
 	IrolesID, _ := strconv.Atoi(c.Param("role_id"))
-	_, err := Iroles.FindbyID(IrolesID)
+	err := Iroles.FindbyID(IrolesID)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, "Role ID tidak ditemukan")
 	}

@@ -21,12 +21,12 @@ func LenderProfile(c echo.Context) error {
 	lenderModel := models.Bank{}
 
 	lenderID, _ := strconv.Atoi(claims["jti"].(string))
-	lender, err := lenderModel.FindbyID(lenderID)
+	err := lenderModel.FindbyID(lenderID)
 	if err != nil {
 		return returnInvalidResponse(http.StatusForbidden, err, "unauthorized")
 	}
 
-	return c.JSON(http.StatusOK, lender)
+	return c.JSON(http.StatusOK, lenderModel)
 }
 
 func LenderProfileEdit(c echo.Context) error {
@@ -39,7 +39,7 @@ func LenderProfileEdit(c echo.Context) error {
 	lenderModel := models.Bank{}
 
 	lenderID, _ := strconv.Atoi(claims["jti"].(string))
-	lender, err := lenderModel.FindbyID(lenderID)
+	err := lenderModel.FindbyID(lenderID)
 	if err != nil {
 		return returnInvalidResponse(http.StatusForbidden, err, "unauthorized")
 	}
@@ -55,15 +55,15 @@ func LenderProfileEdit(c echo.Context) error {
 		"phone":    []string{"id_phonenumber"},
 	}
 
-	validate := validateRequestPayload(c, payloadRules, &lender)
+	validate := validateRequestPayload(c, payloadRules, &lenderModel)
 	if validate != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	_, err = lender.Save()
+	err = lenderModel.Save()
 	if err != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, err, "error saving profile")
 	}
 
-	return c.JSON(http.StatusOK, lender)
+	return c.JSON(http.StatusOK, lenderModel)
 }
