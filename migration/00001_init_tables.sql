@@ -179,6 +179,17 @@ CREATE TABLE "internal_roles" (
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
+
+CREATE TABLE "users" (
+    "id" bigserial,
+    "role_id" bigint,
+    "username" varchar(255) NOT NULL,
+    "password" varchar(255) NOT NULL,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("role_id") REFERENCES internal_roles(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
 DROP TABLE IF EXISTS "service_products" CASCADE;
@@ -190,3 +201,4 @@ DROP TABLE IF EXISTS "loans" CASCADE;
 DROP TABLE IF EXISTS "images" CASCADE;
 DROP TABLE IF EXISTS "internals" CASCADE;
 DROP TABLE IF EXISTS "internal_roles" CASCADE;
+DROP TABLE IF EXISTS "users" CASCADE;
