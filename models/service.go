@@ -35,7 +35,7 @@ func (s *Service) FindbyID(id int) error {
 	return err
 }
 
-func (s *Service) PagedFilterSearch(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
+func (s *Service) PagedFindFilter(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	services := []Service{}
 	result, err = basemodel.PagedFindFilter(&services, page, rows, order, sort, filter)
 

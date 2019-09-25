@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/labstack/echo"
 	"github.com/thedevsaddam/govalidator"
@@ -17,8 +18,8 @@ func BankList(c echo.Context) error {
 	// pagination parameters
 	rows, err := strconv.Atoi(c.QueryParam("rows"))
 	page, err := strconv.Atoi(c.QueryParam("page"))
-	orderby := c.QueryParam("orderby")
-	sort := c.QueryParam("sort")
+	order := strings.Split(c.QueryParam("orderby"), ",")
+	sort := strings.Split(c.QueryParam("sort"), ",")
 
 	// filters
 	name := c.QueryParam("name")
@@ -30,7 +31,7 @@ func BankList(c echo.Context) error {
 	}
 
 	bank := models.Bank{}
-	result, err := bank.PagedFilterSearch(page, rows, orderby, sort, &Filter{
+	result, err := bank.PagedFindFilter(page, rows, order, sort, &Filter{
 		ID:   id,
 		Name: name,
 	})
@@ -58,7 +59,7 @@ func BankNew(c echo.Context) error {
 		"phone":          []string{"required"},
 		"adminfee_setup": []string{"required"},
 		"convfee_setup":  []string{"required"},
-		// "username": []string{"required", "unique:banks,username"},
+		// "username":       []string{"required", "unique:banks,username"},
 		// "password": []string{"required"},
 	}
 

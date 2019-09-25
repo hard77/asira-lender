@@ -59,7 +59,6 @@ CREATE TABLE "services" (
     "status" varchar(255),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
-COMMENT ON COLUMN "bank_services"."status" IS '0 = inactive, 1 = active';
 
 CREATE TABLE "bank_services" (
     "id" bigserial,
@@ -72,8 +71,9 @@ CREATE TABLE "bank_services" (
     "status" varchar(255),
     FOREIGN KEY ("service_id") REFERENCES services(id),
     FOREIGN KEY ("bank_id") REFERENCES banks(id),
-    FOREIGN KEY ("image_id") REFERENCES images(id)
-)
+    FOREIGN KEY ("image_id") REFERENCES images(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
 
 CREATE TABLE "products" (
     "id" bigserial,
@@ -83,7 +83,7 @@ CREATE TABLE "products" (
     "name" varchar(255),
     "service_id" bigint,
     "status" varchar(255),
-    FOREIGN KEY ("service") REFERENCES bank_services(id),
+    FOREIGN KEY ("service_id") REFERENCES services(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -106,8 +106,9 @@ CREATE TABLE "bank_products" (
     "assurance" varchar(255),
     "status" varchar(255),
     FOREIGN KEY ("product_id") REFERENCES products(id),
-    FOREIGN KEY ("bank_service_id") REFERENCES bank_services(id)
-)
+    FOREIGN KEY ("bank_service_id") REFERENCES bank_services(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
 
 CREATE TABLE "borrowers" (
     "id" bigserial,

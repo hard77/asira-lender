@@ -10,7 +10,6 @@ type (
 	BankService struct {
 		basemodel.BaseModel
 		DeletedTime time.Time `json:"deleted_time" gorm:"column:deleted_time"`
-		Name        string    `json:"name" gorm:"column:name"`
 		ServiceID   uint64    `json:"service_id gorm:"service_id"`
 		BankID      uint64    `json:"bank_id gorm:"bank_id"`
 		ImageID     int       `json:"image_id" gorm:"column:image_id"`
@@ -56,7 +55,7 @@ func (model *BankService) FindbyID(id int) error {
 	return err
 }
 
-func (model *BankService) PagedFilterSearch(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
+func (model *BankService) PagedFindFilter(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	bank_type := []BankService{}
 	result, err = basemodel.PagedFindFilter(&bank_type, page, rows, order, sort, filter)
 

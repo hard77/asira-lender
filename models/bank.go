@@ -28,10 +28,10 @@ type (
 
 // gorm callback hook
 func (model *Bank) BeforeCreate() (err error) {
-	if len(b.Username) < 1 {
+	if len(model.Username) < 1 {
 		model.Username = uuid.New().String()
 	}
-	if len(b.Username) < 1 {
+	if len(model.Username) < 1 {
 		model.Password = uuid.New().String()
 	}
 	passwordByte, err := bcrypt.GenerateFromPassword([]byte(model.Password), bcrypt.DefaultCost)
@@ -77,11 +77,11 @@ func (model *Bank) Delete() error {
 }
 
 func (model *Bank) FindbyID(id int) error {
-	err := basemodel.FindbyID(&b, id)
+	err := basemodel.FindbyID(&model, id)
 	return err
 }
 
-func (model *Bank) PagedFilterSearch(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
+func (model *Bank) PagedFindFilter(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	bank_type := []Bank{}
 	result, err = basemodel.PagedFindFilter(&bank_type, page, rows, order, sort, filter)
 
