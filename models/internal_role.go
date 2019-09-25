@@ -3,10 +3,10 @@ package models
 type (
 	InternalRoles struct {
 		BaseModel
-		Name        string `json:"name" gorm:"column:name"`
-		Description string `json:"description" gorm:"column:description"`
-		Status      bool   `json:"status" gorm:"column:status;type:boolean" sql:"DEFAULT:FALSE"`
-		System      string `json:"system" gorm:"column:system"`
+		Name        string   `json:"name" gorm:"column:name"`
+		Description string   `json:"description" gorm:"column:description"`
+		Status      bool     `json:"status" gorm:"column:status;type:boolean" sql:"DEFAULT:FALSE"`
+		Permissions []string `json:"permissions" gorm:"column:permissions"`
 	}
 )
 
