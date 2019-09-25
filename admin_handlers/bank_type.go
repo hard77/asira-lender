@@ -52,12 +52,12 @@ func BankTypeNew(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	newBankType, err := bank_type.Create()
+	err := bank_type.Create()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "Gagal membuat tipe bank baru")
 	}
 
-	return c.JSON(http.StatusCreated, newBankType)
+	return c.JSON(http.StatusCreated, bank_type)
 }
 
 func BankTypeDetail(c echo.Context) error {
@@ -66,12 +66,12 @@ func BankTypeDetail(c echo.Context) error {
 	bank_id, _ := strconv.Atoi(c.Param("bank_id"))
 
 	bankType := models.BankType{}
-	result, err := bankType.FindbyID(bank_id)
+	err := bankType.FindbyID(bank_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bankType)
 }
 
 func BankTypePatch(c echo.Context) error {
@@ -80,7 +80,7 @@ func BankTypePatch(c echo.Context) error {
 	bank_id, _ := strconv.Atoi(c.Param("bank_id"))
 
 	bankType := models.BankType{}
-	result, err := bankType.FindbyID(bank_id)
+	err := bankType.FindbyID(bank_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_id))
 	}
@@ -89,18 +89,18 @@ func BankTypePatch(c echo.Context) error {
 		"name": []string{},
 	}
 
-	validate := validateRequestPayload(c, payloadRules, &result)
-	log.Println(result)
+	validate := validateRequestPayload(c, payloadRules, &bankType)
+	log.Println(bankType)
 	if validate != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	_, err = result.Save()
+	err = bankType.Save()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update bank tipe %v", bank_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bankType)
 }
 
 func BankTypeDelete(c echo.Context) error {
@@ -109,15 +109,15 @@ func BankTypeDelete(c echo.Context) error {
 	bank_id, _ := strconv.Atoi(c.Param("bank_id"))
 
 	bankType := models.BankType{}
-	result, err := bankType.FindbyID(bank_id)
+	err := bankType.FindbyID(bank_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_id))
 	}
 
-	_, err = result.Delete()
+	err = bankType.Delete()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update bank tipe %v", bank_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bankType)
 }
