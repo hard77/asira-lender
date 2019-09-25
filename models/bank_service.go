@@ -1,60 +1,64 @@
 package models
 
-import "gitlab.com/asira-ayannah/basemodel"
+import (
+	"time"
+
+	"gitlab.com/asira-ayannah/basemodel"
+)
 
 type (
 	BankService struct {
 		basemodel.BaseModel
-		Name    string `json:"name" gorm:"column:name"`
-		ImageID int    `json:"image_id" gorm:"column:image_id"`
-		Status  string `json:"status" gorm:"column:status"`
+		DeletedTime time.Time `json:"deleted_time" gorm:"column:deleted_time"`
+		Name        string    `json:"name" gorm:"column:name"`
+		ServiceID   uint64    `json:"service_id gorm:"service_id"`
+		BankID      uint64    `json:"bank_id gorm:"bank_id"`
+		ImageID     int       `json:"image_id" gorm:"column:image_id"`
+		Status      string    `json:"status" gorm:"column:status"`
 	}
 )
 
-func (b *BankService) Create() error {
-	err := basemodel.Create(&b)
+func (model *BankService) Create() error {
+	err := basemodel.Create(&model)
 	if err != nil {
 		return err
 	}
 
-	err = KafkaSubmitModel(b, "bank_service")
+	// err = KafkaSubmitModel(model, "bank_service")
 
 	return err
 }
 
-func (b *BankService) Save() error {
-	err := basemodel.Save(&b)
+func (model *BankService) Save() error {
+	err := basemodel.Save(&model)
 	if err != nil {
 		return err
 	}
 
-	err = KafkaSubmitModel(b, "bank_service")
+	// err = KafkaSubmitModel(model, "bank_service")
 
 	return err
 }
 
-func (b *BankService) Delete() error {
-	err := basemodel.Delete(&b)
+func (model *BankService) Delete() error {
+	err := basemodel.Delete(&model)
 	if err != nil {
 		return err
 	}
 
-	err = KafkaSubmitModel(b, "bank_service_delete")
+	// err = KafkaSubmitModel(model, "bank_service_delete")
 
 	return err
 }
 
-func (b *BankService) FindbyID(id int) error {
-	err := basemodel.FindbyID(&b, id)
+func (model *BankService) FindbyID(id int) error {
+	err := basemodel.FindbyID(&model, id)
 	return err
 }
 
-func (b *BankService) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result basemodel.PagedFindResult, err error) {
+func (model *BankService) PagedFilterSearch(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	bank_type := []BankService{}
-
-	order := []string{orderby}
-	sorts := []string{sort}
-	result, err = basemodel.PagedFindFilter(&bank_type, page, rows, order, sorts, filter)
+	result, err = basemodel.PagedFindFilter(&bank_type, page, rows, order, sort, filter)
 
 	return result, err
 }
