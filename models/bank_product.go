@@ -66,7 +66,7 @@ func (model *BankProduct) FindbyID(id int) error {
 	return err
 }
 
-func (model *BankProduct) PagedFilterSearch(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
+func (model *BankProduct) PagedFindFilter(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	products := []BankProduct{}
 	result, err = basemodel.PagedFindFilter(&products, page, rows, order, sort, filter)
 

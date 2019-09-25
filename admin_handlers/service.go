@@ -22,14 +22,20 @@ func ServiceList(c echo.Context) error {
 
 	// filters
 	id := c.QueryParam("id")
+	name := c.QueryParam("name")
+	status := c.QueryParam("status")
 
 	type Filter struct {
-		ID string `json:"id"`
+		ID     string `json:"id"`
+		Name   string `json:"name"`
+		Status string `json:"status"`
 	}
 
 	service := models.Service{}
 	result, err := service.PagedFindFilter(page, rows, order, sort, &Filter{
-		ID: id,
+		ID:     id,
+		Name:   name,
+		Status: status,
 	})
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "pencarian tidak ditemukan")

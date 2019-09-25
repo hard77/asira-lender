@@ -36,7 +36,7 @@ func (model *Product) FindbyID(id int) error {
 	return err
 }
 
-func (model *Product) PagedFilterSearch(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
+func (model *Product) PagedFindFilter(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	products := []Product{}
 	result, err = basemodel.PagedFindFilter(&products, page, rows, order, sort, filter)
 
