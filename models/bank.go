@@ -77,7 +77,7 @@ func (model *Bank) Delete() error {
 }
 
 func (model *Bank) FindbyID(id int) error {
-	err := basemodel.SingleFindFilter(&model, id)
+	err := basemodel.FindbyID(&b, id)
 	return err
 }
 
