@@ -4,6 +4,7 @@ import (
 	"asira_lender/admin_handlers"
 	"asira_lender/handlers"
 	"asira_lender/middlewares"
+	"asira_lender/permission"
 
 	"github.com/labstack/echo"
 )
@@ -11,6 +12,7 @@ import (
 func AdminGroup(e *echo.Echo) {
 	g := e.Group("/admin")
 	middlewares.SetClientJWTmiddlewares(g, "admin")
+	e.Use(permission.ValidatePermissions)
 
 	// config info
 	g.GET("/info", handlers.AsiraAppInfo)

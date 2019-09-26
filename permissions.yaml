@@ -1,0 +1,18 @@
+GET :
+  Bank_List : /banks
+  Bank_Service_List : /bank_services
+  Service_Product_List : /service_products
+POST :
+  Bank_Add : /banks
+  Bank_Service_Add : /bank_services
+  Service_Product_Add : /service_products
+PATCH :
+  Bank_Edit : /banks
+  Bank_Service_Edit : /bank_services
+  Service_Product_Edit : /service_products
+DELETE :
+  Bank_Delete : /banks
+  Bank_Service_Delete : /bank_services
+  Service_Product_Delete : /service_products
+  
+
