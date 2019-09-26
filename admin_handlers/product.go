@@ -28,13 +28,13 @@ func ProductList(c echo.Context) error {
 
 	type Filter struct {
 		ID        string `json:"id"`
-		Name      string `json:"name"`
+		Name      string `json:"name" condition:"LIKE"`
 		ServiceID string `json:"service_id`
 		Status    string `json:"status"`
 	}
 
-	service := models.Service{}
-	result, err := service.PagedFindFilter(page, rows, order, sort, &Filter{
+	product := models.Product{}
+	result, err := product.PagedFindFilter(page, rows, order, sort, &Filter{
 		ID:        id,
 		Name:      name,
 		ServiceID: serviceId,
@@ -54,7 +54,7 @@ func ProductNew(c echo.Context) error {
 
 	payloadRules := govalidator.MapData{
 		"name":       []string{"required"},
-		"service_id": []string{"required"},
+		"service_id": []string{"required", "valid_id:services"},
 		"status":     []string{"required", "active_inactive"},
 	}
 
@@ -77,7 +77,7 @@ func ProductDetail(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
 
 	product := models.Product{}
-	err := service.FindbyID(productId)
+	err := product.FindbyID(productId)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("product %v tidak ditemukan", productId))
 	}
@@ -91,7 +91,7 @@ func ProductPatch(c echo.Context) error {
 	productId, _ := strconv.Atoi(c.Param("id"))
 
 	product := models.Product{}
-	err := service.FindbyID(productId)
+	err := product.FindbyID(productId)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("product %v tidak ditemukan", productId))
 	}

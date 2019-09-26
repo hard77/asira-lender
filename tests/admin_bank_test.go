@@ -9,7 +9,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestLenderGetBankServiceList(t *testing.T) {
+func TestLenderGetBankList(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -31,29 +31,29 @@ func TestLenderGetBankServiceList(t *testing.T) {
 	})
 
 	// valid response
-	auth.GET("/admin/bank_services").
+	auth.GET("/admin/banks").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 
 	// test query found
-	obj := auth.GET("/admin/bank_services").WithQuery("name", "Pinjaman PNS").
+	obj := auth.GET("/admin/banks").WithQuery("name", "Bank A").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
 	// test query found with part name
-	obj = auth.GET("/admin/bank_services").WithQuery("name", "pinjaman").
+	obj = auth.GET("/admin/banks").WithQuery("name", "bank").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 5)
+	obj.ContainsKey("total_data").ValueEqual("total_data", 2)
 
 	// test query invalid
-	obj = auth.GET("/admin/bank_services").WithQuery("name", "should not found this").
+	obj = auth.GET("/admin/banks").WithQuery("name", "should not found this").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
 }
 
-func TestNewBankService(t *testing.T) {
+func TestNewBank(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -75,37 +75,33 @@ func TestNewBankService(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":   "Test New Bank Service",
-		"image":  "this is a long long base64 encoded image string",
-		"status": "active",
+		"name":           "Test New Bank",
+		"type":           1,
+		"address":        "testing st.",
+		"province":       "test province",
+		"city":           "test city",
+		"pic":            "test pic",
+		"phone":          "08123454321",
+		"adminfee_setup": "potong_plafon",
+		"convfee_setup":  "potong_plafon",
 	}
 
 	// normal scenario
-	obj := auth.POST("/admin/bank_services").WithJSON(payload).
+	obj := auth.POST("/admin/banks").WithJSON(payload).
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test New Bank Service")
-
-	// invalid status
-	payload = map[string]interface{}{
-		"name":   "Test New Bank Service",
-		"image":  "this is a long long base64 encoded image string",
-		"status": "not valid",
-	}
-	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
-		Expect().
-		Status(http.StatusUnprocessableEntity).JSON().Object()
+	obj.ContainsKey("name").ValueEqual("name", "Test New Bank")
 
 	// test invalid
 	payload = map[string]interface{}{
 		"name": "",
 	}
-	auth.POST("/admin/bank_services").WithJSON(payload).
+	auth.POST("/admin/banks").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
 }
 
-func TestGetBankServicebyID(t *testing.T) {
+func TestGetBankbyID(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -127,18 +123,18 @@ func TestGetBankServicebyID(t *testing.T) {
 	})
 
 	// valid response
-	obj := auth.GET("/admin/bank_services/1").
+	obj := auth.GET("/admin/banks/1").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("id").ValueEqual("id", 1)
 
 	// not found
-	auth.GET("/admin/bank_services/9999").
+	auth.GET("/admin/banks/9999").
 		Expect().
 		Status(http.StatusNotFound).JSON().Object()
 }
 
-func TestPatchBankService(t *testing.T) {
+func TestPatchBank(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -160,28 +156,20 @@ func TestPatchBankService(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name": "Test Service Patch",
+		"name": "Test Patch",
 	}
 
 	// valid response
-	obj := auth.PATCH("/admin/bank_services/1").WithJSON(payload).
+	obj := auth.PATCH("/admin/banks/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test Service Patch")
-
-	// invalid status
-	payload = map[string]interface{}{
-		"status": "not valid",
-	}
-	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
-		Expect().
-		Status(http.StatusUnprocessableEntity).JSON().Object()
+	obj.ContainsKey("name").ValueEqual("name", "Test Patch")
 
 	// test invalid token
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer wrong token")
 	})
-	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
+	auth.PATCH("/admin/banks/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object()
 }

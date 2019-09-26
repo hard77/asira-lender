@@ -27,7 +27,7 @@ func ServiceList(c echo.Context) error {
 
 	type Filter struct {
 		ID     string `json:"id"`
-		Name   string `json:"name"`
+		Name   string `json:"name" condition:"LIKE"`
 		Status string `json:"status"`
 	}
 

@@ -9,7 +9,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestLenderGetBankServiceProductList(t *testing.T) {
+func TestServiceList(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -31,29 +31,30 @@ func TestLenderGetBankServiceProductList(t *testing.T) {
 	})
 
 	// valid response
-	auth.GET("/admin/service_products").
+	auth.GET("/admin/services").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 
 	// test query found
-	obj := auth.GET("/admin/service_products").WithQuery("name", "Product A").
+	obj := auth.GET("/admin/services").WithQuery("name", "Pinjaman PNS").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
-	//with part of name
-	obj = auth.GET("/admin/service_products").WithQuery("name", "prod").
+
+	// test query found with part name
+	obj = auth.GET("/admin/services").WithQuery("name", "pinjaman").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 2)
+	obj.ContainsKey("total_data").ValueEqual("total_data", 5)
 
 	// test query invalid
-	obj = auth.GET("/admin/service_products").WithQuery("name", "should not found this").
+	obj = auth.GET("/admin/services").WithQuery("name", "should not found this").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
 }
 
-func TestNewBankServiceProduct(t *testing.T) {
+func TestNewService(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -75,40 +76,35 @@ func TestNewBankServiceProduct(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":         "Test Product",
-		"min_timespan": 1,
-		"max_timespan": 6,
-		"interest":     5,
-		"min_loan":     1000000,
-		"max_loan":     10000000,
-		"fees": map[string]interface{}{
-			"description": "Admin Fee",
-			"amount":      2500,
-		},
-		"asn_fee":          "5%",
-		"service":          1,
-		"collaterals":      []string{"Surat Tanah", "BPKB"},
-		"financing_sector": []string{"Pendidikan"},
-		"assurance":        "an Assurance",
-		"status":           "active",
+		"name":   "Test New Bank Service",
+		"status": "active",
 	}
 
 	// normal scenario
-	obj := auth.POST("/admin/service_products").WithJSON(payload).
+	obj := auth.POST("/admin/services").WithJSON(payload).
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test Product")
+	obj.ContainsKey("name").ValueEqual("name", "Test New Bank Service")
+
+	// invalid status
+	payload = map[string]interface{}{
+		"name":   "Test New Bank Service",
+		"status": "not valid",
+	}
+	auth.PATCH("/admin/services/1").WithJSON(payload).
+		Expect().
+		Status(http.StatusUnprocessableEntity).JSON().Object()
 
 	// test invalid
 	payload = map[string]interface{}{
 		"name": "",
 	}
-	auth.POST("/admin/service_products").WithJSON(payload).
+	auth.POST("/admin/services").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
 }
 
-func TestGetBankServiceProductbyID(t *testing.T) {
+func TestGetServicebyID(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -130,18 +126,18 @@ func TestGetBankServiceProductbyID(t *testing.T) {
 	})
 
 	// valid response
-	obj := auth.GET("/admin/service_products/1").
+	obj := auth.GET("/admin/services/1").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("id").ValueEqual("id", 1)
 
 	// not found
-	auth.GET("/admin/service_products/9999").
+	auth.GET("/admin/services/9999").
 		Expect().
 		Status(http.StatusNotFound).JSON().Object()
 }
 
-func TestPatchBankServiceProduct(t *testing.T) {
+func TestPatchService(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -163,20 +159,20 @@ func TestPatchBankServiceProduct(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name": "Test Service Product Patch",
+		"name": "Test Service Patch",
 	}
 
 	// valid response
-	obj := auth.PATCH("/admin/service_products/1").WithJSON(payload).
+	obj := auth.PATCH("/admin/services/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test Service Product Patch")
+	obj.ContainsKey("name").ValueEqual("name", "Test Service Patch")
 
-	// valid response
+	// invalid status
 	payload = map[string]interface{}{
-		"status": "invalid",
+		"status": "not valid",
 	}
-	auth.PATCH("/admin/service_products/1").WithJSON(payload).
+	auth.PATCH("/admin/services/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
 
@@ -184,7 +180,7 @@ func TestPatchBankServiceProduct(t *testing.T) {
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer wrong token")
 	})
-	auth.PATCH("/admin/service_products/1").WithJSON(payload).
+	auth.PATCH("/admin/services/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object()
 }

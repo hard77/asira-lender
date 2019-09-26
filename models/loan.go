@@ -24,7 +24,6 @@ type (
 		DueDate          time.Time      `json:"due_date" gorm:"column:due_date"`
 		LayawayPlan      float64        `json:"layaway_plan" gorm:"column:layaway_plan;type:int;not null"` // how much borrower will pay per month
 		Product          uint64         `json:"product" gorm:"column:product;foreignkey"`                  // product and service is later to be discussed
-		Service          uint64         `json:"service" gorm:"column:service;foreignkey"`
 		LoanIntention    string         `json:"loan_intention" gorm:"column:loan_intention;type:varchar(255);not null"`
 		IntentionDetails string         `json:"intention_details" gorm:"column:intention_details;type:text;not null"`
 		DisburseDate     time.Time      `json:"disburse_date" gorm:"column:disburse_date"`
