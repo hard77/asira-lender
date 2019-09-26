@@ -171,7 +171,7 @@ CREATE TABLE "internal_roles" (
     "id" bigserial,
     "name" varchar(255) NOT NULL,
     "description" text,
-    "permissions" text[],
+    "permissions" varchar(255) ARRAY,
     "status" BOOLEAN,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,

@@ -1,14 +1,17 @@
 package models
 
-import "gitlab.com/asira-ayannah/basemodel"
+import (
+	"github.com/lib/pq"
+	"gitlab.com/asira-ayannah/basemodel"
+)
 
 type (
 	InternalRoles struct {
 		basemodel.BaseModel
-		Name        string   `json:"name" gorm:"column:name"`
-		Description string   `json:"description" gorm:"column:description"`
-		Status      bool     `json:"status" gorm:"column:status;type:boolean" sql:"DEFAULT:FALSE"`
-		Permissions []string `json:"permissions" gorm:"column:permissions"`
+		Name        string         `json:"name" gorm:"column:name"`
+		Description string         `json:"description" gorm:"column:description"`
+		Status      bool           `json:"status" gorm:"column:status;type:boolean" sql:"DEFAULT:FALSE"`
+		Permissions pq.StringArray `json:"permissions" gorm:"column:permissions;type:varchar(255) ARRAY"`
 	}
 )
 
