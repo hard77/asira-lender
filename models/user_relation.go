@@ -7,8 +7,8 @@ import (
 type (
 	UserRelation struct {
 		basemodel.BaseModel
-		UserID uint64 `json:"user_id" gorm:"column:user_id;foreignkey"`
-		BankID uint64 `json:"bank_id" gorm:"column:bank_id;foreignkey"`
+		UserID uint64 `json:"user_id" gorm:"column:user_id"`
+		BankID uint64 `json:"bank_id" gorm:"column:bank_id"`
 	}
 )
 

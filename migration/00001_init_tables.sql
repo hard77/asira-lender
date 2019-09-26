@@ -196,7 +196,7 @@ CREATE TABLE "user_relations" (
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("bank_id") REFERENCES banks(id),
-    FOREIGN KEY ("user_Id") REFERENCES users(id),
+    FOREIGN KEY ("user_id") REFERENCES users(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 -- +goose Down

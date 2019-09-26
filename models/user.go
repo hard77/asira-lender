@@ -8,7 +8,7 @@ import (
 type (
 	User struct {
 		basemodel.BaseModel
-		RoleID   uint64 `json:"role_id" gorm:"column:role_id;foreignkey"`
+		RoleID   int    `json:"role_id" gorm:"column:role_id"`
 		Username string `json:"username" gorm:"column:username;type:varchar(255);unique;not null"`
 		Password string `json:"password" gorm:"column:password;type:text;not null"`
 	}
@@ -16,12 +16,12 @@ type (
 
 // gorm callback hook
 func (u *User) BeforeCreate() (err error) {
-	passwordByte, err := bcrypt.GenerateFromPassword([]byte(b.Password), bcrypt.DefaultCost)
+	passwordByte, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
 
-	b.Password = string(passwordByte)
+	u.Password = string(passwordByte)
 	return nil
 }
 

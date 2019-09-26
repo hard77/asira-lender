@@ -163,8 +163,6 @@ func Seed() {
 				ConvinienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank A PIC",
 				Phone:               "081234567890",
-				Username:            "Banktoib",
-				Password:            "password",
 			},
 			models.Bank{
 				Name:                "Bank B",
@@ -178,12 +176,33 @@ func Seed() {
 				ConvinienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank B PIC",
 				Phone:               "081234567891",
-				Username:            "Banktoic",
-				Password:            "password",
 			},
 		}
 		for _, lender := range lenders {
 			lender.Create()
+		}
+
+		roles := []models.InternalRoles{
+			models.InternalRoles{
+				Name:        "Finance",
+				Description: "untuk finance",
+				Status:      true,
+				Permissions: []string{"Bank_List"},
+			},
+		}
+		for _, role := range roles {
+			role.Create()
+		}
+
+		users := []models.User{
+			models.User{
+				RoleID:   1,
+				Username: "finance",
+				Password: "manusia123",
+			},
+		}
+		for _, user := range users {
+			user.Create()
 		}
 	}
 }
@@ -337,8 +356,6 @@ func TestSeed() {
 				Phone:               "081234567890",
 				AdminFeeSetup:       "potong_plafon",
 				ConvinienceFeeSetup: "potong_plafon",
-				Username:            "Banktoib",
-				Password:            "password",
 			},
 			models.Bank{
 				Name:                "Bank B",
@@ -352,8 +369,6 @@ func TestSeed() {
 				Phone:               "081234567891",
 				AdminFeeSetup:       "beban_plafon",
 				ConvinienceFeeSetup: "beban_plafon",
-				Username:            "Banktoic",
-				Password:            "password",
 			},
 		}
 		for _, lender := range lenders {
@@ -597,6 +612,8 @@ func Truncate(tableList []string) (err error) {
 				"loans",
 				"images",
 				"internal_roles",
+				"users",
+				"user_relations",
 			}
 		}
 
