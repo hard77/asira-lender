@@ -46,8 +46,6 @@ CREATE TABLE "banks" (
     "phone" varchar(255),
     "adminfee_setup" varchar(255),
     "convfee_setup" varchar(255),
-    "username" varchar(255) NOT NULL UNIQUE,
-    "password" text NOT NULL,
     FOREIGN KEY ("type") REFERENCES bank_types(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
@@ -184,10 +182,21 @@ CREATE TABLE "users" (
     "id" bigserial,
     "role_id" bigint,
     "username" varchar(255) NOT NULL,
-    "password" varchar(255) NOT NULL,
+    "password" text NOT NULL,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("role_id") REFERENCES internal_roles(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "user_relations" (
+    "id" bigserial,
+    "bank_id" bigint,
+    "user_id" bigint,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("bank_id") REFERENCES banks(id),
+    FOREIGN KEY ("user_Id") REFERENCES users(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 -- +goose Down
@@ -202,3 +211,4 @@ DROP TABLE IF EXISTS "images" CASCADE;
 DROP TABLE IF EXISTS "internals" CASCADE;
 DROP TABLE IF EXISTS "internal_roles" CASCADE;
 DROP TABLE IF EXISTS "users" CASCADE;
+DROP TABLE IF EXISTS "user_relations" CASCADE;

@@ -1,12 +1,9 @@
 package models
 
 import (
-	"log"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/jinzhu/gorm/dialects/postgres"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type (
@@ -24,26 +21,11 @@ type (
 		Products            postgres.Jsonb `json:"products" gorm:"column:products;type:jsonb"`
 		PIC                 string         `json:"pic" gorm:"column:pic;type:varchar(255)"`
 		Phone               string         `json:"phone" gorm:"column:phone;type:varchar(255)"`
-		Username            string         `json:"username" gorm:"column:username;type:varchar(255);unique;not null"`
-		Password            string         `json:"password" gorm:"column:password;type:text;not null"`
 	}
 )
 
 // gorm callback hook
 func (b *Bank) BeforeCreate() (err error) {
-	log.Printf("new bank : %v", b)
-	if len(b.Username) < 1 {
-		b.Username = uuid.New().String()
-	}
-	if len(b.Username) < 1 {
-		b.Password = uuid.New().String()
-	}
-	passwordByte, err := bcrypt.GenerateFromPassword([]byte(b.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
-	b.Password = string(passwordByte)
 	return nil
 }
 
