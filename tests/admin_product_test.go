@@ -75,9 +75,8 @@ func TestNewProduct(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":       "Test Product",
-		"service_id": 1,
-		"status":     "active",
+		"name":   "Test Product",
+		"status": "active",
 	}
 
 	// normal scenario
@@ -85,16 +84,6 @@ func TestNewProduct(t *testing.T) {
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
 	obj.ContainsKey("name").ValueEqual("name", "Test Product")
-
-	// invalid service
-	payload = map[string]interface{}{
-		"name":       "Test Product",
-		"service_id": 99,
-		"status":     "active",
-	}
-	auth.POST("/admin/products").WithJSON(payload).
-		Expect().
-		Status(http.StatusUnprocessableEntity).JSON().Object()
 
 	// test invalid
 	payload = map[string]interface{}{

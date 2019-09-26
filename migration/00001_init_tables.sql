@@ -81,7 +81,6 @@ CREATE TABLE "products" (
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
     "name" varchar(255),
-    "service_id" bigint,
     "status" varchar(255),
     FOREIGN KEY ("service_id") REFERENCES services(id),
     PRIMARY KEY ("id")

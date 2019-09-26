@@ -23,22 +23,19 @@ func ProductList(c echo.Context) error {
 	// filters
 	id := c.QueryParam("id")
 	name := c.QueryParam("name")
-	serviceId := c.QueryParam("service_id")
 	status := c.QueryParam("status")
 
 	type Filter struct {
-		ID        string `json:"id"`
-		Name      string `json:"name" condition:"LIKE"`
-		ServiceID string `json:"service_id`
-		Status    string `json:"status"`
+		ID     string `json:"id"`
+		Name   string `json:"name" condition:"LIKE"`
+		Status string `json:"status"`
 	}
 
 	product := models.Product{}
 	result, err := product.PagedFindFilter(page, rows, order, sort, &Filter{
-		ID:        id,
-		Name:      name,
-		ServiceID: serviceId,
-		Status:    status,
+		ID:     id,
+		Name:   name,
+		Status: status,
 	})
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "pencarian tidak ditemukan")
@@ -53,9 +50,8 @@ func ProductNew(c echo.Context) error {
 	product := models.Product{}
 
 	payloadRules := govalidator.MapData{
-		"name":       []string{"required"},
-		"service_id": []string{"required", "valid_id:services"},
-		"status":     []string{"required", "active_inactive"},
+		"name":   []string{"required"},
+		"status": []string{"required", "active_inactive"},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &product)
@@ -97,9 +93,8 @@ func ProductPatch(c echo.Context) error {
 	}
 
 	payloadRules := govalidator.MapData{
-		"name":       []string{"required"},
-		"service_id": []string{"required"},
-		"status":     []string{"required", "active_inactive"},
+		"name":   []string{"required"},
+		"status": []string{"required", "active_inactive"},
 	}
 	validate := validateRequestPayload(c, payloadRules, &product)
 	if validate != nil {

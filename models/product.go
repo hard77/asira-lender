@@ -11,7 +11,6 @@ type (
 		basemodel.BaseModel
 		DeletedTime time.Time `json:"deleted_time" gorm:"column:deleted_time"`
 		Name        string    `json:"name" gorm:"column:name;type:varchar(255)"`
-		ServiceID   uint64    `json:"service_id" gorm:"column:service_id`
 		Status      string    `json:"status" gorm:"column:status;type:varchar(255)"`
 	}
 )

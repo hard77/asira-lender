@@ -109,29 +109,24 @@ func Seed() {
 		// seed products
 		products := []models.Product{
 			models.Product{
-				Name:      "Product A",
-				ServiceID: 1,
-				Status:    "active",
+				Name:   "Product A",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product B",
-				ServiceID: 2,
-				Status:    "active",
+				Name:   "Product B",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product C",
-				ServiceID: 3,
-				Status:    "active",
+				Name:   "Product C",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product D",
-				ServiceID: 4,
-				Status:    "active",
+				Name:   "Product D",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product E",
-				ServiceID: 5,
-				Status:    "active",
+				Name:   "Product E",
+				Status: "active",
 			},
 		}
 		for _, product := range products {
@@ -393,29 +388,24 @@ func TestSeed() {
 		// seed products
 		products := []models.Product{
 			models.Product{
-				Name:      "Product A",
-				ServiceID: 1,
-				Status:    "active",
+				Name:   "Product A",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product B",
-				ServiceID: 2,
-				Status:    "active",
+				Name:   "Product B",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product C",
-				ServiceID: 3,
-				Status:    "active",
+				Name:   "Product C",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product D",
-				ServiceID: 4,
-				Status:    "active",
+				Name:   "Product D",
+				Status: "active",
 			},
 			models.Product{
-				Name:      "Product E",
-				ServiceID: 5,
-				Status:    "active",
+				Name:   "Product E",
+				Status: "active",
 			},
 		}
 		for _, product := range products {

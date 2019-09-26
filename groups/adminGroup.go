@@ -50,11 +50,11 @@ func AdminGroup(e *echo.Echo) {
 	g.DELETE("/products/:id", admin_handlers.ProductDelete)
 
 	// Bank Services
-	// g.GET("/bank_services", admin_handlers.BankServiceList)
-	// g.GET("/bank_services/:bank_service_id", admin_handlers.BankServiceDetail)
-	// g.POST("/bank_services", admin_handlers.BankServiceNew)
-	// g.PATCH("/bank_services/:bank_service_id", admin_handlers.BankServicePatch)
-	// g.DELETE("/bank_services/:bank_service_id", admin_handlers.BankServiceDelete)
+	g.GET("/bank_services", admin_handlers.BankServiceList)
+	g.GET("/bank_services/:id", admin_handlers.BankServiceDetail)
+	g.POST("/bank_services", admin_handlers.BankServiceNew)
+	g.PATCH("/bank_services/:id", admin_handlers.BankServicePatch)
+	g.DELETE("/bank_services/:id", admin_handlers.BankServiceDelete)
 
 	// Service Products
 	// g.GET("/service_products", admin_handlers.BankServiceProductList)
