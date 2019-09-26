@@ -67,12 +67,12 @@ func BankNew(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	newBankType, err := bank.Create()
+	err := bank.Create()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "Gagal membuat tipe bank baru")
 	}
 
-	return c.JSON(http.StatusCreated, newBankType)
+	return c.JSON(http.StatusCreated, bank)
 }
 
 func BankDetail(c echo.Context) error {
@@ -81,12 +81,12 @@ func BankDetail(c echo.Context) error {
 	bank_id, _ := strconv.Atoi(c.Param("bank_id"))
 
 	bank := models.Bank{}
-	result, err := bank.FindbyID(bank_id)
+	err := bank.FindbyID(bank_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bank)
 }
 
 func BankPatch(c echo.Context) error {
@@ -95,14 +95,14 @@ func BankPatch(c echo.Context) error {
 	bank_id, _ := strconv.Atoi(c.Param("bank_id"))
 
 	bank := models.Bank{}
-	result, err := bank.FindbyID(bank_id)
+	err := bank.FindbyID(bank_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_id))
 	}
 
 	// dont allow admin to change bank credentials
-	tempUsername := result.Username
-	tempPassword := result.Password
+	tempUsername := bank.Username
+	tempPassword := bank.Password
 
 	payloadRules := govalidator.MapData{
 		"name":           []string{},
@@ -118,21 +118,21 @@ func BankPatch(c echo.Context) error {
 		"convfee_setup":  []string{},
 	}
 
-	validate := validateRequestPayload(c, payloadRules, &result)
-	log.Println(result)
+	validate := validateRequestPayload(c, payloadRules, &bank)
+	log.Println(bank)
 	if validate != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	result.Username = tempUsername
-	result.Password = tempPassword
+	bank.Username = tempUsername
+	bank.Password = tempPassword
 
-	_, err = result.Save()
+	err = bank.Save()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update bank tipe %v", bank_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bank)
 }
 
 func BankDelete(c echo.Context) error {
@@ -141,15 +141,15 @@ func BankDelete(c echo.Context) error {
 	bank_id, _ := strconv.Atoi(c.Param("bank_id"))
 
 	bank := models.Bank{}
-	result, err := bank.FindbyID(bank_id)
+	err := bank.FindbyID(bank_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_id))
 	}
 
-	_, err = result.Delete()
+	err = bank.Delete()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update bank tipe %v", bank_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bank)
 }

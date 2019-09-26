@@ -1,9 +1,12 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"gitlab.com/asira-ayannah/basemodel"
+)
 
 type Internals struct {
-	BaseModel
+	basemodel.BaseModel
 	Name   string `json:"name" gorm:"column:name"`
 	Secret string `json:"secret" gorm:"column:secret"`
 	Key    string `json:"key" gorm:"column:key"`
@@ -18,21 +21,21 @@ func (i *Internals) BeforeCreate() (err error) {
 }
 
 func (i *Internals) Create() (err error) {
-	err = Create(&i)
+	err = basemodel.Create(&i)
 	return err
 }
 
 func (i *Internals) Save() (err error) {
-	err = Save(&i)
+	err = basemodel.Save(&i)
 	return err
 }
 
 func (i *Internals) Delete() (err error) {
-	err = Delete(&i)
+	err = basemodel.Delete(&i)
 	return err
 }
 
 func (l *Internals) FilterSearchSingle(filter interface{}) (err error) {
-	err = FilterSearchSingle(&l, filter)
+	err = basemodel.SingleFindFilter(&l, filter)
 	return err
 }

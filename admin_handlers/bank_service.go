@@ -71,12 +71,12 @@ func BankServiceNew(c echo.Context) error {
 		Status:  bank_service_payload.Status,
 	}
 
-	newBankService, err := bankService.Create()
+	err := bankService.Create()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "Gagal membuat layanan bank baru")
 	}
 
-	return c.JSON(http.StatusCreated, newBankService)
+	return c.JSON(http.StatusCreated, bankService)
 }
 
 func BankServiceDetail(c echo.Context) error {
@@ -85,12 +85,12 @@ func BankServiceDetail(c echo.Context) error {
 	bank_service_id, _ := strconv.Atoi(c.Param("bank_service_id"))
 
 	bankService := models.BankService{}
-	result, err := bankService.FindbyID(bank_service_id)
+	err := bankService.FindbyID(bank_service_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("layanan %v tidak ditemukan", bank_service_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bankService)
 }
 
 func BankServicePatch(c echo.Context) error {
@@ -99,14 +99,16 @@ func BankServicePatch(c echo.Context) error {
 	bank_service_id, _ := strconv.Atoi(c.Param("bank_service_id"))
 
 	bankService := models.BankService{}
-	bankServiceRes, err := bankService.FindbyID(bank_service_id)
+	err := bankService.FindbyID(bank_service_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("layanan %v tidak ditemukan", bank_service_id))
 	}
 
 	bankServiceImg := models.Image{}
-	bankServiceImgRes, _ := bankServiceImg.FindbyID(bankServiceRes.ImageID)
-
+	err = bankServiceImg.FindbyID(bankService.ImageID)
+	if err != nil {
+		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("layanan %v tidak ditemukan", bank_service_id))
+	}
 	payloadBucket := BankServicePayload{}
 	servicePayloadRules := govalidator.MapData{
 		"name":        []string{},
@@ -120,25 +122,25 @@ func BankServicePatch(c echo.Context) error {
 	}
 
 	if len(payloadBucket.Name) > 0 {
-		bankServiceRes.Name = payloadBucket.Name
+		bankService.Name = payloadBucket.Name
 	}
 	if len(payloadBucket.Image) > 0 {
-		bankServiceImgRes.Image_string = payloadBucket.Image
+		bankServiceImg.Image_string = payloadBucket.Image
 	}
 	if len(payloadBucket.Status) > 0 {
-		bankServiceRes.Status = payloadBucket.Status
+		bankService.Status = payloadBucket.Status
 	}
 
-	_, err = bankServiceRes.Save()
+	err = bankService.Save()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update layanan %v", bank_service_id))
 	}
-	_, err = bankServiceImgRes.Save()
+	err = bankServiceImg.Save()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update layanan %v", bank_service_id))
 	}
 
-	return c.JSON(http.StatusOK, bankServiceRes)
+	return c.JSON(http.StatusOK, bankService)
 }
 
 func BankServiceDelete(c echo.Context) error {
@@ -147,15 +149,15 @@ func BankServiceDelete(c echo.Context) error {
 	bank_service_id, _ := strconv.Atoi(c.Param("bank_service_id"))
 
 	bankService := models.BankService{}
-	result, err := bankService.FindbyID(bank_service_id)
+	err := bankService.FindbyID(bank_service_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", bank_service_id))
 	}
 
-	_, err = result.Delete()
+	err = bankService.Delete()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update bank tipe %v", bank_service_id))
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, bankService)
 }

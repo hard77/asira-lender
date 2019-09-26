@@ -4,11 +4,12 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm/dialects/postgres"
+	"gitlab.com/asira-ayannah/basemodel"
 )
 
 type (
 	Bank struct {
-		BaseModel
+		basemodel.BaseModel
 		DeletedTime         time.Time      `json:"deleted_time" gorm:"column:deleted_time" sql:"DEFAULT:current_timestamp"`
 		Name                string         `json:"name" gorm:"column:name;type:varchar(255)"`
 		Type                int            `json:"type" gorm:"column:type;type:varchar(255)"`
@@ -29,15 +30,15 @@ func (b *Bank) BeforeCreate() (err error) {
 	return nil
 }
 
-func (b *Bank) Create() (*Bank, error) {
-	err := Create(&b)
+func (b *Bank) Create() error {
+	err := basemodel.Create(&b)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = KafkaSubmitModel(b, "bank")
 
-	return b, err
+	return err
 }
 
 // gorm callback hook
@@ -45,36 +46,38 @@ func (b *Bank) BeforeSave() (err error) {
 	return nil
 }
 
-func (b *Bank) Save() (*Bank, error) {
-	err := Save(&b)
+func (b *Bank) Save() error {
+	err := basemodel.Save(&b)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = KafkaSubmitModel(b, "bank")
 
-	return b, err
+	return err
 }
 
-func (b *Bank) Delete() (*Bank, error) {
-	err := Delete(&b)
+func (b *Bank) Delete() error {
+	err := basemodel.Delete(&b)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = KafkaSubmitModel(b, "bank_delete")
 
-	return b, err
+	return err
 }
 
-func (b *Bank) FindbyID(id int) (*Bank, error) {
-	err := FindbyID(&b, id)
-	return b, err
+func (b *Bank) FindbyID(id int) error {
+	err := basemodel.FindbyID(&b, id)
+	return err
 }
 
-func (b *Bank) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
+func (b *Bank) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	bank_type := []Bank{}
-	result, err = PagedFilterSearch(&bank_type, page, rows, orderby, sort, filter)
+	order := []string{orderby}
+	sorts := []string{sort}
+	result, err = basemodel.PagedFindFilter(&bank_type, page, rows, order, sorts, filter)
 
 	return result, err
 }
