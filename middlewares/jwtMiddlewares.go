@@ -25,6 +25,7 @@ func SetClientJWTmiddlewares(g *echo.Group, role string) {
 		break
 	case "lender":
 		g.Use(validateJWTlender)
+		g.Use(permission.ValidatePermissions)
 		break
 	case "admin":
 		g.Use(validateJWTadmin)

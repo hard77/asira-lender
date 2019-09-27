@@ -13,22 +13,25 @@ import (
 func GetAllRole(c echo.Context) error {
 	defer c.Request().Body.Close()
 
-	Iroles := models.InternalRoles{}
+	Iroles := models.Roles{}
 	// pagination parameters
 	rows, err := strconv.Atoi(c.QueryParam("rows"))
 	page, err := strconv.Atoi(c.QueryParam("page"))
 	orderby := c.QueryParam("orderby")
 	sort := c.QueryParam("sort")
 
-	permission := c.QueryParam("name")
+	name := c.QueryParam("name")
 	id := c.QueryParam("id")
 
 	type Filter struct {
-		ID         string `json:"id"`
-		Permission string `json:"permission" condition:"LIKE"`
+		ID   string `json:"id"`
+		Name string `json:"name" condition:"LIKE"`
 	}
 
-	result, err := Iroles.PagedFilterSearch(page, rows, orderby, sort, &Filter)
+	result, err := Iroles.PagedFilterSearch(page, rows, orderby, sort, &Filter{
+		ID:   id,
+		Name: name,
+	})
 
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, "Role tidak Ditemukan")
@@ -40,7 +43,7 @@ func GetAllRole(c echo.Context) error {
 func RoleGetDetails(c echo.Context) error {
 	defer c.Request().Body.Close()
 
-	Iroles := models.InternalRoles{}
+	Iroles := models.Roles{}
 
 	IrolesID, _ := strconv.Atoi(c.Param("role_id"))
 	err := Iroles.FindbyID(IrolesID)
@@ -54,12 +57,11 @@ func RoleGetDetails(c echo.Context) error {
 func AddRole(c echo.Context) error {
 	defer c.Request().Body.Close()
 
-	Iroles := models.InternalRoles{}
+	Iroles := models.Roles{}
 
 	payloadRules := govalidator.MapData{
-		"name":       []string{"required"},
-		"permission": []string{"required"},
-		"status":     []string{},
+		"name":   []string{"required"},
+		"status": []string{},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &Iroles)
@@ -79,17 +81,15 @@ func UpdateRole(c echo.Context) error {
 	defer c.Request().Body.Close()
 	Iroles_id, _ := strconv.Atoi(c.Param("role_id"))
 
-	Iroles := models.InternalRoles{}
+	Iroles := models.Roles{}
 	err := Iroles.FindbyID(Iroles_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("Internal Role %v tidak ditemukan", Iroles_id))
 	}
 
 	payloadRules := govalidator.MapData{
-		"name":        []string{"required"},
-		"system":      []string{"required"},
-		"status":      []string{},
-		"description": []string{},
+		"name":   []string{"required"},
+		"status": []string{},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &Iroles)

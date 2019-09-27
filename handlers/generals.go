@@ -78,13 +78,12 @@ func createJwtToken(id string, role string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		//get permissions
-		Roles := models.InternalRoles{}
-		err = Roles.FindbyID(user.RoleID)
-		if err != nil {
-			return "", err
-		}
-		permissions = Roles.Permissions
+		// //get permissions
+		// Roles := models.Roles{}
+		// err = Roles.FindbyID(user.RoleID)
+		// if err != nil {
+		// 	return "", err
+		// }
 	}
 	claim := JWTclaims{
 		id,

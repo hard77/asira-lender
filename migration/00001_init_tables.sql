@@ -179,10 +179,10 @@ CREATE TABLE "roles" (
 CREATE TABLE "permissions" (
     "id" bigserial,
     "role_id" bigint,
-    "permissions" varchar(255) ARRAY,
+    "permissions" varchar(255),
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("role_id") REFERENCES internal_roles(id),
+    FOREIGN KEY ("role_id") REFERENCES roles(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -193,7 +193,7 @@ CREATE TABLE "users" (
     "password" text NOT NULL,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("role_id") REFERENCES internal_roles(id),
+    FOREIGN KEY ("role_id") REFERENCES roles(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 

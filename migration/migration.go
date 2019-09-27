@@ -195,7 +195,15 @@ func Seed() {
 		permis := []models.Permissions{
 			models.Permissions{
 				RoleID:      1,
-				Permissions: []string{"Bank_List", "Bank_Add", "Bank_Patch"},
+				Permissions: "Bank_List",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Bank_Add",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Bank_Edit",
 			},
 		}
 		for _, per := range permis {
@@ -619,7 +627,8 @@ func Truncate(tableList []string) (err error) {
 				"borrowers",
 				"loans",
 				"images",
-				"internal_roles",
+				"roles",
+				"permissions",
 				"users",
 				"user_relations",
 			}
