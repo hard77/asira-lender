@@ -82,7 +82,6 @@ CREATE TABLE "products" (
     "deleted_time" timestamptz,
     "name" varchar(255),
     "status" varchar(255),
-    FOREIGN KEY ("service_id") REFERENCES services(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -99,9 +98,8 @@ CREATE TABLE "bank_products" (
     "min_loan" int,
     "max_loan" int,
     "fees" jsonb DEFAULT '[]',
-    "asn_fee" varchar(255),
-    "collaterals" jsonb DEFAULT '[]',
-    "financing_sector" jsonb DEFAULT '[]',
+    "collaterals" varchar(255) ARRAY,
+    "financing_sector" varchar(255) ARRAY,
     "assurance" varchar(255),
     "status" varchar(255),
     FOREIGN KEY ("product_id") REFERENCES products(id),

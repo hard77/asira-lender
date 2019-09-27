@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/lib/pq"
 
 	"gitlab.com/asira-ayannah/basemodel"
 )
@@ -20,9 +21,8 @@ type (
 		MinLoan         int            `json:"min_loan" gorm:"column:min_loan"`
 		MaxLoan         int            `json:"max_loan" gorm:"column:max_loan"`
 		Fees            postgres.Jsonb `json:"fees" gorm:"column:fees"`
-		ASN_Fee         string         `json:"asn_fee" gorm:"column:asn_fee"`
-		Collaterals     postgres.Jsonb `json:"collaterals" gorm:"column:collaterals"`
-		FinancingSector postgres.Jsonb `json:"financing_sector" gorm:"column:financing_sector"`
+		Collaterals     pq.StringArray `json:"collaterals" gorm:"column:collaterals"`
+		FinancingSector pq.StringArray `json:"financing_sector" gorm:"column:financing_sector"`
 		Assurance       string         `json:"assurance" gorm:"column:assurance"`
 		Status          string         `json:"status" gorm:"column:status"`
 	}

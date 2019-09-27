@@ -70,9 +70,13 @@ func BankServiceNew(c echo.Context) error {
 	}
 	image.Create()
 
+	uint64ServiceID, _ := strconv.ParseUint(bankServicePayload.ServiceID, 10, 64)
+	uint64BankID, _ := strconv.ParseUint(bankServicePayload.BankID, 10, 64)
 	bankService := models.BankService{
-		ImageID: int(image.ID),
-		Status:  bankServicePayload.Status,
+		ServiceID: uint64ServiceID,
+		BankID:    uint64BankID,
+		ImageID:   int(image.ID),
+		Status:    bankServicePayload.Status,
 	}
 
 	err := bankService.Create()
