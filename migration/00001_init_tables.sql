@@ -167,14 +167,22 @@ CREATE TABLE "loans" (
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
-CREATE TABLE "internal_roles" (
+CREATE TABLE "roles" (
     "id" bigserial,
     "name" varchar(255) NOT NULL,
-    "description" text,
-    "permissions" varchar(255) ARRAY,
     "status" BOOLEAN,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "permissions" (
+    "id" bigserial,
+    "role_id" bigint,
+    "permissions" varchar(255) ARRAY,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("role_id") REFERENCES internal_roles(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -209,6 +217,7 @@ DROP TABLE IF EXISTS "borrowers" CASCADE;
 DROP TABLE IF EXISTS "loans" CASCADE;
 DROP TABLE IF EXISTS "images" CASCADE;
 DROP TABLE IF EXISTS "internals" CASCADE;
-DROP TABLE IF EXISTS "internal_roles" CASCADE;
+DROP TABLE IF EXISTS "roles" CASCADE;
+DROP TABLE IF EXISTS "permissions" CASCADE;
 DROP TABLE IF EXISTS "users" CASCADE;
 DROP TABLE IF EXISTS "user_relations" CASCADE;
