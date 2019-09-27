@@ -181,18 +181,25 @@ func Seed() {
 		for _, lender := range lenders {
 			lender.Create()
 		}
-		// data := []string{"Bank_List", "Bank_Add", "Bank_Patch"}
-		// permission, _ := json.Marshal(data)
-		roles := []models.InternalRoles{
-			models.InternalRoles{
-				Name:        "Finance",
-				Description: "untuk finance",
-				Status:      true,
-				Permissions: []string{"Bank_List", "Bank_Add", "Bank_Patch"},
+
+		roles := []models.Roles{
+			models.Roles{
+				Name:   "Finance",
+				Status: true,
 			},
 		}
 		for _, role := range roles {
 			role.Create()
+		}
+
+		permis := []models.Permissions{
+			models.Permissions{
+				RoleID:      1,
+				Permissions: []string{"Bank_List", "Bank_Add", "Bank_Patch"},
+			},
+		}
+		for _, per := range permis {
+			per.Create()
 		}
 
 		users := []models.User{
