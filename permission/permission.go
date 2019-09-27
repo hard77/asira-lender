@@ -1,17 +1,15 @@
 package permission
 
 import (
-	"log"
+	"asira_lender/asira"
+	"fmt"
+	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
 
-// type (
-// 	Method string
-// 	Url    string
-// )
-
+//ValidatePermissions handlers middleware
 func ValidatePermissions(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user")
@@ -19,12 +17,18 @@ func ValidatePermissions(next echo.HandlerFunc) echo.HandlerFunc {
 		claims := token.Claims.(jwt.MapClaims)
 		permissions := claims["permissions"]
 
-		Method := c.Request.Method
-		Url := c.Request.URL.String()
+		Method := c.Request().Method
+		URL := c.Request().URL.String()
 
-		log.Println(c.Request().Method)
+		perConfig := asira.App.Permission.GetStringMap(fmt.Sprintf("%s", Method))
+		for key, value := range perConfig {
+			for _, val := range permissions {
+				if key == val; value == URL {
+					return next(c)
+				}
+			}
+		}
 
-		return next(c)
-		// return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "invalid token"))
+		return echo.NewHTTPError(http.StatusForbidden, fmt.Sprintf("%s", "you are not allowed"))
 	}
 }
