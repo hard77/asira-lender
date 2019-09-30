@@ -46,6 +46,8 @@ CREATE TABLE "banks" (
     "phone" varchar(255),
     "adminfee_setup" varchar(255),
     "convfee_setup" varchar(255),
+    "username" varchar(255) NOT NULL UNIQUE,
+    "password" text NOT NULL,
     FOREIGN KEY ("type") REFERENCES bank_types(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
@@ -170,6 +172,8 @@ CREATE TABLE "loans" (
 CREATE TABLE "roles" (
     "id" bigserial,
     "name" varchar(255) NOT NULL,
+    "system" text,
+    "description" text,
     "status" BOOLEAN,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
@@ -179,10 +183,10 @@ CREATE TABLE "roles" (
 CREATE TABLE "permissions" (
     "id" bigserial,
     "role_id" bigint,
-    "permissions" varchar(255) ARRAY,
+    "permissions" varchar(255),
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("role_id") REFERENCES internal_roles(id),
+    FOREIGN KEY ("role_id") REFERENCES roles(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -193,7 +197,7 @@ CREATE TABLE "users" (
     "password" text NOT NULL,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("role_id") REFERENCES internal_roles(id),
+    FOREIGN KEY ("role_id") REFERENCES roles(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 

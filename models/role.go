@@ -7,8 +7,10 @@ import (
 type (
 	Roles struct {
 		basemodel.BaseModel
-		Name   string `json:"name" gorm:"column:name"`
-		Status bool   `json:"status" gorm:"column:status;type:boolean" sql:"DEFAULT:TRUE"`
+		Name        string `json:"name" gorm:"column:name"`
+		Description string `json:"description" gorm:"column:description"`
+		System      string `json:"system" gorm:"column:system"`
+		Status      bool   `json:"status" gorm:"column:status;type:boolean" sql:"DEFAULT:TRUE"`
 	}
 )
 
