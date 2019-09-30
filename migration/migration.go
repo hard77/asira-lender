@@ -184,8 +184,9 @@ func Seed() {
 
 		roles := []models.Roles{
 			models.Roles{
-				Name:   "Finance",
-				Status: true,
+				Name:        "Finance",
+				Status:      true,
+				Description: "ini untuk Finance",
 			},
 		}
 		for _, role := range roles {

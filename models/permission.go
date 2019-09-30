@@ -1,15 +1,14 @@
 package models
 
 import (
-	"github.com/lib/pq"
 	"gitlab.com/asira-ayannah/basemodel"
 )
 
 type (
 	Permissions struct {
 		basemodel.BaseModel
-		RoleID      int            `json:"role_id" gorm:"column:role_id"`
-		Permissions pq.StringArray `json:"permissions" gorm:"column:permissions;type:varchar(255) ARRAY"`
+		RoleID      int    `json:"role_id" gorm:"column:role_id"`
+		Permissions string `json:"permissions" gorm:"column:permissions;type:varchar(255)"`
 	}
 )
 
