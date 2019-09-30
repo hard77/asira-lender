@@ -77,6 +77,24 @@ func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
 			}
 		}
 		break
+	case "bank_service":
+		type BankServiceUpdate struct {
+			ID      uint64 `json:"id"`
+			Name    string `json:"name"`
+			BankID  uint64 `json:"bank_id"`
+			ImageID int    `json:"image_id"`
+			Status  string `json:"status"`
+		}
+		if e, ok := i.(*BankService); ok {
+			service := Service.FindByID(int(e.BankID))
+			payload = BankServiceUpdate{
+				ID:      e.ID,
+				Name:    service.Name,
+				BankID:  e.BankID,
+				ImageID: e.ImageID,
+				Status:  e.Status,
+			}
+		}
 	}
 
 	return payload
