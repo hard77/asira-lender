@@ -24,7 +24,6 @@ func ValidatePermissions(next echo.HandlerFunc) echo.HandlerFunc {
 		//method and url from request
 		Method := c.Request().Method
 		URL := c.Request().URL.String()
-		log.Println(URL)
 		PermissionsModel := models.Permissions{}
 		//check permissions
 		perConfig := asira.App.Permission.GetStringMap(fmt.Sprintf("%s", Method))
