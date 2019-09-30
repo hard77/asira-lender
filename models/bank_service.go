@@ -23,7 +23,7 @@ func (model *BankService) Create() error {
 		return err
 	}
 
-	// err = KafkaSubmitModel(model, "bank_service")
+	err = KafkaSubmitModel(model, "bank_service")
 
 	return err
 }
@@ -34,7 +34,7 @@ func (model *BankService) Save() error {
 		return err
 	}
 
-	// err = KafkaSubmitModel(model, "bank_service")
+	err = KafkaSubmitModel(model, "bank_service")
 
 	return err
 }
@@ -45,7 +45,7 @@ func (model *BankService) Delete() error {
 		return err
 	}
 
-	// err = KafkaSubmitModel(model, "bank_service_delete")
+	err = KafkaSubmitModel(model, "bank_service_delete")
 
 	return err
 }
