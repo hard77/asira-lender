@@ -163,6 +163,8 @@ func Seed() {
 				ConvinienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank A PIC",
 				Phone:               "081234567890",
+				Username:            "Banktoib",
+				Password:            "password",
 			},
 			models.Bank{
 				Name:                "Bank B",
@@ -176,6 +178,8 @@ func Seed() {
 				ConvinienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank B PIC",
 				Phone:               "081234567891",
+				Username:            "Banktoic",
+				Password:            "password",
 			},
 		}
 		for _, lender := range lenders {
@@ -184,7 +188,7 @@ func Seed() {
 
 		roles := []models.Roles{
 			models.Roles{
-				Name:        "Finance",
+				Name:        "Manager",
 				Status:      true,
 				Description: "ini untuk Finance",
 			},
@@ -206,6 +210,30 @@ func Seed() {
 				RoleID:      1,
 				Permissions: "Bank_Edit",
 			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Role_List",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Role_Add",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Role_Edit",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Permission_List",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Permission_Add",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Permission_Edit",
+			},
 		}
 		for _, per := range permis {
 			per.Create()
@@ -214,8 +242,8 @@ func Seed() {
 		users := []models.User{
 			models.User{
 				RoleID:   1,
-				Username: "finance",
-				Password: "manusia123",
+				Username: "manager",
+				Password: "password",
 			},
 		}
 		for _, user := range users {
@@ -612,6 +640,70 @@ func TestSeed() {
 		}
 		for _, loan := range loans {
 			loan.Create()
+		}
+
+		roles := []models.Roles{
+			models.Roles{
+				Name:        "Manager",
+				Status:      true,
+				Description: "ini untuk Finance",
+			},
+		}
+		for _, role := range roles {
+			role.Create()
+		}
+
+		permis := []models.Permissions{
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Bank_List",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Bank_Add",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Bank_Edit",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Role_List",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Role_Add",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Role_Edit",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Permission_List",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Permission_Add",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "Permission_Edit",
+			},
+		}
+		for _, per := range permis {
+			per.Create()
+		}
+
+		users := []models.User{
+			models.User{
+				RoleID:   1,
+				Username: "manager",
+				Password: "password",
+			},
+		}
+		for _, user := range users {
+			user.Create()
 		}
 	}
 }

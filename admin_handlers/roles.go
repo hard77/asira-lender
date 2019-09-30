@@ -60,8 +60,9 @@ func AddRole(c echo.Context) error {
 	Iroles := models.Roles{}
 
 	payloadRules := govalidator.MapData{
-		"name":   []string{"required"},
-		"status": []string{},
+		"name":        []string{"required"},
+		"description": []string{},
+		"status":      []string{},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &Iroles)
@@ -88,8 +89,9 @@ func UpdateRole(c echo.Context) error {
 	}
 
 	payloadRules := govalidator.MapData{
-		"name":   []string{"required"},
-		"status": []string{},
+		"name":        []string{"required"},
+		"description": []string{},
+		"status":      []string{},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &Iroles)

@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"asira_lender/asira"
+	"asira_lender/permission"
 	"fmt"
 	"net/http"
 
@@ -27,7 +28,7 @@ func SetClientJWTmiddlewares(g *echo.Group, role string) {
 		break
 	case "admin":
 		g.Use(validateJWTadmin)
-		// g.Use(permission.ValidatePermissions)
+		g.Use(permission.ValidatePermissions)
 		break
 	}
 }

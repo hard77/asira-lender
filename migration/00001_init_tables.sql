@@ -46,6 +46,8 @@ CREATE TABLE "banks" (
     "phone" varchar(255),
     "adminfee_setup" varchar(255),
     "convfee_setup" varchar(255),
+    "username" varchar(255) NOT NULL UNIQUE,
+    "password" text NOT NULL,
     FOREIGN KEY ("type") REFERENCES bank_types(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);

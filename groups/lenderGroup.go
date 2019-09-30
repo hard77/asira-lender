@@ -3,7 +3,6 @@ package groups
 import (
 	"asira_lender/handlers"
 	"asira_lender/middlewares"
-	"asira_lender/permission"
 
 	"github.com/labstack/echo"
 )
@@ -11,7 +10,7 @@ import (
 func LenderGroup(e *echo.Echo) {
 	g := e.Group("/lender")
 	middlewares.SetClientJWTmiddlewares(g, "lender")
-	e.Use(permission.ValidatePermissions)
+	// e.Use(permission.ValidatePermissions)
 
 	// Profile endpoints
 	g.GET("/profile", handlers.LenderProfile)

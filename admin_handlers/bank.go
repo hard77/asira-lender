@@ -58,8 +58,8 @@ func BankNew(c echo.Context) error {
 		"phone":          []string{"required"},
 		"adminfee_setup": []string{"required"},
 		"convfee_setup":  []string{"required"},
-		// "username": []string{"required", "unique:banks,username"},
-		// "password": []string{"required"},
+		// "username":       []string{"required", "unique:banks,username"},
+		// "password":       []string{"required"},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &bank)
@@ -101,8 +101,8 @@ func BankPatch(c echo.Context) error {
 	}
 
 	// dont allow admin to change bank credentials
-	tempUsername := bank.Username
-	tempPassword := bank.Password
+	// tempUsername := bank.Username
+	// tempPassword := bank.Password
 
 	payloadRules := govalidator.MapData{
 		"name":           []string{},
@@ -124,8 +124,8 @@ func BankPatch(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	bank.Username = tempUsername
-	bank.Password = tempPassword
+	// bank.Username = tempUsername
+	// bank.Password = tempPassword
 
 	err = bank.Save()
 	if err != nil {
