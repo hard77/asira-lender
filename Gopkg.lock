@@ -666,6 +666,7 @@
     "github.com/jszwec/csvutil",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",
+    "github.com/lib/pq",
     "github.com/pressly/goose",
     "github.com/spf13/viper",
     "github.com/thedevsaddam/govalidator",

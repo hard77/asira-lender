@@ -49,7 +49,7 @@ func (model *Bank) Create() error {
 		return err
 	}
 
-	// err = KafkaSubmitModel(b, "bank")
+	err = KafkaSubmitModel(model, "bank")
 
 	return err
 }
@@ -60,7 +60,7 @@ func (model *Bank) Save() error {
 		return err
 	}
 
-	// err = KafkaSubmitModel(b, "bank")
+	err = KafkaSubmitModel(model, "bank")
 
 	return err
 }
@@ -71,7 +71,7 @@ func (model *Bank) Delete() error {
 		return err
 	}
 
-	// err = KafkaSubmitModel(b, "bank_delete")
+	err = KafkaSubmitModel(model, "bank_delete")
 
 	return err
 }
