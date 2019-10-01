@@ -24,6 +24,10 @@ func ValidatePermissions(next echo.HandlerFunc) echo.HandlerFunc {
 		Method := c.Request().Method
 		URL := c.Request().URL.String()
 		PermissionsModel := models.Permissions{}
+
+		if !asira.App.DB.Where("lower(permissions) = 'all' AND role_id = ?", RoleID).Find(&PermissionsModel).RecordNotFound() {
+			return next(c)
+		}
 		//check permissions
 		perConfig := asira.App.Permission.GetStringMap(fmt.Sprintf("%s", Method))
 		for key, value := range perConfig {
