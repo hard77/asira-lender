@@ -62,6 +62,7 @@ func AddRole(c echo.Context) error {
 	payloadRules := govalidator.MapData{
 		"name":        []string{"required"},
 		"description": []string{},
+		"system":      []string{},
 		"status":      []string{},
 	}
 
@@ -91,6 +92,7 @@ func UpdateRole(c echo.Context) error {
 	payloadRules := govalidator.MapData{
 		"name":        []string{"required"},
 		"description": []string{},
+		"system":      []string{},
 		"status":      []string{},
 	}
 

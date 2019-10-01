@@ -173,6 +173,7 @@ CREATE TABLE "roles" (
     "id" bigserial,
     "name" varchar(255) NOT NULL,
     "description" text,
+    "system" varchar(255),
     "status" BOOLEAN,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,

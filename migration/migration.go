@@ -191,11 +191,13 @@ func Seed() {
 				Name:        "Core",
 				Status:      true,
 				Description: "ini Super Admin",
+				System:      "Core",
 			},
 			models.Roles{
 				Name:        "Manager",
 				Status:      true,
 				Description: "ini untuk Finance",
+				System:      "Core",
 			},
 		}
 		for _, role := range roles {

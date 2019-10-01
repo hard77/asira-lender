@@ -1,8 +1,8 @@
 package admin_handlers
 
 import (
+	"asira_lender/asira"
 	"asira_lender/models"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -57,50 +57,72 @@ func PermissionGetDetails(c echo.Context) error {
 func AddPermission(c echo.Context) error {
 	defer c.Request().Body.Close()
 
-	Permission := models.Permissions{}
+	type (
+		validatePermissions struct {
+			RoleID      string   `json:"role_id"`
+			Permissions []string `json:"permissions"`
+		}
+	)
+	valPermissions := validatePermissions{}
 
 	payloadRules := govalidator.MapData{
-		"role_id":     []string{"required", "role_id"},
+		"role_id":     []string{"required", "role_id", "numeric"},
 		"permissions": []string{},
 	}
 
-	validate := validateRequestPayload(c, payloadRules, &Permission)
+	validate := validateRequestPayload(c, payloadRules, &valPermissions)
 	if validate != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
-
-	err := Permission.Create()
-	if err != nil {
-		return returnInvalidResponse(http.StatusInternalServerError, err, "Gagal membuat Permissions")
+	Permissions := []models.Permissions{}
+	RoleID, _ := strconv.Atoi(valPermissions.RoleID)
+	for _, n := range valPermissions.Permissions {
+		Permissions = append(Permissions, models.Permissions{
+			RoleID:      RoleID,
+			Permissions: n,
+		})
 	}
 
-	return c.JSON(http.StatusCreated, Permission)
+	for _, per := range Permissions {
+		per.Create()
+	}
+	return c.JSON(http.StatusCreated, valPermissions)
 }
 
 func UpdatePermission(c echo.Context) error {
 	defer c.Request().Body.Close()
-	Permission_id, _ := strconv.Atoi(c.Param("permission_id"))
-
-	Permission := models.Permissions{}
-	err := Permission.FindbyID(Permission_id)
-	if err != nil {
-		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("Permission %v tidak ditemukan", Permission_id))
-	}
+	type (
+		validatePermissions struct {
+			RoleID      string   `json:"role_id"`
+			Permissions []string `json:"permissions"`
+		}
+	)
+	valPermissions := validatePermissions{}
+	Permissions := []models.Permissions{}
 
 	payloadRules := govalidator.MapData{
-		"role_id":     []string{"required", "role_id"},
+		"role_id":     []string{"required", "role_id", "numeric"},
 		"permissions": []string{},
 	}
 
-	validate := validateRequestPayload(c, payloadRules, &Permission)
+	validate := validateRequestPayload(c, payloadRules, &valPermissions)
 	if validate != nil {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	err = Permission.Save()
-	if err != nil {
-		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update Permissions %v", Permission_id))
+	RoleID, _ := strconv.Atoi(valPermissions.RoleID)
+	asira.App.DB.Where("role_id = ?", RoleID).Delete(&Permissions)
+
+	for _, n := range valPermissions.Permissions {
+		Permissions = append(Permissions, models.Permissions{
+			RoleID:      RoleID,
+			Permissions: n,
+		})
 	}
 
-	return c.JSON(http.StatusOK, Permission)
+	for _, per := range Permissions {
+		per.Create()
+	}
+
+	return c.JSON(http.StatusOK, valPermissions)
 }
