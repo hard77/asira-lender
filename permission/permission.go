@@ -4,7 +4,6 @@ import (
 	"asira_lender/asira"
 	"asira_lender/models"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
