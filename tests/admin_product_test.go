@@ -9,7 +9,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestLenderGetBankServiceList(t *testing.T) {
+func TestGetProductList(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -31,29 +31,29 @@ func TestLenderGetBankServiceList(t *testing.T) {
 	})
 
 	// valid response
-	auth.GET("/admin/bank_services").
+	auth.GET("/admin/products").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 
 	// test query found
-	obj := auth.GET("/admin/bank_services").WithQuery("name", "Pinjaman PNS").
+	obj := auth.GET("/admin/products").WithQuery("name", "Product A").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
-	// test query found with part name
-	obj = auth.GET("/admin/bank_services").WithQuery("name", "pinjaman").
+	//with part of name
+	obj = auth.GET("/admin/products").WithQuery("name", "prod").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 5)
 
 	// test query invalid
-	obj = auth.GET("/admin/bank_services").WithQuery("name", "should not found this").
+	obj = auth.GET("/admin/products").WithQuery("name", "should not found this").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
 }
 
-func TestNewBankService(t *testing.T) {
+func TestNewProduct(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -75,37 +75,26 @@ func TestNewBankService(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":   "Test New Bank Service",
-		"image":  "this is a long long base64 encoded image string",
+		"name":   "Test Product",
 		"status": "active",
 	}
 
 	// normal scenario
-	obj := auth.POST("/admin/bank_services").WithJSON(payload).
+	obj := auth.POST("/admin/products").WithJSON(payload).
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test New Bank Service")
-
-	// invalid status
-	payload = map[string]interface{}{
-		"name":   "Test New Bank Service",
-		"image":  "this is a long long base64 encoded image string",
-		"status": "not valid",
-	}
-	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
-		Expect().
-		Status(http.StatusUnprocessableEntity).JSON().Object()
+	obj.ContainsKey("name").ValueEqual("name", "Test Product")
 
 	// test invalid
 	payload = map[string]interface{}{
 		"name": "",
 	}
-	auth.POST("/admin/bank_services").WithJSON(payload).
+	auth.POST("/admin/products").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
 }
 
-func TestGetBankServicebyID(t *testing.T) {
+func TestGetProductbyID(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -127,18 +116,18 @@ func TestGetBankServicebyID(t *testing.T) {
 	})
 
 	// valid response
-	obj := auth.GET("/admin/bank_services/1").
+	obj := auth.GET("/admin/products/1").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("id").ValueEqual("id", 1)
 
 	// not found
-	auth.GET("/admin/bank_services/9999").
+	auth.GET("/admin/products/9999").
 		Expect().
 		Status(http.StatusNotFound).JSON().Object()
 }
 
-func TestPatchBankService(t *testing.T) {
+func TestPatchProduct(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -160,20 +149,20 @@ func TestPatchBankService(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name": "Test Service Patch",
+		"name": "Test Service Product Patch",
 	}
 
 	// valid response
-	obj := auth.PATCH("/admin/bank_services/1").WithJSON(payload).
+	obj := auth.PATCH("/admin/products/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test Service Patch")
+	obj.ContainsKey("name").ValueEqual("name", "Test Service Product Patch")
 
-	// invalid status
+	// valid response
 	payload = map[string]interface{}{
-		"status": "not valid",
+		"status": "invalid",
 	}
-	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
+	auth.PATCH("/admin/products/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
 
@@ -181,7 +170,7 @@ func TestPatchBankService(t *testing.T) {
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer wrong token")
 	})
-	auth.PATCH("/admin/bank_services/1").WithJSON(payload).
+	auth.PATCH("/admin/products/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object()
 }

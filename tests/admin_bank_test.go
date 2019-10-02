@@ -75,15 +75,15 @@ func TestNewBank(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":     "Test New Bank",
-		"type":     1,
-		"address":  "testing st.",
-		"province": "test province",
-		"city":     "test city",
-		"services": []string{"Service 1", "Service 2", "Service 3"},
-		"products": []string{"Products 1", "Products 2", "Products 3"},
-		"pic":      "test pic",
-		"phone":    "08123454321",
+		"name":           "Test New Bank",
+		"type":           1,
+		"address":        "testing st.",
+		"province":       "test province",
+		"city":           "test city",
+		"pic":            "test pic",
+		"phone":          "08123454321",
+		"adminfee_setup": "potong_plafon",
+		"convfee_setup":  "potong_plafon",
 	}
 
 	// normal scenario

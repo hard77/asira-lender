@@ -99,7 +99,7 @@ func processMessage(kafkaMessage []byte) (err error) {
 			return err
 		}
 
-		_, err = borrower.Save() // finish borrower create
+		err = borrower.Save() // finish borrower create
 		if err != nil {
 			return err
 		}
@@ -114,7 +114,7 @@ func processMessage(kafkaMessage []byte) (err error) {
 		loan.Bank = borrower.Bank
 		loan.OwnerName = borrower.Fullname
 
-		_, err = loan.Save() // finish create loan
+		err = loan.Save() // finish create loan
 		break
 	case "internal_role":
 		{
@@ -129,12 +129,12 @@ func processMessage(kafkaMessage []byte) (err error) {
 
 			if a["delete"] != nil && a["delete"].(bool) == true {
 				ID := int(a["id"].(float64))
-				result, err := iroles.FindbyID(ID)
+				err := iroles.FindbyID(ID)
 				if err != nil {
 					return err
 				}
 
-				_, err = result.Delete()
+				err = iroles.Delete()
 				if err != nil {
 					return err
 				}
@@ -143,7 +143,7 @@ func processMessage(kafkaMessage []byte) (err error) {
 				if err != nil {
 					return err
 				}
-				_, err = iroles.Save()
+				err = iroles.Save()
 				return err
 			}
 		}
