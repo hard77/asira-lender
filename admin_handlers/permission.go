@@ -22,14 +22,17 @@ func GetAllPermission(c echo.Context) error {
 
 	name := c.QueryParam("name")
 	id := c.QueryParam("id")
+	role_id := c.QueryParam("role_id")
 
 	type Filter struct {
 		ID         string `json:"id"`
+		RoleID     string `json:"role_id"`
 		Permission string `json:"permissions" condition:"LIKE"`
 	}
 
 	result, err := Permission.PagedFilterSearch(page, rows, orderby, sort, &Filter{
 		ID:         id,
+		RoleID:     role_id,
 		Permission: name,
 	})
 
