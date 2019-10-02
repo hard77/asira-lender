@@ -89,7 +89,7 @@ func TestNewBankProduct(t *testing.T) {
 				"amount":      "1%",
 			},
 			map[string]interface{}{
-				"description": "Convinience Fee",
+				"description": "Convenience Fee",
 				"amount":      "2%",
 			},
 		},

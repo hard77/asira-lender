@@ -142,7 +142,7 @@ func Seed() {
 				Province:            "Province A",
 				City:                "City A",
 				AdminFeeSetup:       "potong_plafon",
-				ConvinienceFeeSetup: "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank A PIC",
 				Phone:               "081234567890",
 				Username:            "Banktoib",
@@ -155,7 +155,7 @@ func Seed() {
 				Province:            "Province B",
 				City:                "City B",
 				AdminFeeSetup:       "potong_plafon",
-				ConvinienceFeeSetup: "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank B PIC",
 				Phone:               "081234567891",
 				Username:            "Banktoic",
@@ -208,7 +208,7 @@ func Seed() {
 			"description": "Admin Fee",
 			"amount":      "1%",
 		}, map[string]interface{}{
-			"description": "Convinience Fee",
+			"description": "Convenience Fee",
 			"amount":      "2%",
 		}})
 		bankProducts := []models.BankProduct{
@@ -417,7 +417,7 @@ func TestSeed() {
 				Province:            "Province A",
 				City:                "City A",
 				AdminFeeSetup:       "potong_plafon",
-				ConvinienceFeeSetup: "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank A PIC",
 				Phone:               "081234567890",
 				Username:            "Banktoib",
@@ -430,7 +430,7 @@ func TestSeed() {
 				Province:            "Province B",
 				City:                "City B",
 				AdminFeeSetup:       "potong_plafon",
-				ConvinienceFeeSetup: "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank B PIC",
 				Phone:               "081234567891",
 				Username:            "Banktoic",
@@ -483,7 +483,7 @@ func TestSeed() {
 			"description": "Admin Fee",
 			"amount":      "1%",
 		}, map[string]interface{}{
-			"description": "Convinience Fee",
+			"description": "Convenience Fee",
 			"amount":      "2%",
 		}})
 		bankProducts := []models.BankProduct{
@@ -657,13 +657,6 @@ func TestSeed() {
 		}
 
 		// seed loans
-		fees := []models.LoanFee{
-			models.LoanFee{
-				Description: "fee 1",
-				Amount:      1000,
-			},
-		}
-		jMarshal, _ := json.Marshal(fees)
 		loans := []models.Loan{
 			models.Loan{
 				Bank: sql.NullInt64{
@@ -679,7 +672,7 @@ func TestSeed() {
 				Installment:      8,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(6500000),
 				LayawayPlan:      500000,
@@ -699,7 +692,7 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,
@@ -719,7 +712,7 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(6500000),
 				LayawayPlan:      500000,
@@ -739,7 +732,7 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,
@@ -759,7 +752,7 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 3 intention",
 				IntentionDetails: "a loan 5 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,
@@ -779,7 +772,7 @@ func TestSeed() {
 				Installment:      11,
 				LoanIntention:    "a loan 3 intention",
 				IntentionDetails: "a loan 5 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,

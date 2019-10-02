@@ -20,7 +20,7 @@ type (
 		PIC                 string    `json:"pic" gorm:"column:pic;type:varchar(255)"`
 		Phone               string    `json:"phone" gorm:"column:phone;type:varchar(255)"`
 		AdminFeeSetup       string    `json:"adminfee_setup" gorm:"column:adminfee_setup;type:varchar(255)"`
-		ConvinienceFeeSetup string    `json:"convfee_setup" gorm:"column:convfee_setup;type:varchar(255)"`
+		ConvenienceFeeSetup string    `json:"convfee_setup" gorm:"column:convfee_setup;type:varchar(255)"`
 		Username            string    `json:"username" gorm:"column:username;type:varchar(255);unique;not null"`
 		Password            string    `json:"password" gorm:"column:password;type:text;not null"`
 	}
