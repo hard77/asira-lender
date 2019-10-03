@@ -62,7 +62,7 @@ func AddPermission(c echo.Context) error {
 
 	type (
 		validatePermissions struct {
-			RoleID      string   `json:"role_id"`
+			RoleID      int      `json:"role_id"`
 			Permissions []string `json:"permissions"`
 		}
 	)
@@ -78,10 +78,9 @@ func AddPermission(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 	Permissions := []models.Permissions{}
-	RoleID, _ := strconv.Atoi(valPermissions.RoleID)
 	for _, n := range valPermissions.Permissions {
 		Permissions = append(Permissions, models.Permissions{
-			RoleID:      RoleID,
+			RoleID:      valPermissions.RoleID,
 			Permissions: n,
 		})
 	}
@@ -96,7 +95,7 @@ func UpdatePermission(c echo.Context) error {
 	defer c.Request().Body.Close()
 	type (
 		validatePermissions struct {
-			RoleID      string   `json:"role_id"`
+			RoleID      int      `json:"role_id"`
 			Permissions []string `json:"permissions"`
 		}
 	)
@@ -113,12 +112,11 @@ func UpdatePermission(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	RoleID, _ := strconv.Atoi(valPermissions.RoleID)
-	asira.App.DB.Where("role_id = ?", RoleID).Delete(&Permissions)
+	asira.App.DB.Where("role_id = ?", valPermissions.RoleID).Delete(&Permissions)
 
 	for _, n := range valPermissions.Permissions {
 		Permissions = append(Permissions, models.Permissions{
-			RoleID:      RoleID,
+			RoleID:      valPermissions.RoleID,
 			Permissions: n,
 		})
 	}
