@@ -119,8 +119,8 @@ func BankServicePatch(c echo.Context) error {
 	}
 	bankServicePayload := BankServicePayload{}
 	servicePayloadRules := govalidator.MapData{
-		"service_id": []string{},
-		"bank_id":    []string{},
+		"service_id": []string{"valid_id:services"},
+		"bank_id":    []string{"valid_id:banks"},
 		"image":      []string{},
 		"status":     []string{"active_inactive"},
 	}
@@ -136,10 +136,10 @@ func BankServicePatch(c echo.Context) error {
 		bankService.Status = bankServicePayload.Status
 	}
 	if len(bankServicePayload.ServiceID) > 0 {
-		bankService.ServiceID = bankServicePayload.ServiceID
+		bankService.ServiceID, _ = strconv.ParseUint(bankServicePayload.ServiceID, 10, 64)
 	}
 	if len(bankServicePayload.BankID) > 0 {
-		bankService.BankID = bankServicePayload.BankID
+		bankService.BankID, _ = strconv.ParseUint(bankServicePayload.BankID, 10, 64)
 	}
 
 	err = bankService.Save()
