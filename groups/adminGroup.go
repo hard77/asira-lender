@@ -4,6 +4,7 @@ import (
 	"asira_lender/admin_handlers"
 	"asira_lender/handlers"
 	"asira_lender/middlewares"
+	"asira_lender/reports"
 
 	"github.com/labstack/echo"
 )
@@ -66,4 +67,7 @@ func AdminGroup(e *echo.Echo) {
 	// Role
 	g.GET("/internal_role", admin_handlers.GetAllRole)
 	g.GET("/internal_role/:role_id", admin_handlers.RoleGetDetails)
+
+	// Reports
+	g.GET("/reports/convenience_fee", reports.ConvenienceFeeReport)
 }

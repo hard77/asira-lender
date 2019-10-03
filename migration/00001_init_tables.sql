@@ -157,7 +157,7 @@ CREATE TABLE "borrowers" (
     "related_phonenumber" varchar(255) NOT NULL,
     "related_homenumber" varchar(255),
     "related_address" text,
-    "bank" bigint,
+    "bank" bigserial,
     "bank_accountnumber" varchar(255),
     FOREIGN KEY ("bank") REFERENCES banks(id),
     PRIMARY KEY ("id")
@@ -168,10 +168,10 @@ CREATE TABLE "loans" (
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
-    "owner" bigint,
+    "owner" bigserial,
     "owner_name" varchar(255),
-    "bank" bigint,
-    "product" bigint,
+    "bank" bigserial,
+    "product" bigserial,
     "status" varchar(255) DEFAULT  ('processing'),
     "loan_amount" FLOAT NOT NULL,
     "installment" int NOT NULL,
@@ -184,6 +184,7 @@ CREATE TABLE "loans" (
     "intention_details" text NOT NULL,
     "disburse_date" timestamptz,
     FOREIGN KEY ("owner") REFERENCES borrowers(id),
+    FOREIGN KEY ("bank") REFERENCES banks(id),
     FOREIGN KEY ("product") REFERENCES bank_products(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
