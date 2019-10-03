@@ -15,8 +15,8 @@ func GetAllPermission(c echo.Context) error {
 
 	Permission := models.Permissions{}
 	// pagination parameters
-	rows, err := strconv.Atoi(c.QueryParam("rows"))
-	page, err := strconv.Atoi(c.QueryParam("page"))
+	limit, err := strconv.Atoi(c.QueryParam("limit"))
+	offset, err := strconv.Atoi(c.QueryParam("offset"))
 	orderby := c.QueryParam("orderby")
 	sort := c.QueryParam("sort")
 
@@ -30,7 +30,7 @@ func GetAllPermission(c echo.Context) error {
 		Permission string `json:"permissions" condition:"LIKE"`
 	}
 
-	result, err := Permission.PagedFilterSearch(page, rows, orderby, sort, &Filter{
+	result, err := Permission.FilterSearch(offset, limit, orderby, sort, &Filter{
 		ID:         id,
 		RoleID:     role_id,
 		Permission: name,

@@ -45,3 +45,12 @@ func (b *Permissions) PagedFilterSearch(page int, rows int, orderby string, sort
 
 	return result, err
 }
+
+func (b *Permissions) FilterSearch(limit int, offset int, orderby string, sort string, filter interface{}) (result interface{}, err error) {
+	internal := []Permissions{}
+	order := []string{orderby}
+	sorts := []string{sort}
+	result, err = basemodel.FindFilter(&internal, order, sorts, limit, offset, filter)
+
+	return result, err
+}
