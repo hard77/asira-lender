@@ -135,6 +135,12 @@ func BankServicePatch(c echo.Context) error {
 	if len(bankServicePayload.Status) > 0 {
 		bankService.Status = bankServicePayload.Status
 	}
+	if len(bankServicePayload.ServiceID) > 0 {
+		bankService.ServiceID = bankServicePayload.ServiceID
+	}
+	if len(bankServicePayload.BankID) > 0 {
+		bankService.BankID = bankServicePayload.BankID
+	}
 
 	err = bankService.Save()
 	if err != nil {
