@@ -77,8 +77,8 @@ func BankProductNew(c echo.Context) error {
 	bankProduct := models.BankProduct{}
 
 	payloadRules := govalidator.MapData{
-		"product_id":       []string{"required"},
-		"bank_service_id":  []string{"required"},
+		"product_id":       []string{"required", "valid_id:products"},
+		"bank_service_id":  []string{"required", "valid_id:bank_services"},
 		"min_timespan":     []string{"required", "numeric"},
 		"max_timespan":     []string{"required", "numeric"},
 		"interest":         []string{"required", "numeric"},
@@ -130,8 +130,8 @@ func BankProductPatch(c echo.Context) error {
 	}
 
 	productPayloadRules := govalidator.MapData{
-		"product_id":       []string{},
-		"bank_service_id":  []string{},
+		"product_id":       []string{"valid_id:products"},
+		"bank_service_id":  []string{"valid_id:bank_services"},
 		"min_timespan":     []string{"numeric"},
 		"max_timespan":     []string{"numeric"},
 		"interest":         []string{"numeric"},
