@@ -2,11 +2,13 @@ package models
 
 import (
 	"github.com/jinzhu/gorm/dialects/postgres"
+
+	"gitlab.com/asira-ayannah/basemodel"
 )
 
 type (
 	ServiceProduct struct {
-		BaseModel
+		basemodel.BaseModel
 		Name            string         `json:"name" gorm:"column:name"`
 		MinTimeSpan     int            `json:"min_timespan" gorm:"column:min_timespan"`
 		MaxTimeSpan     int            `json:"max_timespan" gorm:"column:max_timespan"`
@@ -23,47 +25,49 @@ type (
 	}
 )
 
-func (p *ServiceProduct) Create() (*ServiceProduct, error) {
-	err := Create(&p)
+func (p *ServiceProduct) Create() error {
+	err := basemodel.Create(&p)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = KafkaSubmitModel(p, "bank_service_product")
 
-	return p, err
+	return err
 }
 
-func (p *ServiceProduct) Save() (*ServiceProduct, error) {
-	err := Save(&p)
+func (p *ServiceProduct) Save() error {
+	err := basemodel.Save(&p)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = KafkaSubmitModel(p, "bank_service_product")
 
-	return p, err
+	return err
 }
 
-func (p *ServiceProduct) Delete() (*ServiceProduct, error) {
-	err := Delete(&p)
+func (p *ServiceProduct) Delete() error {
+	err := basemodel.Delete(&p)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = KafkaSubmitModel(p, "bank_service_product_delete")
 
-	return p, err
+	return err
 }
 
-func (p *ServiceProduct) FindbyID(id int) (*ServiceProduct, error) {
-	err := FindbyID(&p, id)
-	return p, err
+func (p *ServiceProduct) FindbyID(id int) error {
+	err := basemodel.FindbyID(&p, id)
+	return err
 }
 
-func (p *ServiceProduct) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
+func (p *ServiceProduct) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	product := []ServiceProduct{}
-	result, err = PagedFilterSearch(&product, page, rows, orderby, sort, filter)
+	order := []string{orderby}
+	sorts := []string{sort}
+	result, err = basemodel.PagedFindFilter(&product, page, rows, order, sorts, filter)
 
 	return result, err
 }

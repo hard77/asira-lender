@@ -63,7 +63,7 @@ func BankServiceProductNew(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	_, err := serviceProduct.Create()
+	err := serviceProduct.Create()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "Gagal membuat layanan bank baru")
 	}
@@ -77,7 +77,7 @@ func BankServiceProductDetail(c echo.Context) error {
 	product_id, _ := strconv.Atoi(c.Param("product_id"))
 
 	serviceProduct := models.ServiceProduct{}
-	_, err := serviceProduct.FindbyID(product_id)
+	err := serviceProduct.FindbyID(product_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("product %v tidak ditemukan", serviceProduct))
 	}
@@ -91,7 +91,7 @@ func BankServiceProductPatch(c echo.Context) error {
 	product_id, _ := strconv.Atoi(c.Param("product_id"))
 
 	serviceProduct := models.ServiceProduct{}
-	_, err := serviceProduct.FindbyID(product_id)
+	err := serviceProduct.FindbyID(product_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("product %v tidak ditemukan", product_id))
 	}
@@ -116,7 +116,7 @@ func BankServiceProductPatch(c echo.Context) error {
 		return returnInvalidResponse(http.StatusUnprocessableEntity, validate, "validation error")
 	}
 
-	_, err = serviceProduct.Save()
+	err = serviceProduct.Save()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update product %v", product_id))
 	}
@@ -130,12 +130,12 @@ func BankServiceProductDelete(c echo.Context) error {
 	product_id, _ := strconv.Atoi(c.Param("product_id"))
 
 	serviceProduct := models.ServiceProduct{}
-	_, err := serviceProduct.FindbyID(product_id)
+	err := serviceProduct.FindbyID(product_id)
 	if err != nil {
 		return returnInvalidResponse(http.StatusNotFound, err, fmt.Sprintf("bank type %v tidak ditemukan", product_id))
 	}
 
-	_, err = serviceProduct.Delete()
+	err = serviceProduct.Delete()
 	if err != nil {
 		return returnInvalidResponse(http.StatusInternalServerError, err, fmt.Sprintf("Gagal update bank tipe %v", product_id))
 	}
