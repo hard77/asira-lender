@@ -15,9 +15,6 @@ import (
 )
 
 func Seed() {
-	seeder := asira.App.DB.Begin()
-	defer seeder.Commit()
-
 	if asira.App.ENV == "development" {
 		// seed internals
 		internals := []models.Internals{
@@ -46,6 +43,18 @@ func Seed() {
 			models.Image{
 				Image_string: string(b64image),
 			},
+			models.Image{
+				Image_string: string(b64image),
+			},
+			models.Image{
+				Image_string: string(b64image),
+			},
+			models.Image{
+				Image_string: string(b64image),
+			},
+			models.Image{
+				Image_string: string(b64image),
+			},
 		}
 		for _, image := range images {
 			image.Create()
@@ -70,86 +79,61 @@ func Seed() {
 			bankType.Create()
 		}
 
-		// seed bank services
-		bankServices := []models.BankService{
-			models.BankService{
-				Name:    "Pinjaman PNS",
-				ImageID: 1,
-				Status:  "active",
+		// seed services
+		services := []models.Service{
+			models.Service{
+				Name:   "Pinjaman PNS",
+				Status: "active",
 			},
-			models.BankService{
-				Name:    "Pinjaman Pensiun",
-				ImageID: 1,
-				Status:  "active",
+			models.Service{
+				Name:   "Pinjaman Pensiun",
+				Status: "active",
 			},
-			models.BankService{
-				Name:    "Pinjaman UMKN",
-				ImageID: 1,
-				Status:  "active",
+			models.Service{
+				Name:   "Pinjaman UMKN",
+				Status: "active",
 			},
-			models.BankService{
-				Name:    "Pinjaman Mikro",
-				ImageID: 1,
-				Status:  "inactive",
+			models.Service{
+				Name:   "Pinjaman Mikro",
+				Status: "inactive",
 			},
-			models.BankService{
-				Name:    "Pinjaman Lainnya",
-				ImageID: 1,
-				Status:  "inactive",
+			models.Service{
+				Name:   "Pinjaman Lainnya",
+				Status: "inactive",
 			},
 		}
-		for _, bankService := range bankServices {
-			bankService.Create()
+		for _, service := range services {
+			service.Create()
 		}
 
-		// seed service products
-		feesMarshal, _ := json.Marshal([]interface{}{map[string]interface{}{
-			"description": "Admin Fee",
-			"amount":      2500,
-		}})
-		collateralMarshal, _ := json.Marshal([]string{"Surat Tanah", "BPKB"})
-		financeMarshal, _ := json.Marshal([]string{"Pendidikan"})
-		serviceProducts := []models.ServiceProduct{
-			models.ServiceProduct{
-				Name:            "Product A",
-				MinTimeSpan:     1,
-				MaxTimeSpan:     6,
-				Interest:        5,
-				MinLoan:         1000000,
-				MaxLoan:         10000000,
-				Fees:            postgres.Jsonb{feesMarshal},
-				ASN_Fee:         "1%",
-				Service:         1,
-				Collaterals:     postgres.Jsonb{collateralMarshal},
-				FinancingSector: postgres.Jsonb{financeMarshal},
-				Assurance:       "an Assurance",
-				Status:          "active",
+		// seed products
+		products := []models.Product{
+			models.Product{
+				Name:   "Product A",
+				Status: "active",
 			},
-			models.ServiceProduct{
-				Name:            "Product B",
-				MinTimeSpan:     3,
-				MaxTimeSpan:     12,
-				Interest:        5,
-				MinLoan:         5000000,
-				MaxLoan:         8000000,
-				Fees:            postgres.Jsonb{feesMarshal},
-				ASN_Fee:         "1%",
-				Service:         1,
-				Collaterals:     postgres.Jsonb{collateralMarshal},
-				FinancingSector: postgres.Jsonb{financeMarshal},
-				Assurance:       "an Assurance",
-				Status:          "active",
+			models.Product{
+				Name:   "Product B",
+				Status: "active",
+			},
+			models.Product{
+				Name:   "Product C",
+				Status: "active",
+			},
+			models.Product{
+				Name:   "Product D",
+				Status: "active",
+			},
+			models.Product{
+				Name:   "Product E",
+				Status: "active",
 			},
 		}
-		for _, serviceProduct := range serviceProducts {
-			serviceProduct.Create()
+		for _, product := range products {
+			product.Create()
 		}
 
 		// seed lenders
-		rawBankServices := []string{"Pinjaman PNS", "Pinjaman Pensiun", "Pinjaman Mikro"}
-		rawBankProducts := []string{"Product A", "Product B"}
-		jBankServices, _ := json.Marshal(rawBankServices)
-		jBankProducts, _ := json.Marshal(rawBankProducts)
 		lenders := []models.Bank{
 			models.Bank{
 				Name:                "Bank A",
@@ -157,10 +141,8 @@ func Seed() {
 				Address:             "Bank A Address",
 				Province:            "Province A",
 				City:                "City A",
-				Services:            postgres.Jsonb{jBankServices},
-				Products:            postgres.Jsonb{jBankProducts},
 				AdminFeeSetup:       "potong_plafon",
-				ConvinienceFeeSetup: "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank A PIC",
 				Phone:               "081234567890",
 				Username:            "Banktoib",
@@ -172,10 +154,8 @@ func Seed() {
 				Address:             "Bank B Address",
 				Province:            "Province B",
 				City:                "City B",
-				Services:            postgres.Jsonb{jBankServices},
-				Products:            postgres.Jsonb{jBankProducts},
 				AdminFeeSetup:       "potong_plafon",
-				ConvinienceFeeSetup: "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank B PIC",
 				Phone:               "081234567891",
 				Username:            "Banktoic",
@@ -265,13 +245,131 @@ func Seed() {
 		for _, user := range users {
 			user.Create()
 		}
+
+		// seed bank services
+		bankServices := []models.BankService{
+			models.BankService{
+				ServiceID: 1,
+				BankID:    1,
+				ImageID:   1,
+				Status:    "active",
+			},
+			models.BankService{
+				ServiceID: 2,
+				BankID:    1,
+				ImageID:   2,
+				Status:    "active",
+			},
+			models.BankService{
+				ServiceID: 3,
+				BankID:    1,
+				ImageID:   3,
+				Status:    "inactive",
+			},
+			models.BankService{
+				ServiceID: 4,
+				BankID:    2,
+				ImageID:   4,
+				Status:    "active",
+			},
+			models.BankService{
+				ServiceID: 5,
+				BankID:    2,
+				ImageID:   5,
+				Status:    "active",
+			},
+		}
+		for _, bankService := range bankServices {
+			bankService.Create()
+		}
+
+		// seed bank products
+		feesMarshal, _ := json.Marshal([]interface{}{map[string]interface{}{
+			"description": "Admin Fee",
+			"amount":      "1%",
+		}, map[string]interface{}{
+			"description": "Convenience Fee",
+			"amount":      "2%",
+		}})
+		bankProducts := []models.BankProduct{
+			models.BankProduct{
+				ProductID:       1,
+				BankServiceID:   1,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       2,
+				BankServiceID:   2,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       3,
+				BankServiceID:   3,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       4,
+				BankServiceID:   4,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       5,
+				BankServiceID:   5,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+		}
+		for _, bankProduct := range bankProducts {
+			bankProduct.Create()
+		}
 	}
 }
 
 func TestSeed() {
-	seeder := asira.App.DB.Begin()
-	defer seeder.Commit()
-
 	if asira.App.ENV == "development" {
 		// seed internals
 		internals := []models.Internals{
@@ -300,6 +398,18 @@ func TestSeed() {
 			models.Image{
 				Image_string: string(b64image),
 			},
+			models.Image{
+				Image_string: string(b64image),
+			},
+			models.Image{
+				Image_string: string(b64image),
+			},
+			models.Image{
+				Image_string: string(b64image),
+			},
+			models.Image{
+				Image_string: string(b64image),
+			},
 		}
 		for _, image := range images {
 			image.Create()
@@ -324,86 +434,61 @@ func TestSeed() {
 			bankType.Create()
 		}
 
-		// seed bank services
-		bankServices := []models.BankService{
-			models.BankService{
-				Name:    "Pinjaman PNS",
-				ImageID: 1,
-				Status:  "active",
+		// seed services
+		services := []models.Service{
+			models.Service{
+				Name:   "Pinjaman PNS",
+				Status: "active",
 			},
-			models.BankService{
-				Name:    "Pinjaman Pensiun",
-				ImageID: 1,
-				Status:  "active",
+			models.Service{
+				Name:   "Pinjaman Pensiun",
+				Status: "active",
 			},
-			models.BankService{
-				Name:    "Pinjaman UMKN",
-				ImageID: 1,
-				Status:  "active",
+			models.Service{
+				Name:   "Pinjaman UMKN",
+				Status: "active",
 			},
-			models.BankService{
-				Name:    "Pinjaman Mikro",
-				ImageID: 1,
-				Status:  "inactive",
+			models.Service{
+				Name:   "Pinjaman Mikro",
+				Status: "inactive",
 			},
-			models.BankService{
-				Name:    "Pinjaman Lainnya",
-				ImageID: 1,
-				Status:  "inactive",
+			models.Service{
+				Name:   "Pinjaman Lainnya",
+				Status: "inactive",
 			},
 		}
-		for _, bankService := range bankServices {
-			bankService.Create()
+		for _, service := range services {
+			service.Create()
 		}
 
-		// seed service products
-		feesMarshal, _ := json.Marshal([]interface{}{map[string]interface{}{
-			"description": "Admin Fee",
-			"amount":      2500,
-		}})
-		collateralMarshal, _ := json.Marshal([]string{"Surat Tanah", "BPKB"})
-		financeMarshal, _ := json.Marshal([]string{"Pendidikan"})
-		serviceProducts := []models.ServiceProduct{
-			models.ServiceProduct{
-				Name:            "Product A",
-				MinTimeSpan:     1,
-				MaxTimeSpan:     6,
-				Interest:        5,
-				MinLoan:         1000000,
-				MaxLoan:         10000000,
-				Fees:            postgres.Jsonb{feesMarshal},
-				ASN_Fee:         "1%",
-				Service:         1,
-				Collaterals:     postgres.Jsonb{collateralMarshal},
-				FinancingSector: postgres.Jsonb{financeMarshal},
-				Assurance:       "an Assurance",
-				Status:          "active",
+		// seed products
+		products := []models.Product{
+			models.Product{
+				Name:   "Product A",
+				Status: "active",
 			},
-			models.ServiceProduct{
-				Name:            "Product B",
-				MinTimeSpan:     3,
-				MaxTimeSpan:     12,
-				Interest:        5,
-				MinLoan:         5000000,
-				MaxLoan:         8000000,
-				Fees:            postgres.Jsonb{feesMarshal},
-				ASN_Fee:         "1%",
-				Service:         1,
-				Collaterals:     postgres.Jsonb{collateralMarshal},
-				FinancingSector: postgres.Jsonb{financeMarshal},
-				Assurance:       "an Assurance",
-				Status:          "active",
+			models.Product{
+				Name:   "Product B",
+				Status: "active",
+			},
+			models.Product{
+				Name:   "Product C",
+				Status: "active",
+			},
+			models.Product{
+				Name:   "Product D",
+				Status: "active",
+			},
+			models.Product{
+				Name:   "Product E",
+				Status: "active",
 			},
 		}
-		for _, serviceProduct := range serviceProducts {
-			serviceProduct.Create()
+		for _, product := range products {
+			product.Create()
 		}
 
 		// seed lenders
-		rawBankServices := []string{"Pinjaman PNS", "Pinjaman Pensiun", "Pinjaman Mikro"}
-		rawBankProducts := []string{"Product A", "Product B"}
-		jBankServices, _ := json.Marshal(rawBankServices)
-		jBankProducts, _ := json.Marshal(rawBankProducts)
 		lenders := []models.Bank{
 			models.Bank{
 				Name:                "Bank A",
@@ -411,12 +496,12 @@ func TestSeed() {
 				Address:             "Bank A Address",
 				Province:            "Province A",
 				City:                "City A",
-				Services:            postgres.Jsonb{jBankServices},
-				Products:            postgres.Jsonb{jBankProducts},
+				AdminFeeSetup:       "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank A PIC",
 				Phone:               "081234567890",
-				AdminFeeSetup:       "potong_plafon",
-				ConvinienceFeeSetup: "potong_plafon",
+				Username:            "Banktoib",
+				Password:            "password",
 			},
 			models.Bank{
 				Name:                "Bank B",
@@ -424,16 +509,137 @@ func TestSeed() {
 				Address:             "Bank B Address",
 				Province:            "Province B",
 				City:                "City B",
-				Services:            postgres.Jsonb{jBankServices},
-				Products:            postgres.Jsonb{jBankProducts},
+				AdminFeeSetup:       "potong_plafon",
+				ConvenienceFeeSetup: "potong_plafon",
 				PIC:                 "Bank B PIC",
 				Phone:               "081234567891",
-				AdminFeeSetup:       "beban_plafon",
-				ConvinienceFeeSetup: "beban_plafon",
+				Username:            "Banktoic",
+				Password:            "password",
 			},
 		}
 		for _, lender := range lenders {
 			lender.Create()
+		}
+
+		// seed bank services
+		bankServices := []models.BankService{
+			models.BankService{
+				ServiceID: 1,
+				BankID:    1,
+				ImageID:   1,
+				Status:    "active",
+			},
+			models.BankService{
+				ServiceID: 2,
+				BankID:    1,
+				ImageID:   2,
+				Status:    "active",
+			},
+			models.BankService{
+				ServiceID: 3,
+				BankID:    1,
+				ImageID:   3,
+				Status:    "inactive",
+			},
+			models.BankService{
+				ServiceID: 4,
+				BankID:    2,
+				ImageID:   4,
+				Status:    "active",
+			},
+			models.BankService{
+				ServiceID: 5,
+				BankID:    2,
+				ImageID:   5,
+				Status:    "active",
+			},
+		}
+		for _, bankService := range bankServices {
+			bankService.Create()
+		}
+
+		// seed bank products
+		feesMarshal, _ := json.Marshal([]interface{}{map[string]interface{}{
+			"description": "Admin Fee",
+			"amount":      "1%",
+		}, map[string]interface{}{
+			"description": "Convenience Fee",
+			"amount":      "2%",
+		}})
+		bankProducts := []models.BankProduct{
+			models.BankProduct{
+				ProductID:       1,
+				BankServiceID:   1,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       2,
+				BankServiceID:   2,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       3,
+				BankServiceID:   3,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       4,
+				BankServiceID:   4,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+			models.BankProduct{
+				ProductID:       5,
+				BankServiceID:   5,
+				MinTimeSpan:     3,
+				MaxTimeSpan:     12,
+				Interest:        5,
+				MinLoan:         5000000,
+				MaxLoan:         8000000,
+				Fees:            postgres.Jsonb{feesMarshal},
+				Collaterals:     []string{"Surat Tanah", "BPKB"},
+				FinancingSector: []string{"Pendidikan"},
+				Assurance:       "an Assurance",
+				Status:          "active",
+			},
+		}
+		for _, bankProduct := range bankProducts {
+			bankProduct.Create()
 		}
 
 		// @ToDo borrower and loans should be get from borrower platform
@@ -531,13 +737,6 @@ func TestSeed() {
 		}
 
 		// seed loans
-		fees := []models.LoanFee{
-			models.LoanFee{
-				Description: "fee 1",
-				Amount:      1000,
-			},
-		}
-		jMarshal, _ := json.Marshal(fees)
 		loans := []models.Loan{
 			models.Loan{
 				Bank: sql.NullInt64{
@@ -553,10 +752,11 @@ func TestSeed() {
 				Installment:      8,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(6500000),
 				LayawayPlan:      500000,
+				Product:          1,
 			},
 			models.Loan{
 				Bank: sql.NullInt64{
@@ -572,10 +772,11 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,
+				Product:          1,
 			},
 			models.Loan{
 				Bank: sql.NullInt64{
@@ -591,10 +792,11 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(6500000),
 				LayawayPlan:      500000,
+				Product:          1,
 			},
 			models.Loan{
 				Bank: sql.NullInt64{
@@ -610,10 +812,11 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 1 intention",
 				IntentionDetails: "a loan 1 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,
+				Product:          1,
 			},
 			models.Loan{
 				Bank: sql.NullInt64{
@@ -629,10 +832,11 @@ func TestSeed() {
 				Installment:      3,
 				LoanIntention:    "a loan 3 intention",
 				IntentionDetails: "a loan 5 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,
+				Product:          1,
 			},
 			models.Loan{
 				Bank: sql.NullInt64{
@@ -648,10 +852,11 @@ func TestSeed() {
 				Installment:      11,
 				LoanIntention:    "a loan 3 intention",
 				IntentionDetails: "a loan 5 intention details",
-				Fees:             postgres.Jsonb{jMarshal},
+				Fees:             postgres.Jsonb{feesMarshal},
 				Interest:         1.5,
 				TotalLoan:        float64(3000000),
 				LayawayPlan:      200000,
+				Product:          1,
 			},
 		}
 		for _, loan := range loans {
@@ -729,10 +934,13 @@ func Truncate(tableList []string) (err error) {
 	if len(tableList) > 0 {
 		if tableList[0] == "all" {
 			tableList = []string{
-				"service_products",
+				"internals",
+				"bank_products",
 				"bank_services",
-				"bank_types",
+				"products",
+				"services",
 				"banks",
+				"bank_types",
 				"borrowers",
 				"loans",
 				"images",

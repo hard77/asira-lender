@@ -22,12 +22,13 @@ var (
 
 type (
 	Application struct {
-		Name       string        `json:"name"`
-		Version    string        `json:"version"`
-		ENV        string        `json:"env"`
-		Config     viper.Viper   `json:"prog_config"`
-		DB         *gorm.DB      `json:"db"`
-		Kafka      KafkaInstance `json:"kafka"`
+		Name    string        `json:"name"`
+		Port    string        `json:"port"`
+		Version string        `json:"version"`
+		ENV     string        `json:"env"`
+		Config  viper.Viper   `json:"prog_config"`
+		DB      *gorm.DB      `json:"db"`
+		Kafka   KafkaInstance `json:"kafka"`
 		Permission viper.Viper   `json:"prog_permission"`
 	}
 
@@ -41,7 +42,8 @@ type (
 func init() {
 	var err error
 	App = &Application{}
-	App.Name = os.Getenv("APPNAME")
+	App.Name = "asira_lender"
+	App.Port = os.Getenv("APPPORT")
 	App.Version = os.Getenv("APPVER")
 	App.loadENV()
 	if err = App.LoadConfigs(); err != nil {

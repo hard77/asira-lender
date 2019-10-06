@@ -68,6 +68,24 @@ func (a *AsiraValidator) CustomValidatorRules() {
 		return nil
 	})
 
+	// valid_id. must be a listed id of a model.
+	govalidator.AddCustomRule("valid_id", func(field string, rule string, message string, value interface{}) error {
+		var (
+			queryRow *gorm.DB
+			total    int
+		)
+
+		table := strings.TrimPrefix(rule, fmt.Sprintf("%s:", "valid_id"))
+		query := fmt.Sprintf("SELECT COUNT(*) as total FROM %s WHERE id = ?", table)
+		queryRow = a.DB.Raw(query, value)
+		queryRow.Row().Scan(&total)
+
+		if total < 1 {
+			return fmt.Errorf(fmt.Sprint("service id %v is not found.", value), field)
+		}
+		return nil
+	})
+
 	// bank type. must be a listed bank type id.
 	govalidator.AddCustomRule("role_id", func(field string, rule string, message string, value interface{}) error {
 		var (

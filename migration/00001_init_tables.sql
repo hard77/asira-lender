@@ -36,12 +36,10 @@ CREATE TABLE "banks" (
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
     "name" varchar(255),
-    "type" bigint,
+    "type" bigserial,
     "address" text,
     "province" varchar(255),
     "city" varchar(255),
-    "services" jsonb DEFAULT '[]',
-    "products" jsonb DEFAULT '[]',
     "pic" varchar(255),
     "phone" varchar(255),
     "adminfee_setup" varchar(255),
@@ -52,38 +50,60 @@ CREATE TABLE "banks" (
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
+CREATE TABLE "services" (
+    "id" bigserial,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "deleted_time" timestamptz,
+    "name" varchar(255),
+    "status" varchar(255),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
 CREATE TABLE "bank_services" (
     "id" bigserial,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
-    "name" varchar(255),
-    "image_id" bigint,
+    "service_id" bigserial,
+    "bank_id" bigserial,
+    "image_id" bigserial,
     "status" varchar(255),
+    FOREIGN KEY ("service_id") REFERENCES services(id),
+    FOREIGN KEY ("bank_id") REFERENCES banks(id),
     FOREIGN KEY ("image_id") REFERENCES images(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
-COMMENT ON COLUMN "bank_services"."status" IS '0 = inactive, 1 = active';
 
-CREATE TABLE "service_products" (
+CREATE TABLE "products" (
     "id" bigserial,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
     "name" varchar(255),
+    "status" varchar(255),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "bank_products" (
+    "id" bigserial,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "deleted_time" timestamptz,
+    "product_id" bigserial,
+    "bank_service_id" bigserial,
     "min_timespan" int,
     "max_timespan" int,
     "interest" int,
     "min_loan" int,
     "max_loan" int,
     "fees" jsonb DEFAULT '[]',
-    "asn_fee" varchar(255),
-    "service" bigint,
-    "collaterals" jsonb DEFAULT '[]',
-    "financing_sector" jsonb DEFAULT '[]',
+    "collaterals" varchar(255) ARRAY,
+    "financing_sector" varchar(255) ARRAY,
     "assurance" varchar(255),
     "status" varchar(255),
-    FOREIGN KEY ("service") REFERENCES bank_services(id),
+    FOREIGN KEY ("product_id") REFERENCES products(id),
+    FOREIGN KEY ("bank_service_id") REFERENCES bank_services(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -151,7 +171,6 @@ CREATE TABLE "loans" (
     "owner" bigint,
     "owner_name" varchar(255),
     "bank" bigint,
-    "service" bigint,
     "product" bigint,
     "status" varchar(255) DEFAULT  ('processing'),
     "loan_amount" FLOAT NOT NULL,
@@ -165,7 +184,7 @@ CREATE TABLE "loans" (
     "intention_details" text NOT NULL,
     "disburse_date" timestamptz,
     FOREIGN KEY ("owner") REFERENCES borrowers(id),
-    FOREIGN KEY ("bank") REFERENCES banks(id),
+    FOREIGN KEY ("product") REFERENCES bank_products(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
@@ -211,10 +230,14 @@ CREATE TABLE "user_relations" (
     FOREIGN KEY ("user_id") REFERENCES users(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
+
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
-DROP TABLE IF EXISTS "service_products" CASCADE;
+
+DROP TABLE IF EXISTS "bank_products" CASCADE;
 DROP TABLE IF EXISTS "bank_services" CASCADE;
+DROP TABLE IF EXISTS "products" CASCADE;
+DROP TABLE IF EXISTS "services" CASCADE;
 DROP TABLE IF EXISTS "banks" CASCADE;
 DROP TABLE IF EXISTS "bank_types" CASCADE;
 DROP TABLE IF EXISTS "borrowers" CASCADE;
