@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"asira_lender/asira"
+	"asira_lender/models"
 	"fmt"
+	"strconv"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -12,8 +14,9 @@ import (
 
 type (
 	JWTclaims struct {
-		Username string `json:"username"`
-		Role     string `json:"role"`
+		Username    string   `json:"username"`
+		Role        string   `json:"role"`
+		Permissions []string `json:"permissions"`
 		jwt.StandardClaims
 	}
 )
@@ -67,10 +70,26 @@ func returnInvalidResponse(httpcode int, details interface{}, message string) er
 // self explanation
 func createJwtToken(id string, role string) (string, error) {
 	jwtConf := asira.App.Config.GetStringMap(fmt.Sprintf("%s.jwt", asira.App.ENV))
-
+	var permissions []string
+	if role == "admin" {
+		user := models.User{}
+		UserID, _ := strconv.Atoi(id)
+		err := user.FindbyID(UserID)
+		if err != nil {
+			return "", err
+		}
+		//get permissions
+		Roles := models.InternalRoles{}
+		err = Roles.FindbyID(user.RoleID)
+		if err != nil {
+			return "", err
+		}
+		permissions = Roles.Permissions
+	}
 	claim := JWTclaims{
 		id,
 		role,
+		permissions,
 		jwt.StandardClaims{
 			Id:        id,
 			ExpiresAt: time.Now().Add(time.Duration(jwtConf["duration"].(int)) * time.Minute).Unix(),

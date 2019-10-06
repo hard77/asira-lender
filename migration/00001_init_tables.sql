@@ -169,14 +169,46 @@ CREATE TABLE "loans" (
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 
-CREATE TABLE "internal_roles" (
+CREATE TABLE "roles" (
     "id" bigserial,
     "name" varchar(255) NOT NULL,
-    "system" varchar(255) NOT NULL,
+    "system" text,
     "description" text,
     "status" BOOLEAN,
     "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "permissions" (
+    "id" bigserial,
+    "role_id" bigint,
+    "permissions" varchar(255),
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("role_id") REFERENCES roles(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "users" (
+    "id" bigserial,
+    "role_id" bigint,
+    "username" varchar(255) NOT NULL,
+    "password" text NOT NULL,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("role_id") REFERENCES roles(id),
+    PRIMARY KEY ("id")
+) WITH (OIDS = FALSE);
+
+CREATE TABLE "user_relations" (
+    "id" bigserial,
+    "bank_id" bigint,
+    "user_id" bigint,
+    "created_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY ("bank_id") REFERENCES banks(id),
+    FOREIGN KEY ("user_id") REFERENCES users(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 -- +goose Down
@@ -189,4 +221,7 @@ DROP TABLE IF EXISTS "borrowers" CASCADE;
 DROP TABLE IF EXISTS "loans" CASCADE;
 DROP TABLE IF EXISTS "images" CASCADE;
 DROP TABLE IF EXISTS "internals" CASCADE;
-DROP TABLE IF EXISTS "internal_roles" CASCADE;
+DROP TABLE IF EXISTS "roles" CASCADE;
+DROP TABLE IF EXISTS "permissions" CASCADE;
+DROP TABLE IF EXISTS "users" CASCADE;
+DROP TABLE IF EXISTS "user_relations" CASCADE;
