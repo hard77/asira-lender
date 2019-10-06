@@ -9,7 +9,7 @@ import (
 	"github.com/gavv/httpexpect"
 )
 
-func TestLenderGetBankList(t *testing.T) {
+func TestGetRoleList(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -31,29 +31,24 @@ func TestLenderGetBankList(t *testing.T) {
 	})
 
 	// valid response
-	auth.GET("/admin/banks").
+	auth.GET("/admin/roles").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 
 	// test query found
-	obj := auth.GET("/admin/banks").WithQuery("name", "Bank A").
+	obj := auth.GET("/admin/roles").WithQuery("name", "Finance").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
-	// test query found with part name
-	obj = auth.GET("/admin/banks").WithQuery("name", "bank").
-		Expect().
-		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 2)
 
 	// test query invalid
-	obj = auth.GET("/admin/banks").WithQuery("name", "should not found this").
+	obj = auth.GET("/admin/roles").WithQuery("name", "should not found this").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
 }
 
-func TestNewBank(t *testing.T) {
+func TestNewRole(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -75,35 +70,26 @@ func TestNewBank(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":           "Test New Bank",
-		"type":           1,
-		"address":        "testing st.",
-		"province":       "test province",
-		"city":           "test city",
-		"services":       []string{"Service 1", "Service 2", "Service 3"},
-		"products":       []string{"Products 1", "Products 2", "Products 3"},
-		"pic":            "test pic",
-		"phone":          "08123454321",
-		"adminfee_setup": "100",
-		"convfee_setup":  "1",
+		"name":        "Manager",
+		"description": "ini description",
 	}
 
 	// normal scenario
-	obj := auth.POST("/admin/banks").WithJSON(payload).
+	obj := auth.POST("/admin/roles").WithJSON(payload).
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test New Bank")
+	obj.ContainsKey("name").ValueEqual("name", "Manager")
 
 	// test invalid
 	payload = map[string]interface{}{
 		"name": "",
 	}
-	auth.POST("/admin/banks").WithJSON(payload).
+	auth.POST("/admin/roles").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
 }
 
-func TestGetBankbyID(t *testing.T) {
+func TestGetRolebyID(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -125,18 +111,18 @@ func TestGetBankbyID(t *testing.T) {
 	})
 
 	// valid response
-	obj := auth.GET("/admin/banks/1").
+	obj := auth.GET("/admin/roles/1").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("id").ValueEqual("id", 1)
 
 	// not found
-	auth.GET("/admin/banks/9999").
+	auth.GET("/admin/roles/9999").
 		Expect().
 		Status(http.StatusNotFound).JSON().Object()
 }
 
-func TestPatchBank(t *testing.T) {
+func TestPatchRole(t *testing.T) {
 	RebuildData()
 
 	api := router.NewRouter()
@@ -158,20 +144,21 @@ func TestPatchBank(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name": "Test Patch",
+		"name":        "Finance1",
+		"description": "ini deskripsi",
 	}
 
 	// valid response
-	obj := auth.PATCH("/admin/banks/1").WithJSON(payload).
+	obj := auth.PATCH("/admin/roles/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Test Patch")
+	obj.ContainsKey("id").ValueEqual("id", 1)
 
 	// test invalid token
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer wrong token")
 	})
-	auth.PATCH("/admin/banks/1").WithJSON(payload).
+	auth.PATCH("/admin/roles/1").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object()
 }

@@ -188,9 +188,16 @@ func Seed() {
 
 		roles := []models.Roles{
 			models.Roles{
+				Name:        "Core",
+				Status:      true,
+				Description: "ini Super Admin",
+				System:      "Core",
+			},
+			models.Roles{
 				Name:        "Manager",
 				Status:      true,
 				Description: "ini untuk Finance",
+				System:      "Core",
 			},
 		}
 		for _, role := range roles {
@@ -199,40 +206,44 @@ func Seed() {
 
 		permis := []models.Permissions{
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Bank_List",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Bank_Add",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Bank_Edit",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Role_List",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Role_Add",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Role_Edit",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Permission_List",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Permission_Add",
 			},
 			models.Permissions{
-				RoleID:      1,
+				RoleID:      2,
 				Permissions: "Permission_Edit",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "All",
 			},
 		}
 		for _, per := range permis {
@@ -242,6 +253,11 @@ func Seed() {
 		users := []models.User{
 			models.User{
 				RoleID:   1,
+				Username: "adminkey",
+				Password: "adminsecret",
+			},
+			models.User{
+				RoleID:   2,
 				Username: "manager",
 				Password: "password",
 			},

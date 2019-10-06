@@ -116,37 +116,6 @@ func processMessage(kafkaMessage []byte) (err error) {
 
 		err = loan.Save() // finish create loan
 		break
-	case "internal_role":
-		{
-			//create internal roles
-			var iroles models.InternalRoles
-			var a map[string]interface{}
-
-			err = json.Unmarshal([]byte(data[1]), &a)
-			if err != nil {
-				return err
-			}
-
-			if a["delete"] != nil && a["delete"].(bool) == true {
-				ID := int(a["id"].(float64))
-				err := iroles.FindbyID(ID)
-				if err != nil {
-					return err
-				}
-
-				err = iroles.Delete()
-				if err != nil {
-					return err
-				}
-			} else {
-				err = json.Unmarshal([]byte(data[1]), &iroles)
-				if err != nil {
-					return err
-				}
-				err = iroles.Save()
-				return err
-			}
-		}
 	}
 	return err
 }

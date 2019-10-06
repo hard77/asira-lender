@@ -50,6 +50,14 @@ func AdminGroup(e *echo.Echo) {
 	g.DELETE("/service_products/:product_id", admin_handlers.BankServiceProductDelete)
 
 	// Role
-	g.GET("/internal_role", admin_handlers.GetAllRole)
-	g.GET("/internal_role/:role_id", admin_handlers.RoleGetDetails)
+	g.GET("/roles", admin_handlers.GetAllRole)
+	g.GET("/roles/:role_id", admin_handlers.RoleGetDetails)
+	g.POST("/roles", admin_handlers.AddRole)
+	g.PATCH("/roles/:role_id", admin_handlers.UpdateRole)
+
+	//Permission
+	g.GET("/permission", admin_handlers.GetAllPermission)
+	g.GET("/permission/:permission_id", admin_handlers.PermissionGetDetails)
+	g.POST("/permission", admin_handlers.AddPermission)
+	g.PATCH("/permission", admin_handlers.UpdatePermission)
 }

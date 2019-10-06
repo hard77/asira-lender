@@ -1,0 +1,32 @@
+GET:
+  Bank_List: /admin/banks
+  Bank_Type_List: /admin/bank_types
+  Bank_Service_List: /admin/bank_services
+  Service_Product_List: /admin/service_products
+  Role_List: /admin/roles
+  Permission_List: /admin/permission
+  Borrower_List: /admin/borrower
+  Loan_List: /admin/loan
+POST:
+  Bank_Add: /admin/banks
+  Bank_Type_Add: /admin/bank_types
+  Bank_Service_Add: /admin/bank_services
+  Service_Product_Add: /admin/service_products
+  Role_Add: /admin/roles
+  Permission_Add: /admin/permission
+PATCH:
+  Bank_Edit: /admin/banks
+  Bank_Type_Edit: /admin/bank_types
+  Bank_Service_Edit: /admin/bank_services
+  Service_Product_Edit: /admin/service_products
+  Role_Edit: /admin/roles
+  Permission_Edit: /admin/permission
+DELETE:
+  Bank_Delete: /admin/banks
+  Bank_Type_Delete: /admin/bank_types
+  Bank_Service_Delete: /admin/bank_services
+  Service_Product_Delete: /admin/service_products
+  Role_Delete: /admin/roles
+  Permission_Delete: /admin/permission
+  
+
