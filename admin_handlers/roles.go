@@ -90,7 +90,6 @@ func UpdateRole(c echo.Context) error {
 	}
 
 	payloadRules := govalidator.MapData{
-		"id":          []string{"unrequired"},
 		"name":        []string{"required"},
 		"description": []string{},
 		"system":      []string{"required"},
