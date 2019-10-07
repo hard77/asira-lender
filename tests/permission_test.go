@@ -33,19 +33,17 @@ func TestGetPermissionList(t *testing.T) {
 	// valid response
 	auth.GET("/admin/permission").
 		Expect().
-		Status(http.StatusOK).JSON().Object()
+		Status(http.StatusOK).JSON().Array()
 
 	// test query found
-	obj := auth.GET("/admin/permission").WithQuery("name", "Finance").
+	auth.GET("/admin/permission").WithQuery("name", "bank").
 		Expect().
-		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
+		Status(http.StatusOK).JSON().Array()
 
 	// test query invalid
-	obj = auth.GET("/admin/permission").WithQuery("name", "should not found this").
+	auth.GET("/admin/permission").WithQuery("name", "should not found this").
 		Expect().
-		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 0)
+		Status(http.StatusOK).JSON().Array()
 }
 
 func TestNewPermission(t *testing.T) {
@@ -70,20 +68,18 @@ func TestNewPermission(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":        "Manager",
-		"description": "ini description",
+		"role_id":     2,
+		"permissions": []string{"All"},
 	}
 
 	// normal scenario
 	obj := auth.POST("/admin/permission").WithJSON(payload).
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Manager")
+	obj.ContainsKey("role_id").ValueEqual("role_id", 2)
 
 	// test invalid
-	payload = map[string]interface{}{
-		"name": "",
-	}
+	payload = map[string]interface{}{}
 	auth.POST("/admin/permission").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnprocessableEntity).JSON().Object()
@@ -144,21 +140,21 @@ func TestPatchPermission(t *testing.T) {
 	})
 
 	payload := map[string]interface{}{
-		"name":        "Finance1",
-		"description": "ini deskripsi",
+		"role_id":     1,
+		"description": []string{"All"},
 	}
 
 	// valid response
-	obj := auth.PATCH("/admin/permission/1").WithJSON(payload).
+	obj := auth.PATCH("/admin/permission").WithJSON(payload).
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("id").ValueEqual("id", 1)
+	obj.ContainsKey("role_id").ValueEqual("role_id", 1)
 
 	// test invalid token
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer wrong token")
 	})
-	auth.PATCH("/admin/permission/1").WithJSON(payload).
+	auth.PATCH("/admin/permission").WithJSON(payload).
 		Expect().
 		Status(http.StatusUnauthorized).JSON().Object()
 }
