@@ -71,8 +71,8 @@ func getAdminLoginToken(e *httpexpect.Expect, auth *httpexpect.Expect, admin_id 
 	switch admin_id {
 	case "1":
 		payload = map[string]interface{}{
-			"key":      "finance",
-			"password": "password",
+			"key":      "adminkey",
+			"password": "adminsecret",
 		}
 	}
 
