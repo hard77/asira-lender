@@ -1,55 +1,63 @@
 package models
 
+import (
+	"time"
+
+	"gitlab.com/asira-ayannah/basemodel"
+)
+
 type (
 	BankService struct {
-		BaseModel
-		Name    string `json:"name" gorm:"column:name"`
-		ImageID int    `json:"image_id" gorm:"column:image_id"`
-		Status  string `json:"status" gorm:"column:status"`
+		basemodel.BaseModel
+		DeletedTime time.Time `json:"deleted_time" gorm:"column:deleted_time"`
+		ServiceID   uint64    `json:"service_id" gorm:"column:service_id"`
+		BankID      uint64    `json:"bank_id" gorm:"column:bank_id"`
+		ImageID     int       `json:"image_id" gorm:"column:image_id"`
+		Status      string    `json:"status" gorm:"column:status"`
 	}
 )
 
-func (b *BankService) Create() (*BankService, error) {
-	err := Create(&b)
+func (model *BankService) Create() error {
+	err := basemodel.Create(&model)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = KafkaSubmitModel(b, "bank_service")
+	err = KafkaSubmitModel(model, "bank_service")
 
-	return b, err
+	return err
 }
 
-func (b *BankService) Save() (*BankService, error) {
-	err := Save(&b)
+func (model *BankService) Save() error {
+	err := basemodel.Save(&model)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = KafkaSubmitModel(b, "bank_service")
+	err = KafkaSubmitModel(model, "bank_service")
 
-	return b, err
+	return err
 }
 
-func (b *BankService) Delete() (*BankService, error) {
-	err := Delete(&b)
+func (model *BankService) Delete() error {
+	err := basemodel.Delete(&model)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	err = KafkaSubmitModel(b, "bank_service_delete")
+	err = KafkaSubmitModel(model, "bank_service_delete")
 
-	return b, err
+	return err
 }
 
-func (b *BankService) FindbyID(id int) (*BankService, error) {
-	err := FindbyID(&b, id)
-	return b, err
+func (model *BankService) FindbyID(id int) error {
+	err := basemodel.FindbyID(&model, id)
+	return err
 }
 
-func (b *BankService) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
+func (model *BankService) PagedFindFilter(page int, rows int, order []string, sort []string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	bank_type := []BankService{}
-	result, err = PagedFilterSearch(&bank_type, page, rows, orderby, sort, filter)
+	result, err = basemodel.PagedFindFilter(&bank_type, page, rows, order, sort, filter)
 
 	return result, err
 }

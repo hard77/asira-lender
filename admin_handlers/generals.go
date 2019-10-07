@@ -1,8 +1,22 @@
 package admin_handlers
 
 import (
+	"asira_lender/asira"
+	"fmt"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/thedevsaddam/govalidator"
+)
+
+type (
+	JWTclaims struct {
+		Username string `json:"username"`
+		Role     string `json:"role"`
+		RoleID   string `json:"role_id"`
+		jwt.StandardClaims
+	}
 )
 
 // general function to validate all kind of api request payload / body
@@ -49,4 +63,27 @@ func returnInvalidResponse(httpcode int, details interface{}, message string) er
 	}
 
 	return echo.NewHTTPError(httpcode, responseBody)
+}
+
+// self explanation
+func createJwtToken(id string, role string, roleID string) (string, error) {
+	jwtConf := asira.App.Config.GetStringMap(fmt.Sprintf("%s.jwt", asira.App.ENV))
+
+	claim := JWTclaims{
+		id,
+		role,
+		roleID,
+		jwt.StandardClaims{
+			Id:        id,
+			ExpiresAt: time.Now().Add(time.Duration(jwtConf["duration"].(int)) * time.Minute).Unix(),
+		},
+	}
+
+	rawToken := jwt.NewWithClaims(jwt.SigningMethodHS512, claim)
+	token, err := rawToken.SignedString([]byte(jwtConf["jwt_secret"].(string)))
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

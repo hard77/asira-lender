@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm/dialects/postgres"
+	"gitlab.com/asira-ayannah/basemodel"
 )
 
 type (
 	Loan struct {
-		BaseModel
+		basemodel.BaseModel
 		DeletedTime      time.Time      `json:"deleted_time" gorm:"column:deleted_time"`
 		Owner            sql.NullInt64  `json:"owner" gorm:"column:owner;foreignkey"`
 		OwnerName        string         `json:"owner_name" gorm:"column:owner_name"`
@@ -23,7 +24,6 @@ type (
 		DueDate          time.Time      `json:"due_date" gorm:"column:due_date"`
 		LayawayPlan      float64        `json:"layaway_plan" gorm:"column:layaway_plan;type:int;not null"` // how much borrower will pay per month
 		Product          uint64         `json:"product" gorm:"column:product;foreignkey"`                  // product and service is later to be discussed
-		Service          uint64         `json:"service" gorm:"column:service;foreignkey"`
 		LoanIntention    string         `json:"loan_intention" gorm:"column:loan_intention;type:varchar(255);not null"`
 		IntentionDetails string         `json:"intention_details" gorm:"column:intention_details;type:text;not null"`
 		DisburseDate     time.Time      `json:"disburse_date" gorm:"column:disburse_date"`
@@ -41,36 +41,39 @@ type (
 	}
 )
 
-func (l *Loan) Create() (*Loan, error) {
-	err := Create(&l)
-	return l, err
+func (l *Loan) Create() error {
+	err := basemodel.Create(&l)
+	return err
 }
 
-func (l *Loan) Save() (*Loan, error) {
-	err := Save(&l)
-	return l, err
+func (l *Loan) Save() error {
+	err := basemodel.Save(&l)
+	return err
 }
 
-func (l *Loan) Delete() (*Loan, error) {
+func (l *Loan) Delete() error {
 	l.DeletedTime = time.Now()
-	err := Save(&l)
+	err := basemodel.Save(&l)
 
-	return l, err
+	return err
 }
 
-func (l *Loan) FindbyID(id int) (*Loan, error) {
-	err := FindbyID(&l, id)
-	return l, err
+func (l *Loan) FindbyID(id int) error {
+	err := basemodel.FindbyID(&l, id)
+	return err
 }
 
-func (l *Loan) FilterSearchSingle(filter interface{}) (*Loan, error) {
-	err := FilterSearchSingle(&l, filter)
-	return l, err
+func (l *Loan) FilterSearchSingle(filter interface{}) error {
+	err := basemodel.SingleFindFilter(&l, filter)
+	return err
 }
 
-func (l *Loan) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result PagedSearchResult, err error) {
+func (l *Loan) PagedFilterSearch(page int, rows int, orderby string, sort string, filter interface{}) (result basemodel.PagedFindResult, err error) {
 	loans := []Loan{}
-	result, err = PagedFilterSearch(&loans, page, rows, orderby, sort, filter)
+
+	order := []string{orderby}
+	sorts := []string{sort}
+	result, err = basemodel.PagedFindFilter(&loans, page, rows, order, sorts, filter)
 
 	return result, err
 }
@@ -79,7 +82,7 @@ func (l *Loan) Approve(disburseDate time.Time) error {
 	l.Status = "approved"
 	l.DisburseDate = disburseDate
 
-	_, err := l.Save()
+	err := l.Save()
 	if err != nil {
 		return err
 	}
@@ -92,7 +95,7 @@ func (l *Loan) Approve(disburseDate time.Time) error {
 func (l *Loan) Reject() error {
 	l.Status = "rejected"
 
-	_, err := l.Save()
+	err := l.Save()
 	if err != nil {
 		return err
 	}

@@ -12,11 +12,12 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jszwec/csvutil"
 	"github.com/labstack/echo"
+	"gitlab.com/asira-ayannah/basemodel"
 )
 
 type (
 	LoanCSV struct {
-		models.BaseModel
+		basemodel.BaseModel
 		DeletedTime time.Time `json:"deleted_time"`
 		Owner       int64
 		OwnerName   string `json:"owner_name"`
@@ -60,12 +61,12 @@ func LenderLoanRequestList(c echo.Context) error {
 	end_date := c.QueryParam("end_date")
 
 	type Filter struct {
-		Bank        sql.NullInt64        `json:"bank"`
-		Status      string               `json:"status"`
-		Owner       string               `json:"owner"`
-		OwnerName   string               `json:"owner_name" condition:"LIKE"`
-		DateBetween models.CompareFilter `json:"created_time" condition:"BETWEEN"`
-		ID          string               `json:"id"`
+		Bank        sql.NullInt64           `json:"bank"`
+		Status      string                  `json:"status"`
+		Owner       string                  `json:"owner"`
+		OwnerName   string                  `json:"owner_name" condition:"LIKE"`
+		DateBetween basemodel.CompareFilter `json:"created_time" condition:"BETWEEN"`
+		ID          string                  `json:"id"`
 	}
 
 	loan := models.Loan{}
@@ -78,7 +79,7 @@ func LenderLoanRequestList(c echo.Context) error {
 		Status:    status,
 		OwnerName: ownerName,
 		ID:        id,
-		DateBetween: models.CompareFilter{
+		DateBetween: basemodel.CompareFilter{
 			Value1: start_date,
 			Value2: end_date,
 		},
@@ -108,7 +109,7 @@ func LenderLoanRequestListDetail(c echo.Context) error {
 	}
 
 	loan := models.Loan{}
-	result, err := loan.FilterSearchSingle(&Filter{
+	err = loan.FilterSearchSingle(&Filter{
 		Bank: sql.NullInt64{
 			Int64: int64(lenderID),
 			Valid: true,
@@ -120,7 +121,7 @@ func LenderLoanRequestListDetail(c echo.Context) error {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "query result error")
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, loan)
 }
 
 func LenderLoanApproveReject(c echo.Context) error {
@@ -141,7 +142,7 @@ func LenderLoanApproveReject(c echo.Context) error {
 	}
 
 	loan := models.Loan{}
-	_, err := loan.FilterSearchSingle(&Filter{
+	err := loan.FilterSearchSingle(&Filter{
 		Bank: sql.NullInt64{
 			Int64: int64(lenderID),
 			Valid: true,
@@ -198,12 +199,12 @@ func LenderLoanRequestListDownload(c echo.Context) error {
 	end_date := c.QueryParam("end_date")
 
 	type Filter struct {
-		Bank        sql.NullInt64        `json:"bank"`
-		Status      string               `json:"status"`
-		Owner       string               `json:"owner"`
-		OwnerName   string               `json:"owner_name" condition:"LIKE"`
-		DateBetween models.CompareFilter `json:"created_time" condition:"BETWEEN"`
-		ID          string               `json:"id"`
+		Bank        sql.NullInt64           `json:"bank"`
+		Status      string                  `json:"status"`
+		Owner       string                  `json:"owner"`
+		OwnerName   string                  `json:"owner_name" condition:"LIKE"`
+		DateBetween basemodel.CompareFilter `json:"created_time" condition:"BETWEEN"`
+		ID          string                  `json:"id"`
 	}
 
 	loan := models.Loan{}
@@ -216,7 +217,7 @@ func LenderLoanRequestListDownload(c echo.Context) error {
 		Status:    status,
 		OwnerName: ownerName,
 		ID:        id,
-		DateBetween: models.CompareFilter{
+		DateBetween: basemodel.CompareFilter{
 			Value1: start_date,
 			Value2: end_date,
 		},

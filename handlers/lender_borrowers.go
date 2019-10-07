@@ -11,11 +11,12 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jszwec/csvutil"
 	"github.com/labstack/echo"
+	"gitlab.com/asira-ayannah/basemodel"
 )
 
 type (
 	BorrowerCSV struct {
-		models.BaseModel
+		basemodel.BaseModel
 		DeletedTime          time.Time `json:"deleted_time"`
 		Status               string    `json:"status"`
 		Fullname             string    `json:"fullname"`
@@ -73,7 +74,6 @@ func LenderBorrowerList(c echo.Context) error {
 	user := c.Get("user")
 	token := user.(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
-
 	lenderID, _ := strconv.Atoi(claims["jti"].(string))
 
 	// pagination parameters
@@ -131,7 +131,7 @@ func LenderBorrowerListDetail(c echo.Context) error {
 	}
 
 	borrower := models.Borrower{}
-	result, err := borrower.FilterSearchSingle(&Filter{
+	err = borrower.FilterSearchSingle(&Filter{
 		Bank: sql.NullInt64{
 			Int64: int64(lenderID),
 			Valid: true,
@@ -143,12 +143,11 @@ func LenderBorrowerListDetail(c echo.Context) error {
 		return returnInvalidResponse(http.StatusInternalServerError, err, "query result error")
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, borrower)
 }
 
 func LenderBorrowerListDownload(c echo.Context) error {
 	defer c.Request().Body.Close()
-
 	user := c.Get("user")
 	token := user.(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
