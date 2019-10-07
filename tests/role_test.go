@@ -36,7 +36,7 @@ func TestGetRoleList(t *testing.T) {
 		Status(http.StatusOK).JSON().Object()
 
 	// test query found
-	obj := auth.GET("/admin/roles").WithQuery("name", "Finance").
+	obj := auth.GET("/admin/roles").WithQuery("name", "Manager").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
 	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
@@ -71,6 +71,7 @@ func TestNewRole(t *testing.T) {
 
 	payload := map[string]interface{}{
 		"name":        "Manager",
+		"system":      "Bank Dashboard",
 		"description": "ini description",
 	}
 
@@ -145,6 +146,7 @@ func TestPatchRole(t *testing.T) {
 
 	payload := map[string]interface{}{
 		"name":        "Finance1",
+		"system":      "Bank Dashboard",
 		"description": "ini deskripsi",
 	}
 
