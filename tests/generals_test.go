@@ -26,7 +26,7 @@ func init() {
 
 func RebuildData() {
 	migration.Truncate([]string{"all"})
-	migration.Seed()
+	migration.TestSeed()
 }
 
 func getLenderLoginToken(e *httpexpect.Expect, auth *httpexpect.Expect, lender_id string) string {

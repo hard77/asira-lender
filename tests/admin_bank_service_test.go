@@ -21,10 +21,10 @@ func TestBankServiceList(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	auth := e.Builder(func(req *httpexpect.Request) {
-		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+		req.WithHeader("Authorization", "Basic "+clientBasicToken)
 	})
 
-	adminToken := getLenderAdminToken(e, auth)
+	adminToken := getAdminLoginToken(e, auth, "1")
 
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer "+adminToken)
@@ -64,10 +64,10 @@ func TestNewBankService(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	auth := e.Builder(func(req *httpexpect.Request) {
-		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+		req.WithHeader("Authorization", "Basic "+clientBasicToken)
 	})
 
-	adminToken := getLenderAdminToken(e, auth)
+	adminToken := getAdminLoginToken(e, auth, "1")
 
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer "+adminToken)
@@ -137,10 +137,10 @@ func TestGetBankServicebyID(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	auth := e.Builder(func(req *httpexpect.Request) {
-		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+		req.WithHeader("Authorization", "Basic "+clientBasicToken)
 	})
 
-	adminToken := getLenderAdminToken(e, auth)
+	adminToken := getAdminLoginToken(e, auth, "1")
 
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer "+adminToken)
@@ -170,10 +170,10 @@ func TestPatchBankService(t *testing.T) {
 	e := httpexpect.New(t, server.URL)
 
 	auth := e.Builder(func(req *httpexpect.Request) {
-		req.WithHeader("Authorization", "Basic "+adminBasicToken)
+		req.WithHeader("Authorization", "Basic "+clientBasicToken)
 	})
 
-	adminToken := getLenderAdminToken(e, auth)
+	adminToken := getAdminLoginToken(e, auth, "1")
 
 	auth = e.Builder(func(req *httpexpect.Request) {
 		req.WithHeader("Authorization", "Bearer "+adminToken)

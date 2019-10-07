@@ -79,7 +79,7 @@ func TestNewRole(t *testing.T) {
 	obj := auth.POST("/admin/roles").WithJSON(payload).
 		Expect().
 		Status(http.StatusCreated).JSON().Object()
-	obj.ContainsKey("name").ValueEqual("name", "Manager")
+	obj.ContainsKey("name").ValueEqual("name", "Finance")
 
 	// test invalid
 	payload = map[string]interface{}{
