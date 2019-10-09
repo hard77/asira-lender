@@ -74,7 +74,6 @@ func LenderBorrowerList(c echo.Context) error {
 	user := c.Get("user")
 	token := user.(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
-
 	lenderID, _ := strconv.Atoi(claims["jti"].(string))
 
 	// pagination parameters
@@ -149,7 +148,6 @@ func LenderBorrowerListDetail(c echo.Context) error {
 
 func LenderBorrowerListDownload(c echo.Context) error {
 	defer c.Request().Body.Close()
-
 	user := c.Get("user")
 	token := user.(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)

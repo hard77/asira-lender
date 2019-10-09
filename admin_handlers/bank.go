@@ -60,7 +60,7 @@ func BankNew(c echo.Context) error {
 		"adminfee_setup": []string{"required"},
 		"convfee_setup":  []string{"required"},
 		// "username":       []string{"required", "unique:banks,username"},
-		// "password": []string{"required"},
+		// "password":       []string{"required"},
 	}
 
 	validate := validateRequestPayload(c, payloadRules, &bank)

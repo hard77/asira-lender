@@ -3,6 +3,7 @@ package models
 import (
 	"asira_lender/asira"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"strings"
@@ -14,6 +15,11 @@ import (
 )
 
 func KafkaSubmitModel(i interface{}, model string) (err error) {
+	// skip kafka submit when in unit testing
+	if flag.Lookup("test.v") != nil {
+		return nil
+	}
+
 	topics := asira.App.Config.GetStringMap(fmt.Sprintf("%s.kafka.topics.produces", asira.App.ENV))
 
 	var payload interface{}
@@ -89,7 +95,7 @@ func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
 		}
 		if e, ok := i.(*BankService); ok {
 			service := Service{}
-			service.FindbyID(int(e.BankID))
+			service.FindbyID(int(e.ServiceID))
 			payload = BankServiceUpdate{
 				ID:      e.ID,
 				Name:    service.Name,

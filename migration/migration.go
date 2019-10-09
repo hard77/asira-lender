@@ -166,6 +166,86 @@ func Seed() {
 			lender.Create()
 		}
 
+		roles := []models.Roles{
+			models.Roles{
+				Name:        "Core",
+				Status:      true,
+				Description: "ini Super Admin",
+				System:      "Core",
+			},
+			models.Roles{
+				Name:        "Manager",
+				Status:      true,
+				Description: "ini untuk Finance",
+				System:      "Core",
+			},
+		}
+		for _, role := range roles {
+			role.Create()
+		}
+
+		permis := []models.Permissions{
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Bank_List",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Bank_Add",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Bank_Edit",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Role_List",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Role_Add",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Role_Edit",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Permission_List",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Permission_Add",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Permission_Edit",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "All",
+			},
+		}
+		for _, per := range permis {
+			per.Create()
+		}
+
+		users := []models.User{
+			models.User{
+				RoleID:   1,
+				Username: "adminkey",
+				Password: "adminsecret",
+			},
+			models.User{
+				RoleID:   2,
+				Username: "manager",
+				Password: "password",
+			},
+		}
+		for _, user := range users {
+			user.Create()
+		}
+
 		// seed bank services
 		bankServices := []models.BankService{
 			models.BankService{
@@ -789,6 +869,86 @@ func TestSeed() {
 		for _, loan := range loans {
 			loan.Create()
 		}
+
+		roles := []models.Roles{
+			models.Roles{
+				Name:        "Core",
+				Status:      true,
+				Description: "ini Super Admin",
+				System:      "Core",
+			},
+			models.Roles{
+				Name:        "Manager",
+				Status:      true,
+				Description: "ini untuk Finance",
+				System:      "Core",
+			},
+		}
+		for _, role := range roles {
+			role.Create()
+		}
+
+		permis := []models.Permissions{
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Bank_List",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Bank_Add",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Bank_Edit",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Role_List",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Role_Add",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Role_Edit",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Permission_List",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Permission_Add",
+			},
+			models.Permissions{
+				RoleID:      2,
+				Permissions: "Permission_Edit",
+			},
+			models.Permissions{
+				RoleID:      1,
+				Permissions: "All",
+			},
+		}
+		for _, per := range permis {
+			per.Create()
+		}
+
+		users := []models.User{
+			models.User{
+				RoleID:   1,
+				Username: "adminkey",
+				Password: "adminsecret",
+			},
+			models.User{
+				RoleID:   2,
+				Username: "manager",
+				Password: "password",
+			},
+		}
+		for _, user := range users {
+			user.Create()
+		}
 	}
 }
 
@@ -807,7 +967,10 @@ func Truncate(tableList []string) (err error) {
 				"borrowers",
 				"loans",
 				"images",
-				"internal_roles",
+				"roles",
+				"permissions",
+				"users",
+				"user_relations",
 			}
 		}
 

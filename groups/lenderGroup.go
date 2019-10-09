@@ -10,6 +10,7 @@ import (
 func LenderGroup(e *echo.Echo) {
 	g := e.Group("/lender")
 	middlewares.SetClientJWTmiddlewares(g, "lender")
+	// e.Use(permission.ValidatePermissions)
 
 	// Profile endpoints
 	g.GET("/profile", handlers.LenderProfile)
