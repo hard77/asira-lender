@@ -97,11 +97,9 @@ func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
 			service := Service{}
 			service.FindbyID(int(e.ServiceID))
 			payload = BankServiceUpdate{
-				ID:      e.ID,
-				Name:    service.Name,
-				BankID:  e.BankID,
-				ImageID: e.ImageID,
-				Status:  e.Status,
+				ID:     e.ID,
+				Name:   service.Name,
+				BankID: e.BankID,
 			}
 		}
 		break
