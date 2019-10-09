@@ -79,5 +79,5 @@ func AdminGroup(e *echo.Echo) {
 	g.GET("/users", admin_handlers.GetAllUser)
 	g.GET("/users/:user_id", admin_handlers.UserGetDetails)
 	g.POST("/users", admin_handlers.AddUser)
-	g.PATCH("/users/:user_id", admin_handlers.UpdateUser
+	g.PATCH("/users/:user_id", admin_handlers.UpdateUser)
 }
