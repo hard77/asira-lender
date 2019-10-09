@@ -56,8 +56,10 @@ CREATE TABLE "services" (
     "updated_time" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "deleted_time" timestamptz,
     "name" varchar(255),
+    "image_id" bigserial,
     "status" varchar(255),
-    PRIMARY KEY ("id")
+    PRIMARY KEY ("id"),
+    FOREIGN KEY ("image_id") REFERENCES images(id)
 ) WITH (OIDS = FALSE);
 
 CREATE TABLE "bank_services" (
@@ -67,11 +69,8 @@ CREATE TABLE "bank_services" (
     "deleted_time" timestamptz,
     "service_id" bigserial,
     "bank_id" bigserial,
-    "image_id" bigserial,
-    "status" varchar(255),
     FOREIGN KEY ("service_id") REFERENCES services(id),
     FOREIGN KEY ("bank_id") REFERENCES banks(id),
-    FOREIGN KEY ("image_id") REFERENCES images(id),
     PRIMARY KEY ("id")
 ) WITH (OIDS = FALSE);
 

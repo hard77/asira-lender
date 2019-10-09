@@ -82,24 +82,29 @@ func Seed() {
 		// seed services
 		services := []models.Service{
 			models.Service{
-				Name:   "Pinjaman PNS",
-				Status: "active",
+				Name:    "Pinjaman PNS",
+				Status:  "active",
+				ImageID: 1,
 			},
 			models.Service{
-				Name:   "Pinjaman Pensiun",
-				Status: "active",
+				Name:    "Pinjaman Pensiun",
+				Status:  "active",
+				ImageID: 2,
 			},
 			models.Service{
-				Name:   "Pinjaman UMKN",
-				Status: "active",
+				Name:    "Pinjaman UMKN",
+				Status:  "active",
+				ImageID: 3,
 			},
 			models.Service{
-				Name:   "Pinjaman Mikro",
-				Status: "inactive",
+				Name:    "Pinjaman Mikro",
+				Status:  "inactive",
+				ImageID: 4,
 			},
 			models.Service{
-				Name:   "Pinjaman Lainnya",
-				Status: "inactive",
+				Name:    "Pinjaman Lainnya",
+				Status:  "inactive",
+				ImageID: 5,
 			},
 		}
 		for _, service := range services {
@@ -257,32 +262,22 @@ func Seed() {
 			models.BankService{
 				ServiceID: 1,
 				BankID:    1,
-				ImageID:   1,
-				Status:    "active",
 			},
 			models.BankService{
 				ServiceID: 2,
 				BankID:    1,
-				ImageID:   2,
-				Status:    "active",
 			},
 			models.BankService{
 				ServiceID: 3,
 				BankID:    1,
-				ImageID:   3,
-				Status:    "inactive",
 			},
 			models.BankService{
 				ServiceID: 4,
 				BankID:    2,
-				ImageID:   4,
-				Status:    "active",
 			},
 			models.BankService{
 				ServiceID: 5,
 				BankID:    2,
-				ImageID:   5,
-				Status:    "active",
 			},
 		}
 		for _, bankService := range bankServices {
@@ -443,24 +438,29 @@ func TestSeed() {
 		// seed services
 		services := []models.Service{
 			models.Service{
-				Name:   "Pinjaman PNS",
-				Status: "active",
+				Name:    "Pinjaman PNS",
+				Status:  "active",
+				ImageID: 1,
 			},
 			models.Service{
-				Name:   "Pinjaman Pensiun",
-				Status: "active",
+				Name:    "Pinjaman Pensiun",
+				Status:  "active",
+				ImageID: 2,
 			},
 			models.Service{
-				Name:   "Pinjaman UMKN",
-				Status: "active",
+				Name:    "Pinjaman UMKN",
+				Status:  "active",
+				ImageID: 3,
 			},
 			models.Service{
-				Name:   "Pinjaman Mikro",
-				Status: "inactive",
+				Name:    "Pinjaman Mikro",
+				Status:  "inactive",
+				ImageID: 4,
 			},
 			models.Service{
-				Name:   "Pinjaman Lainnya",
-				Status: "inactive",
+				Name:    "Pinjaman Lainnya",
+				Status:  "inactive",
+				ImageID: 5,
 			},
 		}
 		for _, service := range services {
@@ -532,32 +532,22 @@ func TestSeed() {
 			models.BankService{
 				ServiceID: 1,
 				BankID:    1,
-				ImageID:   1,
-				Status:    "active",
 			},
 			models.BankService{
 				ServiceID: 2,
 				BankID:    1,
-				ImageID:   2,
-				Status:    "active",
 			},
 			models.BankService{
 				ServiceID: 3,
 				BankID:    1,
-				ImageID:   3,
-				Status:    "inactive",
 			},
 			models.BankService{
 				ServiceID: 4,
 				BankID:    2,
-				ImageID:   4,
-				Status:    "active",
 			},
 			models.BankService{
 				ServiceID: 5,
 				BankID:    2,
-				ImageID:   5,
-				Status:    "active",
 			},
 		}
 		for _, bankService := range bankServices {
