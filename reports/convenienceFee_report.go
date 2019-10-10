@@ -57,7 +57,10 @@ func ConvenienceFeeReport(c echo.Context) error {
 		db = db.Where("LOWER(b.name) LIKE ?", "%"+strings.ToLower(bankName)+"%")
 	}
 	if serviceName := c.QueryParam("service_name"); len(serviceName) > 0 {
-		db = db.Where("LOWER(ss.name) LIKE ?", "%"+strings.ToLower(serviceName)+"%")
+		db = db.Where("LOWER(s.name) LIKE ?", "%"+strings.ToLower(serviceName)+"%")
+	}
+	if productName := c.QueryParam("product_name"); len(productName) > 0 {
+		db = db.Where("LOWER(p.name) LIKE ?", "%"+strings.ToLower(productName)+"%")
 	}
 	if loanID := c.QueryParam("loan_id"); len(loanID) > 0 {
 		db = db.Where("l.id = ?", loanID)
