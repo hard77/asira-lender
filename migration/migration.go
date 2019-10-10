@@ -349,19 +349,19 @@ func Seed() {
 			},
 			models.BankProduct{
 				ProductID: 2,
-				BankID:    2,
+				BankID:    1,
 			},
 			models.BankProduct{
 				ProductID: 3,
-				BankID:    3,
+				BankID:    1,
 			},
 			models.BankProduct{
 				ProductID: 4,
-				BankID:    4,
+				BankID:    2,
 			},
 			models.BankProduct{
 				ProductID: 5,
-				BankID:    5,
+				BankID:    2,
 			},
 		}
 		for _, bankProduct := range bankProducts {
@@ -619,19 +619,19 @@ func TestSeed() {
 			},
 			models.BankProduct{
 				ProductID: 2,
-				BankID:    2,
+				BankID:    1,
 			},
 			models.BankProduct{
 				ProductID: 3,
-				BankID:    3,
+				BankID:    1,
 			},
 			models.BankProduct{
 				ProductID: 4,
-				BankID:    4,
+				BankID:    2,
 			},
 			models.BankProduct{
 				ProductID: 5,
-				BankID:    5,
+				BankID:    2,
 			},
 		}
 		for _, bankProduct := range bankProducts {
