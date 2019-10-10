@@ -22,6 +22,7 @@ func ConvenienceFeeReport(c echo.Context) error {
 	type ConvenienceFeeReport struct {
 		BankName       string    `json:"bank_name"`
 		ServiceName    string    `json:"service_name"`
+		ProductName    string    `json:"product_name"`
 		LoanID         string    `json:"loan_id"`
 		CreatedTime    time.Time `json:"created_time"`
 		Plafond        float64   `json:"plafond"`
@@ -42,12 +43,13 @@ func ConvenienceFeeReport(c echo.Context) error {
 	offset := (page * rows) - rows
 
 	db = db.Table("loans l").
-		Select("b.name as bank_name, ss.name as service_name, l.id as loan_id, l.created_time, loan_amount as plafond, value->>'amount' as convenience_fee").
+		Select("b.name as bank_name, s.name as service_name, p.name ase product_name, l.id as loan_id, l.created_time, loan_amount as plafond, value->>'amount' as convenience_fee").
 		Joins("JOIN LATERAL jsonb_array_elements(l.fees) j ON true").
 		Joins("INNER JOIN banks b ON b.id = l.bank").
-		Joins("INNER JOIN bank_products p ON p.id = l.product").
-		Joins("INNER JOIN bank_services s ON s.id = p.bank_service_id").
-		Joins("INNER JOIN services ss ON ss.id = s.service_id").
+		Joins("INNER JOIN bank_products bp ON bp.id = l.product").
+		Joins("INNER JOIN products p ON p.id = bp.product_id").
+		Joins("INNER JOIN bank_services bs ON bs.id = bp.bank_service_id").
+		Joins("INNER JOIN services s ON s.id = bs.service_id").
 		Where("LOWER(value->>'description') LIKE 'convenience%'")
 
 	// filters
