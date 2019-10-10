@@ -97,11 +97,9 @@ func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
 			service := Service{}
 			service.FindbyID(int(e.ServiceID))
 			payload = BankServiceUpdate{
-				ID:      e.ID,
-				Name:    service.Name,
-				BankID:  e.BankID,
-				ImageID: e.ImageID,
-				Status:  e.Status,
+				ID:     e.ID,
+				Name:   service.Name,
+				BankID: e.BankID,
 			}
 		}
 		break
@@ -127,17 +125,17 @@ func kafkaPayloadBuilder(i interface{}, model string) (payload interface{}) {
 			payload = BankProductUpdate{
 				ID:              e.ID,
 				Name:            product.Name,
-				BankServiceID:   e.BankServiceID,
-				MinTimeSpan:     e.MinTimeSpan,
-				MaxTimeSpan:     e.MaxTimeSpan,
-				Interest:        e.Interest,
-				MinLoan:         e.MinLoan,
-				MaxLoan:         e.MaxLoan,
-				Fees:            e.Fees,
-				Collaterals:     e.Collaterals,
-				FinancingSector: e.FinancingSector,
-				Assurance:       e.Assurance,
-				Status:          e.Status,
+				BankServiceID:   product.ServiceID,
+				MinTimeSpan:     product.MinTimeSpan,
+				MaxTimeSpan:     product.MaxTimeSpan,
+				Interest:        product.Interest,
+				MinLoan:         product.MinLoan,
+				MaxLoan:         product.MaxLoan,
+				Fees:            product.Fees,
+				Collaterals:     product.Collaterals,
+				FinancingSector: product.FinancingSector,
+				Assurance:       product.Assurance,
+				Status:          product.Status,
 			}
 		}
 	}
