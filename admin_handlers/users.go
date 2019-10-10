@@ -68,9 +68,9 @@ func AddUser(c echo.Context) error {
 	userM := models.User{}
 
 	payloadRules := govalidator.MapData{
-		"username": []string{"required", "unique"},
-		"email":    []string{"required", "unique"},
-		"phone":    []string{"required", "unique"},
+		"username": []string{"required", "unique:users,username"},
+		"email":    []string{"required", "unique:users,username"},
+		"phone":    []string{"required", "unique:users,username"},
 		"role_id":  []string{"required", "role_id"},
 		"status":   []string{},
 	}
