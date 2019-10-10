@@ -45,7 +45,7 @@ func TestBankProductList(t *testing.T) {
 	obj = auth.GET("/admin/bank_products").WithQuery("bank_id", "1").
 		Expect().
 		Status(http.StatusOK).JSON().Object()
-	obj.ContainsKey("total_data").ValueEqual("total_data", 1)
+	obj.ContainsKey("total_data").ValueEqual("total_data", 3)
 
 	// test query invalid
 	obj = auth.GET("/admin/bank_products").WithQuery("bank_id", "999").
