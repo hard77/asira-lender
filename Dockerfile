@@ -20,6 +20,7 @@ RUN go build -v -o "${APPNAME}-res"
 
 RUN ls -alh $GOPATH/src/
 RUN ls -alh $GOPATH/src/"${APPNAME}"
+RUN ls -alh $GOPATH/src/"${APPNAME}"/vendor
 RUN pwd
 
 FROM alpine
