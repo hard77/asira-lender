@@ -170,7 +170,7 @@ func (x *Application) LoadPermissions() error {
 	conf.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
 	conf.AutomaticEnv()
 	conf.SetConfigName("permissions")
-	conf.AddConfigPath("$GOPATH/src/" + x.Name)
+	conf.AddConfigPath("/go/src/" + x.Name)
 	conf.SetConfigType("yaml")
 	if err := conf.ReadInConfig(); err != nil {
 		return err
