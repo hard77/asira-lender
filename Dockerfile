@@ -1,4 +1,4 @@
-FROM golang:alpine  AS build-env
+FROM golang:alpine
 
 ARG APPNAME="asira_lender"
 ARG ENV="dev"
