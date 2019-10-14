@@ -13,8 +13,8 @@ development:
     logmode: true
     timezone: Asia/Jakarta
   kafka:
-    host: "kafka-cluster-kafka-brokers"
-    port: "9091"
+    host: "35.240.147.144"
+    port: "9092"
     user: user
     pass: oRB5KjfuHdXc
     client_id: asira
