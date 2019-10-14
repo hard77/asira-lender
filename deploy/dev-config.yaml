@@ -13,7 +13,7 @@ development:
     logmode: true
     timezone: Asia/Jakarta
   kafka:
-    host: "172.30.154.5"
+    host: "34.87.100.200"
     port: "9092"
     user: user
     pass: oRB5KjfuHdXc
