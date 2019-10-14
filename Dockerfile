@@ -12,7 +12,6 @@ WORKDIR $GOPATH/src/"${APPNAME}"
 RUN apk add --update git gcc libc-dev;
 #  tzdata wget gcc libc-dev make openssl py-pip;
 RUN go get -u github.com/golang/dep/cmd/dep
-RUN telnet 35.240.147.144 9092
 
 RUN cd $GOPATH/src/"${APPNAME}"
 RUN cp deploy/dev-config.yaml config.yaml
