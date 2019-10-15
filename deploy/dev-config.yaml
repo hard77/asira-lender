@@ -16,7 +16,7 @@ development:
     host: "172.30.138.213"
     port: "9092"
     user: user
-    pass: oRB5KjfuHdXc
+    pass: bitnami
     client_id: asira
     sasl: true
     log_verbose: true
