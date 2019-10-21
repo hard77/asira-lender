@@ -13,7 +13,7 @@ development:
     logmode: true
     timezone: Asia/Jakarta
   kafka:
-    host: "172.30.36.187"
+    host: "172.30.113.184"
     port: "9092"
     user: user
     pass: bitnami
