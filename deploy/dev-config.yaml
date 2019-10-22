@@ -1,7 +1,7 @@
 development:
   react_cors: true
   database:
-    table: sampledb
+    table: asira_lender
     username: asirauser
     password: asirapass
     host: "172.30.35.68"
